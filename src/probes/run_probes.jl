@@ -9,7 +9,7 @@ include("utils.jl")
 all_data = load_all_data()
 
 # Inflation:
-indicator = "CPI"
+indicator = "PPI"
 mkt_data = subset(all_data, :indicator => x -> x.==indicator)
 transform!(mkt_data, :date => ByRow(x -> Dates.yearmonth(x)) => :ym)
 mkt_data = groupby(mkt_data, :ym) |>
@@ -24,7 +24,8 @@ select!(mkt_data, Not([:value]))
 rename!(mkt_data, :growth => :value)
 select!(mkt_data, [:date, :ym, :sentence_id, :value])
 
-X, y = prepare_probe(mkt_data; layer=24)
+layer = 1
+X, y = prepare_probe(mkt_data; layer=layer)
 
 # Run the probe:
 mod = probe(X,y)
@@ -48,13 +49,14 @@ agg_data_probe = groupby(mkt_data, :ym) |>
 agg_data = innerjoin(agg_data, agg_data_probe, on=:ym)
 
 # Plot the results:
-plot(
+plt = plot(
     [agg_data.value agg_data.yhat agg_data.y_bl], 
     label=[indicator "Probe" "AR($p)"], 
     legend=:topleft, 
     xlabel="Year", 
     ylabel=indicator
 )
+display(plt)
 
 # Score the results:
 DataFrame(
