@@ -42,7 +42,7 @@ mkt_data[:, :y_probe] .= yhat
 mkt_data[:, :layer] .= layer
 
 # Aggregate the probe results:
-agg_data_probe = groupby(mkt_data, [:ym]) |>
+agg_data_probe = groupby(mkt_data, [:ym, :event_type, :speaker]) |>
     x -> combine(
         x, 
         :y_probe .=> mean => :y_probe,
@@ -60,13 +60,14 @@ agg_data = stack(agg_data, [:y_probe, :y_bl], variable_name=:model, value_name=:
     x -> sort(x, [:ym, :model])
 
 # Evaluate the results:
-res = groupby(agg_data, [:ym, :model]) |>
+group_vars = [:model, :event_type]
+res = groupby(agg_data, vcat([:ym], group_vars)) |>
     x -> combine(
         x,
         :y .=> mean => :y,
         [:yhat, :nrow] => ((y,w) -> mean(y,Weights(w))) => :yhat
     ) |>
-    x -> groupby(x, :model) |>
+    x -> groupby(x, group_vars) |>
     x -> combine(
         x,
         [:y, :yhat] => ((y, yhat) -> StatsBase.cor([y yhat])[1, 2]) => :cor,
