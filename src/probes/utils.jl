@@ -150,3 +150,66 @@ function get_clf_activations(clf, X)
         x -> clf.layer.layers[2](x).hidden_state
     return A
 end
+
+"""
+    prepare_mkt_data(all_data, indicator)
+
+Prepare the inflation data for a probe. This involves:
+
+- Lagging the data by one period.
+- Taking the log difference.
+- Selecting the relevant columns.
+"""
+function prepare_mkt_data(
+    all_data::DataFrame,
+    indicator::AbstractString="PPI",
+    maturity::Nothing=nothing,
+)
+    data = subset(all_data, :indicator => x -> x.==indicator)
+    transform!(data, :date => ByRow(x -> Dates.yearmonth(x)) => :ym)
+    data = groupby(data, :ym) |>
+        x -> select(x, [:ym, :value]) |>
+        unique |>
+        x -> transform(x, :value => lag => :value_lag) |>
+        x -> select(x, Not(:value)) |>
+        x -> innerjoin(x, data, on=:ym) |>
+        x -> transform(x, [:value, :value_lag] => ByRow((y,yl) -> log(y)-log(yl)) => :growth) 
+    replace!(data.growth, Inf => 0.0)
+    select!(data, Not([:value]))
+    rename!(data, :growth => :value)
+    
+    return data
+end
+
+"""
+    post_process_mkt_data(data::DataFrame)
+
+Post-process the market data for a probe. This involves:
+
+- Selecting the relevant columns.
+- Sorting the data.
+"""
+function post_process_mkt_data(data::DataFrame)
+    select!(data, [:date, :ym, :sentence_id, :value, :event_type, :speaker])
+    sort!(data, [:sentence_id, :date, :ym])
+    return data
+end
+
+"""
+    prepare_mkt_data(all_data, maturity)
+
+Prepare the yield data for a probe. This involves:
+
+- Selecting the relevant columns.
+"""
+function prepare_mkt_data(
+    all_data::DataFrame,
+    indicator::AbstractString="UST", 
+    maturity::AbstractString="1 Mo",
+)
+    data = subset(all_data, :indicator => x -> x.==indicator, :maturity =>  x -> x.==maturity, skipmissing=true)
+    transform!(data, :date => ByRow(x -> Dates.yearmonth(x)) => :ym)
+    select!(data, [:date, :ym, :sentence_id, :value])
+    sort!(data, [:sentence_id,:ym])
+    return data
+end
