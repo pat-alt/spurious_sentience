@@ -8,11 +8,13 @@ function (mod::Model)(X)
 end
 
 function predict(mod::Model, X)
-    if mod.intercept
+    if mod.intercept && size(X, 2) == size(mod.β, 1) - 1
         X = hcat(ones(size(X, 1)), X)
     end
     return X * mod.β
 end
+
+ssr(mod::Model, X, y) = sum((y .- predict(mod, X)) .^ 2)
 
 function mse(mod::Model, X, y)
     ŷ = predict(mod, X)
@@ -43,11 +45,43 @@ struct AutoRegression <: Model
     l::Int
 end
 
-function ar(y; l::Int=1, intercept::Bool=true)
+function prepare_ar(y; l::Int=1, intercept::Bool=true)
     X = hcat([lag(y, i) for i in 1:l]...)
     if intercept
         X = hcat(ones(size(X, 1)), X)
     end
+    return X
+end
+
+function ar(y; l::Int=1, intercept::Bool=true)
+    X = prepare_ar(y; l=l, intercept=intercept)
     β = (X'X)\(X'y)
     return AutoRegression(β, intercept, l), X
+end
+
+function lag_select(
+    y; 
+    criterium::Function=aic, 
+    max_lag::Int=10, 
+    return_scores::Bool=false,
+    kwrgs...
+)
+    n = size(y, 1)
+    lags = 1:max_lag
+    models = [ar(y; l=l, kwrgs...) for l in lags]
+    ssrs = [ssr(mod, X, y) for (mod,X) in models]
+    scores = criterium(ssrs, n, lags)
+    p = lags[argmin(scores)]
+    return_scores || return p
+    return p, scores
+end
+
+bic(ssr, n, lags) = n * log.(ssr ./ n) .+ log.(n) .* lags
+
+aic(ssr, n, lags) = n * log.(ssr ./ n) .+ 2 .* lags
+
+function get_clf_activations(clf, X)
+    A = clf.layer.layers[1](X).hidden_state |>
+        x -> clf.layer.layers[2](x).hidden_state
+    return A
 end

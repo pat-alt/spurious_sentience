@@ -4,9 +4,12 @@ using Plots
 using TrillionDollarWords
 
 include("utils.jl")
+use_clf = false
 
 # All data:
 all_data = load_all_data()
+model = load_model(;use_head=true)
+clf = model.mod.cls
 
 # Inflation:
 indicator = "PPI"
@@ -24,8 +27,12 @@ select!(mkt_data, Not([:value]))
 rename!(mkt_data, :growth => :value)
 select!(mkt_data, [:date, :ym, :sentence_id, :value])
 
-layer = 1
+layer = 24
 X, y = prepare_probe(mkt_data; layer=layer)
+
+if use_clf
+    X = vcat([get_clf_activations(clf, x)' for x in eachrow(X)]...)
+end
 
 # Run the probe:
 mod = probe(X,y)
@@ -35,7 +42,7 @@ yhat = mod(X)
 agg_data = groupby(mkt_data, :ym) |>
     x -> combine(x, :value .=> mean; renamecols=false)
 _y = agg_data.value
-p = 5
+lag_select(_y)
 mod_bl, _X = ar(_y; l=p)
 y_bl = mod_bl(_X[:,2:end])
 agg_data.y_bl .= y_bl
@@ -52,6 +59,7 @@ agg_data = innerjoin(agg_data, agg_data_probe, on=:ym)
 plt = plot(
     [agg_data.value agg_data.yhat agg_data.y_bl], 
     label=[indicator "Probe" "AR($p)"], 
+    alpha=[0.2 1.0 1.0],
     legend=:topleft, 
     xlabel="Year", 
     ylabel=indicator
@@ -63,5 +71,6 @@ DataFrame(
     indicator = indicator,
     model = ["Probe", "AR($p)"],
     rmse = [rmse(mod, X, y), rmse(mod_bl, _X[:,2:end], _y)],
-    mse = [mse(mod, X, y), mse(mod_bl, _X[:,2:end], _y)]
+    mse = [mse(mod, X, y), mse(mod_bl, _X[:,2:end], _y)],
+    cor = [cor(y, yhat), cor(_y, y_bl)]
 )
