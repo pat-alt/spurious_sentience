@@ -54,23 +54,3 @@ agg_data_probe = groupby(mkt_data, :ym) |>
 
 # Merge the results:
 agg_data = innerjoin(agg_data, agg_data_probe, on=:ym)
-
-# Plot the results:
-plt = plot(
-    [agg_data.value agg_data.yhat agg_data.y_bl], 
-    label=[indicator "Probe" "AR($p)"], 
-    alpha=[0.2 1.0 1.0],
-    legend=:topleft, 
-    xlabel="Year", 
-    ylabel=indicator
-)
-display(plt)
-
-# Score the results:
-DataFrame(
-    indicator = indicator,
-    model = ["Probe", "AR($p)"],
-    rmse = [rmse(mod, X, y), rmse(mod_bl, _X[:,2:end], _y)],
-    mse = [mse(mod, X, y), mse(mod_bl, _X[:,2:end], _y)],
-    cor = [cor(y, yhat), cor(_y, y_bl)]
-)

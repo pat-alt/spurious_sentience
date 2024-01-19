@@ -3,10 +3,20 @@ using Statistics
 
 abstract type Model end
 
+"""
+    (mod::Model)(X)
+
+Predict the output of a model `mod` on the input `X`.
+"""
 function (mod::Model)(X)
     return predict(mod, X)
 end
 
+"""
+    predict(mod::Model, X)
+
+Predict the output of a model `mod` on the input `X`.
+"""
 function predict(mod::Model, X)
     if mod.intercept && size(X, 2) == size(mod.β, 1) - 1
         X = hcat(ones(size(X, 1)), X)
@@ -14,13 +24,28 @@ function predict(mod::Model, X)
     return X * mod.β
 end
 
+"""
+    ssr(mod::Model, X, y)
+
+Compute the sum of squared residuals of a model `mod` on the input `X` and output `y`.
+"""
 ssr(mod::Model, X, y) = sum((y .- predict(mod, X)) .^ 2)
 
+"""
+    mse(mod::Model, X, y)
+
+Compute the mean squared error of a model `mod` on the input `X` and output `y`.
+"""
 function mse(mod::Model, X, y)
     ŷ = predict(mod, X)
     return mean((y .- ŷ) .^ 2)
 end
 
+"""
+    rmse(mod::Model, X, y)
+
+Compute the root mean squared error of a model `mod` on the input `X` and output `y`.
+"""
 rmse(mod::Model, X, y) = sqrt(mse(mod, X, y))
 
 struct Probe <: Model
@@ -29,6 +54,11 @@ struct Probe <: Model
     λ::Float64
 end
 
+"""
+    probe(X, y; λ::Real=0.1, intercept::Bool=true)
+
+Fit a probe to the input `X` and output `y`.
+"""
 function probe(X, y; λ::Real=0.1, intercept::Bool=true)
     if intercept
         X = hcat(ones(size(X, 1)), X)
@@ -37,6 +67,11 @@ function probe(X, y; λ::Real=0.1, intercept::Bool=true)
     return Probe(β, intercept, λ)
 end
 
+"""
+    lag(X::Vector, l=1)
+
+Lag a vector `X` by `l` periods.
+"""
 lag(X::Vector, l=1) = [zeros(l) ; X[1:end-l]]
 
 struct AutoRegression <: Model
@@ -45,6 +80,11 @@ struct AutoRegression <: Model
     l::Int
 end
 
+"""
+    prepare_ar(y; l::Int=1, intercept::Bool=true)
+
+Prepare the input matrix for an autoregressive model.
+"""
 function prepare_ar(y; l::Int=1, intercept::Bool=true)
     X = hcat([lag(y, i) for i in 1:l]...)
     if intercept
@@ -53,12 +93,22 @@ function prepare_ar(y; l::Int=1, intercept::Bool=true)
     return X
 end
 
+"""
+    ar(y; l::Int=1, intercept::Bool=true)
+
+Fit an autoregressive model to the output `y`.
+"""
 function ar(y; l::Int=1, intercept::Bool=true)
     X = prepare_ar(y; l=l, intercept=intercept)
     β = (X'X)\(X'y)
     return AutoRegression(β, intercept, l), X
 end
 
+"""
+    lag_select(y; criterium::Function=aic, max_lag::Int=10, return_scores::Bool=false)
+
+Select the optimal lag for an autoregressive model. Depending on the value of `return_scores`, either return the optimal lag or a tuple of the optimal lag and the scores for all lags. The `criterium` function should take the sum of squared residuals, the number of observations, and the number of lags as arguments and return a vector of scores for each lag.
+"""
 function lag_select(
     y; 
     criterium::Function=aic, 
@@ -76,10 +126,25 @@ function lag_select(
     return p, scores
 end
 
+"""
+    bic(ssr, n, lags)
+
+Compute the Bayesian information criterion for a set of models.
+"""
 bic(ssr, n, lags) = n * log.(ssr ./ n) .+ log.(n) .* lags
 
+"""
+    aic(ssr, n, lags)
+
+Compute the Akaike information criterion for a set of models.
+"""
 aic(ssr, n, lags) = n * log.(ssr ./ n) .+ 2 .* lags
 
+"""
+    get_clf_activations(clf, X)
+
+Get the activations of the penultimate layer of a classifier `clf` on the input `X` where `X` is a matrix of word embeddings (in other words the final-layer activations of a language model.
+"""
 function get_clf_activations(clf, X)
     A = clf.layer.layers[1](X).hidden_state |>
         x -> clf.layer.layers[2](x).hidden_state
