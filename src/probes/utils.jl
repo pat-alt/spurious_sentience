@@ -72,6 +72,30 @@ Compute the root mean squared error of a model `mod` on the output `y` and predi
 """
 rmse(y, ŷ; weights::Union{Nothing,AbstractArray}=nothing) = sqrt(mse(y, ŷ; weights=weights))
 
+"""
+    r2(mod::Model, X, y)
+
+Compute the R² of a model `mod` on the input `X` and output `y`.
+"""
+function r2(mod::Model, X, y)
+    ȳ = mean(y)
+    _ssr = ssr(mod, X, y)
+    sst = sum((y .- ȳ) .^ 2)
+    return 1 - _ssr/sst
+end
+
+"""
+    r2(y, ŷ)
+
+Compute the R² of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+function r2(y, ŷ)
+    ȳ = mean(y)
+    _ssr = ssr(y, ŷ)
+    sst = sum((y .- ȳ) .^ 2)
+    return 1 - _ssr/sst
+end
+
 struct Probe <: Model
     β::Vector{Float64}
     intercept::Bool
@@ -187,11 +211,16 @@ Prepare the inflation data for a probe. This involves:
 function prepare_mkt_data(
     all_data::DataFrame,
     indicator::AbstractString="PPI",
-    maturity::Nothing=nothing,
+    maturity::Union{Missing,AbstractString}=missing,
 )
-    data = subset(all_data, :indicator => x -> x.==indicator)
+    if ismissing(maturity)
+        data = subset(all_data, :indicator => x -> x.==indicator)
+    else
+        data = subset(all_data, :indicator => x -> x.==indicator, :maturity =>  x -> x.==maturity, skipmissing=true)
+    end
     transform!(data, :date => ByRow(x -> Dates.yearmonth(x)) => :ym)
     data = groupby(data, :ym) |>
+        x -> transform(x, :value => mean => :value) |>
         x -> select(x, [:ym, :value]) |>
         unique |>
         x -> transform(x, :value => lag => :value_lag) |>
@@ -201,7 +230,7 @@ function prepare_mkt_data(
     replace!(data.growth, Inf => 0.0)
     select!(data, Not([:value]))
     rename!(data, :growth => :value)
-    
+    data = post_process_mkt_data(data)
     return data
 end
 
@@ -214,32 +243,9 @@ Post-process the market data for a probe. This involves:
 - Sorting the data.
 """
 function post_process_mkt_data(data::DataFrame)
-    select!(data, [:date, :ym, :sentence_id, :value, :event_type, :speaker])
+    data = data[.!isinf.(data.value), :]
+    data = data[.!isnan.(data.value), :]
+    select!(data, [:date, :ym, :sentence_id, :value, :event_type, :speaker, :indicator, :maturity])
     sort!(data, [:sentence_id, :date, :ym])
     return data
-end
-
-"""
-    prepare_mkt_data(all_data, maturity)
-
-Prepare the yield data for a probe. This involves:
-
-- Selecting the relevant columns.
-"""
-function prepare_mkt_data(
-    all_data::DataFrame,
-    indicator::AbstractString="UST", 
-    maturity::AbstractString="1 Mo",
-)
-    data = subset(all_data, :indicator => x -> x.==indicator, :maturity =>  x -> x.==maturity, skipmissing=true)
-    transform!(data, :date => ByRow(x -> Dates.yearmonth(x)) => :ym)
-    select!(data, [:date, :ym, :sentence_id, :value])
-    sort!(data, [:sentence_id,:ym])
-    return data
-end
-
-function agg_probe_results(data::DataFrame)
-    agg_data = groupby(data, :ym) |>
-        x -> combine(x, :value .=> mean; renamecols=false)
-    return agg_data
 end
