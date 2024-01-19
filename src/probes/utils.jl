@@ -29,16 +29,33 @@ end
 
 Compute the sum of squared residuals of a model `mod` on the input `X` and output `y`.
 """
-ssr(mod::Model, X, y) = sum((y .- predict(mod, X)) .^ 2)
+ssr(mod::Model, X, y) = ssr(y, predict(mod, X))
+
+"""
+    ssr(y, ŷ)
+
+Compute the sum of squared residuals of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+ssr(y, ŷ) = sum((y .- ŷ) .^ 2)
 
 """
     mse(mod::Model, X, y)
 
 Compute the mean squared error of a model `mod` on the input `X` and output `y`.
 """
-function mse(mod::Model, X, y)
-    ŷ = predict(mod, X)
-    return mean((y .- ŷ) .^ 2)
+mse(mod::Model, X, y; weights::Union{Nothing,AbstractArray}=nothing) = mse(y, predict(mod, X); weights=weights)
+
+"""
+    mse(y, ŷ)       
+
+Compute the mean squared error of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+function mse(y, ŷ; weights::Union{Nothing,AbstractArray}=nothing)
+    if isnothing(weights)
+        return mean((y .- ŷ) .^ 2)
+    else
+        return mean((y .- ŷ) .^ 2, Weights(weights))
+    end
 end
 
 """
@@ -46,7 +63,14 @@ end
 
 Compute the root mean squared error of a model `mod` on the input `X` and output `y`.
 """
-rmse(mod::Model, X, y) = sqrt(mse(mod, X, y))
+rmse(mod::Model, X, y; weights::Union{Nothing,AbstractArray}=nothing) = rmse(y, predict(mod, X); weights=weights)
+
+"""
+    rmse(y, ŷ)
+
+Compute the root mean squared error of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+rmse(y, ŷ; weights::Union{Nothing,AbstractArray}=nothing) = sqrt(mse(y, ŷ; weights=weights))
 
 struct Probe <: Model
     β::Vector{Float64}
@@ -212,4 +236,10 @@ function prepare_mkt_data(
     select!(data, [:date, :ym, :sentence_id, :value])
     sort!(data, [:sentence_id,:ym])
     return data
+end
+
+function agg_probe_results(data::DataFrame)
+    agg_data = groupby(data, :ym) |>
+        x -> combine(x, :value .=> mean; renamecols=false)
+    return agg_data
 end
