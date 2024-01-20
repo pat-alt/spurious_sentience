@@ -69,5 +69,19 @@ df_evals = stack(df_evals, [:cor, :mse, :rmse, :r2])
 CSV.write(joinpath(save_dir, "evaluations.csv"), df_evals)
 
 # Plot the results:
+ispath(joinpath(save_dir, "figures")) || mkdir(joinpath(save_dir, "figures"))
 df_evals = CSV.read(joinpath(save_dir, "evaluations.csv"), DataFrame)
 gdf = groupby(df_evals, [:indicator, :maturity]) 
+axis = (width=225, height=225)
+for g in gdf
+    g = DataFrame(g)
+    i = g.indicator[1]
+    m = g.maturity[1]
+    if !ismissing(m)
+        title = "$i ($m)"
+    else
+        title = i
+    end
+    plt = plot_measures(g, axis=axis)
+    save(joinpath(save_dir, "figures", "measures_$title.png"), plt, px_per_unit=3) 
+end
