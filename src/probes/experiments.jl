@@ -71,12 +71,3 @@ CSV.write(joinpath(save_dir, "evaluations.csv"), df_evals)
 # Plot the results:
 df_evals = CSV.read(joinpath(save_dir, "evaluations.csv"), DataFrame)
 gdf = groupby(df_evals, [:indicator, :maturity]) 
-
-plt = data(df) * mapping(:layer, :value, col=:variable, color=:model)
-layer = visual(Lines)
-axis = (width=225, height=225)
-draw(
-    layer * plt, 
-    facet=(; linkyaxes=:none),
-    axis=axis
-)

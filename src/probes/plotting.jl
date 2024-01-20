@@ -43,3 +43,36 @@ function plot_ts(
     )
     return plt
 end
+
+"""
+    plot_measures(
+        df::DataFrame;
+        axis=(width=225, height=225)
+    )
+
+Plot the evaluation measures against the layer number for a set of models.
+"""
+function plot_measures(
+    df::DataFrame;
+    axis=(width=225, height=225)
+)
+
+    # Title:
+    indicator = df.indicator[1]
+    maturity = df.maturity[1]
+    if !ismissing(maturity)
+        title = "$indicator ($maturity)"
+    else
+        title = "$indicator"
+    end
+
+    plt = data(df) * mapping(:layer, :value, col=:variable, color=:model)
+    layer = visual(Lines)
+    plt = draw(
+        layer * plt, 
+        facet=(; linkyaxes=:none),
+        axis=axis
+    )
+    plt.figure[0, :] = Label(plt.figure, title, fontsize=20)
+    return plt
+end
