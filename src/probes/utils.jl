@@ -263,9 +263,10 @@ function time_series_split(X::AbstractArray; n_splits::Int=5, return_vals::Bool=
     test_ids = []
     for i in 1:n_splits
         train_idx = i * n ÷ (n_splits + 1) + n % (n_splits + 1) |>
-            x -> 1:x
+            x -> 1:(x-1)
         test_idx = n ÷ (n_splits + 1) |>
-            x -> train_idx[end]+1:train_idx[end]+x
+            x -> train_idx[end]+1:minimum([train_idx[end]+x, n])
+        println((train_idx, test_idx))
         push!(train_ids, train_idx)
         push!(test_ids, test_idx)
         push!(train_vals, selectdim(X, dim, train_idx))
