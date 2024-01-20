@@ -14,7 +14,7 @@ function evaluate(agg_data, group_vars=[:model])
             :layer .=> unique => :layer,
             :indicator .=> unique => :indicator,
             :maturity .=> unique => :maturity,
-            [:y, :yhat] => ((y, yhat) -> StatsBase.cor([y yhat])[1, 2]) => :cor,
+            [:y, :yhat] => ((y, yhat) -> cor([y yhat])[1, 2]) => :cor,
             [:y, :yhat] => ((y, yhat) -> mse(y, yhat)) => :mse,
             [:y, :yhat] => ((y, yhat) -> rmse(y, yhat)) => :rmse,
             [:y, :yhat] => ((y, yhat) -> r2(y, yhat)) => :r2,

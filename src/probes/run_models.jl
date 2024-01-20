@@ -3,7 +3,7 @@ function run_models(
     indicator="PPI", 
     maturity=missing, 
     layer=24, 
-    use_head=false
+    use_head=false,
 )
 
     # Prepare market data:

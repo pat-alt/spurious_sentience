@@ -33,7 +33,7 @@ function plot_ts(
     end
     plt = plot(
         dates,
-        ts,
+        ts;
         label=[measure_name "AR($p)" "Probe (layer $layer)"],
         ylabel=measure_name,
         alpha=alpha,
