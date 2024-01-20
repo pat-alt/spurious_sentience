@@ -251,21 +251,22 @@ function post_process_mkt_data(data::DataFrame)
 end
 
 """
-    time_series_split(x::Vector; n_splits::Int=5, return_vals::Bool=false)
+    time_series_split(x::Vector; n_folds::Int=5, return_vals::Bool=false)
 
-Split a time series `x` into `n_splits` splits. If `return_vals` is `true`, return the splits as vectors, otherwise return the indices of the splits. Mimics the behaviour of `sklearn.model_selection.TimeSeriesSplit`: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html.
+Split a time series `x` into `n_folds` splits. If `return_vals` is `true`, return the splits as vectors, otherwise return the indices of the splits. Mimics the behaviour of `sklearn.model_selection.TimeSeriesSplit`: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html.
 """
-function time_series_split(X::AbstractArray; n_splits::Int=5, return_vals::Bool=false, dim::Int=1)
+function time_series_split(X::AbstractArray; n_folds::Int=5, return_vals::Bool=false, dim::Int=1)
     n = size(X, dim)
+    @assert n_folds + 1 < n "Number of folds must be less than the number of observations."
     train_vals = []
     test_vals = []
     train_ids = []
     test_ids = []
-    for i in 1:n_splits
-        train_idx = i * n ÷ (n_splits + 1) + n % (n_splits + 1) |>
+    for i in 1:n_folds
+        train_idx = i * n ÷ (n_folds + 1) + n % (n_folds + 1) |>
             x -> 1:(x-1)
-        test_idx = n ÷ (n_splits + 1) |>
-            x -> train_idx[end]+1:minimum([train_idx[end]+x, n])
+        test_idx = n ÷ (n_folds + 1) |>
+            x -> minimum([train_idx[end]+1,n]):minimum([train_idx[end]+x, n])
         println((train_idx, test_idx))
         push!(train_ids, train_idx)
         push!(test_ids, test_idx)
