@@ -249,3 +249,31 @@ function post_process_mkt_data(data::DataFrame)
     sort!(data, [:sentence_id, :date, :ym])
     return data
 end
+
+"""
+    time_series_split(x::Vector; n_splits::Int=5, return_vals::Bool=false)
+
+Split a time series `x` into `n_splits` splits. If `return_vals` is `true`, return the splits as vectors, otherwise return the indices of the splits. Mimics the behaviour of `sklearn.model_selection.TimeSeriesSplit`: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html.
+"""
+function time_series_split(X::AbstractArray; n_splits::Int=5, return_vals::Bool=false, dim::Int=1)
+    n = size(X, dim)
+    train_vals = []
+    test_vals = []
+    train_ids = []
+    test_ids = []
+    for i in 1:n_splits
+        train_idx = i * n ÷ (n_splits + 1) + n % (n_splits + 1) |>
+            x -> 1:x
+        test_idx = n ÷ (n_splits + 1) |>
+            x -> train_idx[end]+1:train_idx[end]+x
+        push!(train_ids, train_idx)
+        push!(test_ids, test_idx)
+        push!(train_vals, selectdim(X, dim, train_idx))
+        push!(test_vals, selectdim(X, dim, test_idx))
+    end
+    if return_vals
+        return train_ids, test_ids, train_vals, test_vals
+    else
+        return train_ids, test_ids
+    end
+end

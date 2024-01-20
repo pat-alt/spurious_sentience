@@ -4,6 +4,7 @@ function run_models(
     maturity=missing, 
     layer=24, 
     use_head=false,
+    cv::Union{Nothing,Int}=nothing,
 )
 
     # Prepare market data:
