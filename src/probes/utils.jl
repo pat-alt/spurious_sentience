@@ -249,3 +249,57 @@ function post_process_mkt_data(data::DataFrame)
     sort!(data, [:sentence_id, :date, :ym])
     return data
 end
+
+"""
+    time_series_split(
+        X::AbstractArray;
+        n_folds::Int=5,
+        min_train_prp::Float64=1/n_folds,
+    )
+
+Split a time series into training and test sets using explanding windows. The training set is always the first `min_train_prp` proportion of the data. The test set is then split into `n_folds` folds.
+"""
+function time_series_split(
+    X::AbstractArray;
+    n_folds::Int=5,
+    min_train_prp::Float64=1/n_folds,
+    return_vals::Bool=false,
+    dim::Int=1,
+)
+
+    # Return if n_folds == 1:
+    if n_folds == 1
+        @warn "Only one fold requested. Returning the entire dataset as the training set and an empty test set."
+        if return_vals
+            return zip([X], [[]])
+        else
+            return zip([[1:size(X, dim)]], [[]])
+        end
+    end
+
+    # Check inputs:
+    n = size(X, dim)
+    @assert min_train_prp >= 1/n_folds "Minimum training proportion must be at least 1/n_folds."
+    @assert n_folds < n "Number of folds must be less than the number of observations."
+
+    # Compute the first training set end:
+    first_train_end = Int(ceil(min_train_prp * n))
+    @assert n - first_train_end >= n_folds "Minimum training proportion is too large."
+
+    # Compute ids:
+    first_test_start = first_train_end + 1
+    test_size = Int(ceil((n - first_test_start + 1)/n_folds))
+    test_ids = Base.Iterators.partition(first_test_start:n, test_size) |> collect
+    length(test_ids) == n_folds || @warn "Could only create $(length(test_ids)) folds for given specifications. Try adjusting the minimum training proportion."
+    train_ids = [1:(minimum(x)-1) for x in test_ids]
+
+    # Return:
+    if return_vals
+        train_vals = [selectdim(X, dim, i) for i in train_ids]
+        test_vals = [selectdim(X, dim, i) for i in test_ids]
+        output = zip(train_vals, test_vals)
+        return output
+    else
+        return zip(train_ids, test_ids)
+    end
+end

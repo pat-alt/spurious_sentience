@@ -66,8 +66,17 @@ function plot_measures(
         title = "$indicator"
     end
 
-    plt = data(df) * mapping(:layer, :value, col=:variable, color=:model)
-    layer = visual(Lines)
+    # Upper and lower bounds:
+    df = transform(df, [:value, :std] => ByRow((x, s) -> (x + s, x - s)) => [:lb, :ub])
+    df = df[.!isnan.(df.value), :]
+    plt = data(df) * mapping(
+        :layer, :value, 
+        lower=:lb, upper=:ub,
+        row=:split,
+        col=:variable, 
+        color=:model => x -> x=="y_bl" ? "AR" : "Probe",
+    )
+    layer = visual(LinesFill)
     plt = draw(
         layer * plt, 
         facet=(; linkyaxes=:none),
