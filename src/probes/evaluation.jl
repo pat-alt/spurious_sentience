@@ -1,4 +1,4 @@
-function evaluate(agg_data, group_vars=[:model])
+function evaluate(agg_data, group_vars=[:model, :fold, :split])
     res = groupby(agg_data, vcat([:ym], group_vars)) |>
         x -> combine(
             x,
