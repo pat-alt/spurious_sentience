@@ -257,7 +257,7 @@ end
         min_train_prp::Float64=1/n_folds,
     )
 
-Split a time series into training and test sets. The training set is always the first `min_train_prp` proportion of the data. The test set is then split into `n_folds` folds.
+Split a time series into training and test sets using explanding windows. The training set is always the first `min_train_prp` proportion of the data. The test set is then split into `n_folds` folds.
 """
 function time_series_split(
     X::AbstractArray;

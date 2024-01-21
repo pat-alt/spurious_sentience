@@ -20,7 +20,8 @@ all_data = load_all_data()
 save_dir = "results"
 interim_dir = joinpath(save_dir, "interim")
 ispath(interim_dir) || mkdir(interim_dir)
-last_saved = maximum(sort(parse.(Int, filter.(isdigit, readdir(interim_dir)))))
+all_saved = sort(parse.(Int, filter.(isdigit, readdir(interim_dir))))
+last_saved = length(all_saved) > 0 ? maximum(all_saved) : 0
 
 # Parameter grid:
 use_head = [false, true]
@@ -59,13 +60,15 @@ end
 results = vcat(results...)
 
 # Save the results:
-CSV.write(joinpath(save_dir, "results.csv"), results, append=true)
+CSV.write(
+    joinpath(save_dir, "results.csv"), results, 
+    append=ifelse(isfile(joinpath(save_dir, "results.csv")), true, false)
+)
 
 # Evaluate the results:
 results = CSV.read(joinpath(save_dir, "results.csv"), DataFrame)
 gdf = groupby(results, [:indicator, :maturity, :layer]) 
 df_evals = vcat([evaluate(DataFrame(g)) for g in gdf]...)
-df_evals = stack(df_evals, [:cor, :mse, :rmse, :r2])
 CSV.write(joinpath(save_dir, "evaluations.csv"), df_evals)
 
 # Plot the results:
