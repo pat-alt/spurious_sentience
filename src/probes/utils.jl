@@ -251,31 +251,34 @@ function post_process_mkt_data(data::DataFrame)
 end
 
 """
-    time_series_split(x::Vector; n_folds::Int=5, return_vals::Bool=false)
+    time_series_split(
+        X::AbstractArray;
+        n_folds::Int=5,
+        min_train_prp::Float64=1/n_folds,
+    )
 
-Split a time series `x` into `n_folds` splits. If `return_vals` is `true`, return the splits as vectors, otherwise return the indices of the splits. Mimics the behaviour of `sklearn.model_selection.TimeSeriesSplit`: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html.
+Split a time series into training and test sets. The training set is always the first `min_train_prp` proportion of the data. The test set is then split into `n_folds` folds.
 """
-function time_series_split(X::AbstractArray; n_folds::Int=5, return_vals::Bool=false, dim::Int=1)
-    n = size(X, dim)
-    @assert n_folds + 1 < n "Number of folds must be less than the number of observations."
-    train_vals = []
-    test_vals = []
-    train_ids = []
-    test_ids = []
-    for i in 1:n_folds
-        train_idx = i * n ÷ (n_folds + 1) + n % (n_folds + 1) |>
-            x -> 1:(x-1)
-        test_idx = n ÷ (n_folds + 1) |>
-            x -> minimum([train_idx[end]+1,n]):minimum([train_idx[end]+x, n])
-        println((train_idx, test_idx))
-        push!(train_ids, train_idx)
-        push!(test_ids, test_idx)
-        push!(train_vals, selectdim(X, dim, train_idx))
-        push!(test_vals, selectdim(X, dim, test_idx))
-    end
-    if return_vals
-        return train_ids, test_ids, train_vals, test_vals
-    else
-        return train_ids, test_ids
-    end
+function time_series_split(
+    X::AbstractArray;
+    n_folds::Int=5,
+    min_train_prp::Float64=1/n_folds,
+)
+
+    n = size(X, 1)
+    @assert min_train_prp >= 1/n_folds "Minimum training proportion must be at least 1/n_folds."
+    @assert n_folds < n "Number of folds must be less than the number of observations."
+
+    # Compute the first training set end:
+    first_train_end = Int(ceil(min_train_prp * n))
+    @assert n - first_train_end >= n_folds "Minimum training proportion is too large."
+
+    # Compute ids:
+    first_test_start = first_train_end + 1
+    test_size = Int(ceil((n - first_test_start + 1)/n_folds))
+    test_ids = Base.Iterators.partition(first_test_start:n, test_size) |> collect
+    length(test_ids) == n_folds || @warn "Could only create $(length(test_ids)) folds for given specifications. Try adjusting the minimum training proportion."
+    train_ids = [1:(minimum(x)-1) for x in test_ids]
+
+    return train_ids, test_ids
 end
