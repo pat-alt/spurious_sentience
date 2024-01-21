@@ -263,9 +263,22 @@ function time_series_split(
     X::AbstractArray;
     n_folds::Int=5,
     min_train_prp::Float64=1/n_folds,
+    return_vals::Bool=false,
+    dim::Int=1,
 )
 
-    n = size(X, 1)
+    # Return if n_folds == 1:
+    if n_folds == 1
+        @warn "Only one fold requested. Returning the entire dataset as the training set and test set."
+        if return_vals
+            return [X], [X]
+        else
+            return [[1:size(X, dim)]], [[1:size(X, dim)]]
+        end
+    end
+
+    # Check inputs:
+    n = size(X, dim)
     @assert min_train_prp >= 1/n_folds "Minimum training proportion must be at least 1/n_folds."
     @assert n_folds < n "Number of folds must be less than the number of observations."
 
@@ -280,5 +293,12 @@ function time_series_split(
     length(test_ids) == n_folds || @warn "Could only create $(length(test_ids)) folds for given specifications. Try adjusting the minimum training proportion."
     train_ids = [1:(minimum(x)-1) for x in test_ids]
 
-    return train_ids, test_ids
+    # Return:
+    if return_vals
+        train_vals = [selectdim(X, dim, i) for i in train_ids]
+        test_vals = [selectdim(X, dim, i) for i in test_ids]
+        return train_vals, test_vals
+    else
+        return train_ids, test_ids
+    end
 end
