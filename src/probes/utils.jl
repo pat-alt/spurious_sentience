@@ -269,11 +269,11 @@ function time_series_split(
 
     # Return if n_folds == 1:
     if n_folds == 1
-        @warn "Only one fold requested. Returning the entire dataset as the training set and test set."
+        @warn "Only one fold requested. Returning the entire dataset as the training set and an empty test set."
         if return_vals
-            return [X], [X]
+            return zip([X], [[]])
         else
-            return [[1:size(X, dim)]], [[1:size(X, dim)]]
+            return zip([[1:size(X, dim)]], [[]])
         end
     end
 
