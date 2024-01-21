@@ -4,21 +4,36 @@ function run_models(
     maturity=missing, 
     layer=24, 
     use_head=false,
-    n_folds::Union{Nothing,Int}=nothing,
+    n_folds::Int=1,
 )
 
     # Prepare market data:
     mkt_data = prepare_mkt_data(all_data, indicator, maturity)
+    time_stamps = unique(sort(mkt_data.ym))
+    ts_splits = time_series_split(time_stamps; n_folds=n_folds, return_vals=true) |> collect
 
-    # Run the baseline on the aggregated data:
-    agg_data = groupby(mkt_data, :ym) |>
-        x -> combine(x, :value .=> mean; renamecols=false)
-    _y = agg_data.value
-    p = lag_select(_y)
-    mod_bl, _X = ar(_y; l=p)
-    y_bl = mod_bl(_X)
-    agg_data.y_bl .= y_bl
-    agg_data.p .= p
+    # Run models for each split:
+    res = []
+    for (i, (train, test)) in enumerate(ts_splits)
+        
+        println("Running experiment $i of $(size(ts_splits)[1])")
+
+        # Run the baseline on the aggregated data:
+        agg_data = groupby(mkt_data, :ym) |>
+            x -> combine(x, :value .=> mean; renamecols=false)
+        y_train = agg_data[findall(in(train), agg_data.ym), :].value
+        p = lag_select(_y)
+        mod_bl, _X = ar(_y; l=p)
+        y_bl = mod_bl(_X)
+        agg_data.y_bl .= y_bl
+        agg_data.p .= p
+
+
+
+        push!(res, _res)
+    end
+
+    
 
     # Prepare the data for the probe:
     if use_head

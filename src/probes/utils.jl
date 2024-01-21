@@ -297,8 +297,9 @@ function time_series_split(
     if return_vals
         train_vals = [selectdim(X, dim, i) for i in train_ids]
         test_vals = [selectdim(X, dim, i) for i in test_ids]
-        return train_vals, test_vals
+        output = zip(train_vals, test_vals)
+        return output
     else
-        return train_ids, test_ids
+        return zip(train_ids, test_ids)
     end
 end
