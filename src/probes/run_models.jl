@@ -7,6 +7,8 @@ function run_models(
     n_folds::Int=5,
     λ::Real=0.1,
     min_train_prp::Float64=0.75,
+    n_pc::Union{Nothing,Int}=nothing,
+    return_meta::Bool=false,
 )
 
     # Prepare market data:
@@ -25,14 +27,17 @@ function run_models(
         X_probe, y_probe = prepare_probe(mkt_data)
         model = load_model(; use_head=use_head)
         clf = model.mod.cls
-        X = vcat([get_clf_activations(clf, x)' for x in eachrow(X_probe)]...)
+        X_probe = vcat([get_clf_activations(clf, x)' for x in eachrow(X_probe)]...)
     else
         X_probe, y_probe = prepare_probe(mkt_data; layer=layer)
     end
+
     mkt_data.layer .= layer
 
     # Run models for each split:
     res = []
+    probes = []
+    probe_data = []
     for (i, (train, test)) in enumerate(ts_splits)
         _mkt_data = deepcopy(mkt_data)
         # Run the baseline on the aggregated data:
@@ -58,7 +63,20 @@ function run_models(
 
         # Run the probe:
         X_train, y_train = X_probe[_mkt_data.split .== "train", :], y_probe[_mkt_data.split .== "train"]
+        # Reduce the dimensionality of the probe data:
+        if !isnothing(n_pc)
+            # Run PCA on the training data:
+            U, Σ, V = svd(X_train)
+            X_train = U[:, 1:n_pc]
+            # Project all probe data:
+            X_probe = X_probe * inv(diagm(Σ) * V') |>
+                x -> x[:, 1:n_pc]
+            push!(probe_data, (X=X_train, Σ=Σ, V=V))
+        else
+            push!(probe_data, (X=X_train,))
+        end
         mod = probe(X_train, y_train; λ=λ)
+        push!(probes, mod)
         yhat = mod(X_probe)
         _mkt_data[:, :y_probe] .= yhat
 
@@ -77,6 +95,7 @@ function run_models(
         rename!(agg_data, :value => :y)
         agg_data.indicator .= indicator
         agg_data.maturity .= maturity
+        agg_data.n_pc .= isnothing(n_pc) ? missing : n_pc
 
         # Stack:
         agg_data = stack(agg_data, [:y_probe, :y_bl], variable_name=:model, value_name=:yhat) |>
@@ -87,7 +106,11 @@ function run_models(
 
     res = vcat(res...)
 
-    return res
+    if return_meta
+        return res, probes, probe_data
+    else
+        return res
+    end
 
 end
 
