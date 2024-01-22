@@ -24,6 +24,7 @@ all_saved = sort(parse.(Int, filter.(isdigit, readdir(interim_dir))))
 last_saved = length(all_saved) > 0 ? maximum(all_saved) : 0
 
 # Parameter grid:
+n_pcs = [nothing, 128]
 use_head = [false, true]
 indicator = ["PPI", "CPI", "UST"]
 maturity = ["1 Mo", "1 Yr", "10 Yr"]
@@ -33,9 +34,9 @@ for ind in indicator
     for (i,_head) in enumerate(use_head)
         _mat = ind != "UST" ? [missing] : maturity
         _layer = _head ? [25] : layer
-        grid = Base.Iterators.product(_head, _mat, _layer) |> 
+        grid = Base.Iterators.product(_head, _mat, _layer, n_pcs) |> 
             collect |>
-            x -> DataFrame(vec(x), [:use_head, :maturity, :layer])
+            x -> DataFrame(vec(x), [:use_head, :maturity, :layer, :n_pc])
         grid.indicator .= ind
         push!(grids, grid)
     end
@@ -52,7 +53,8 @@ for (i, row) in enumerate(eachrow(grid))
         indicator=row.indicator, 
         maturity=row.maturity, 
         layer=row.layer, 
-        use_head=row.use_head
+        use_head=row.use_head,
+        n_pc=row.n_pc,
     )
     CSV.write(joinpath(interim_dir, "results_$i.csv"), _results)
     push!(results, _results)

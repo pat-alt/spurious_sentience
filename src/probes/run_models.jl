@@ -7,6 +7,7 @@ function run_models(
     n_folds::Int=5,
     λ::Real=0.1,
     min_train_prp::Float64=0.75,
+    n_pc::Union{Nothing,Int}=nothing,
 )
 
     # Prepare market data:
@@ -25,10 +26,17 @@ function run_models(
         X_probe, y_probe = prepare_probe(mkt_data)
         model = load_model(; use_head=use_head)
         clf = model.mod.cls
-        X = vcat([get_clf_activations(clf, x)' for x in eachrow(X_probe)]...)
+        X_probe = vcat([get_clf_activations(clf, x)' for x in eachrow(X_probe)]...)
     else
         X_probe, y_probe = prepare_probe(mkt_data; layer=layer)
     end
+
+    # Reduce the dimensionality of the probe data:
+    if !isnothing(n_pc)
+        U, Σ, V = svd(X_probe)
+        X_probe = U[:, 1:n_pc]
+    end
+
     mkt_data.layer .= layer
 
     # Run models for each split:
@@ -77,6 +85,7 @@ function run_models(
         rename!(agg_data, :value => :y)
         agg_data.indicator .= indicator
         agg_data.maturity .= maturity
+        agg_data.n_pc .= isnothing(n_pc) ? missing : n_pc
 
         # Stack:
         agg_data = stack(agg_data, [:y_probe, :y_bl], variable_name=:model, value_name=:yhat) |>
