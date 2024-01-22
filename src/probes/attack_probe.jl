@@ -37,19 +37,19 @@ function text_to_probe(tfm::BaselineModel, mod::Probe, query::Vector{<:AbstractS
     return yhat
 end
 
-high_inf_text = "Consumer prices are at all time highs.;Inflation is expected to rise further.;The Fed is expected to raise interest rates to curb inflation.;Excessively loose monetary policy is the cause of the inflation.;It is essential to bring inflation back to target to avoid drifting into hyperinflation territory."
+high_inf_text = "Consumer prices are at all-time highs.;Inflation is expected to rise further.;The Fed is expected to raise interest rates to curb inflation.;Excessively loose monetary policy is the cause of the inflation.;It is essential to bring inflation back to target to avoid drifting into hyperinflation territory."
 high_inf_query = split(high_inf_text, ";") |> 
     x -> String.(x)
 
-hawk_text = "The number of hawks is at all time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise extremely high barriers to curb hawk migration.;Excessively loose hawk immigration policy is the cause of the inflation in the number of hawks.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory."
+hawk_text = "The number of hawks is at all-time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise extremely high barriers to curb hawk migration.;Excessively loose immigration policy for hawks is the likely cause of their numbers being so far above target.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory."
 hawk_query = split(hawk_text, ";") |>
     x -> String.(x)
 
-low_inf_text = "Consumer prices are at all time lows.;Inflation is expected to fall further.;The Fed is expected to lower interest rates to boost inflation.;Excessively tight monetary policy is the cause of the low inflation.;It is essential to bring inflation back to target to avoid drifting into deflation territory."
+low_inf_text = "Consumer prices are at all-time lows.;Inflation is expected to fall further.;The Fed is expected to lower interest rates to boost inflation.;Excessively tight monetary policy is the cause of deflationary pressures.;It is essential to bring inflation back to target to avoid drifting into deflation territory."
 low_inf_query = split(low_inf_text, ";") |>
     x -> String.(x)
 
-dove_text = "The number of doves is at all time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry to doves.;Excessively tight dove immigration policy is the likely cause of their low supply in local areas.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory."
+dove_text = "The number of doves is at all-time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry to doves.;Excessively tight immigration policy for doves is the likely cause of their numbers being so far below target.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory."
 
 dove_query = split(dove_text, ";") |>
     x -> String.(x)
