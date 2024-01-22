@@ -6,6 +6,7 @@ using Dates
 using Plots
 using Statistics
 using StatsBase: cor, Weights
+using Transformers
 using TrillionDollarWords
 
 include("utils.jl")
@@ -76,17 +77,14 @@ CSV.write(joinpath(save_dir, "evaluations.csv"), df_evals)
 # Plot the results:
 ispath(joinpath(save_dir, "figures")) || mkdir(joinpath(save_dir, "figures"))
 df_evals = CSV.read(joinpath(save_dir, "evaluations.csv"), DataFrame)
-gdf = groupby(df_evals, [:indicator, :maturity]) 
+gdf = groupby(df_evals, [:indicator, :maturity, :n_pc]) 
 axis = (width=225, height=225)
 for g in gdf
     g = DataFrame(g)
     i = g.indicator[1]
-    m = g.maturity[1]
-    if !ismissing(m)
-        title = "$i ($m)"
-    else
-        title = i
-    end
+    m = g.maturity[1] |> x -> ismissing(x) ? "" : " ($x)"
+    n_pc = g.n_pc[1] |> x -> ismissing(x) ? "" : " (n_pc=$x)"
+    title = "$i$m$n_pc"
     plt = plot_measures(g, axis=axis)
     save(joinpath(save_dir, "figures", "measures_$title.png"), plt, px_per_unit=3) 
 end

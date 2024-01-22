@@ -1,4 +1,8 @@
-function evaluate(agg_data, group_vars=[:model, :fold, :split])
+function evaluate(
+    agg_data; 
+    group_vars=[:model, :fold, :split, :n_pc],
+    agg_vars=[:indicator, :maturity, :layer, :split, :n_pc, :variable, :model]
+)
     res = groupby(agg_data, vcat([:ym], group_vars)) |>
         x -> combine(
             x,
@@ -21,8 +25,8 @@ function evaluate(agg_data, group_vars=[:model, :fold, :split])
             [:y, :yhat] => ((y, yhat) -> rmse(y, yhat)) => :rmse
         )
     res = stack(res, [:cor, :mse, :rmse]) |>
-        x -> groupby(x, [:indicator, :maturity, :layer, :split, :n_pc, :model, :variable]) |>
+        x -> groupby(x, agg_vars) |>
         x -> combine(x, :value => mean => :value, :value => std => :std) |>
-        x -> sort(x, [:indicator, :maturity, :layer, :split, :n_pc, :variable, :model])
+        x -> sort(x, agg_vars)
     return res
 end
