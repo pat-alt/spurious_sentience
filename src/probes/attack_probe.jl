@@ -1,7 +1,15 @@
 n_pc = 128
 layer = 24
-agg_data, probes, probe_data = run_models(all_data; n_pc=n_pc, return_meta=true, layer=layer)
-best_res = evaluate(agg_data, agg_vars=[:indicator, :maturity, :layer, :split, :fold, :n_pc, :variable, :model]) |>
+indicator = "CPI"
+agg_data, probes, probe_data = run_models(
+    all_data; 
+    n_pc=n_pc, 
+    return_meta=true, 
+    layer=layer, 
+    indicator=indicator
+)
+agg_vars = [:indicator, :maturity, :layer, :split, :fold, :n_pc, :variable, :model]
+best_res = evaluate(agg_data, agg_vars=agg_vars) |>
     df -> subset(
         df, 
         :split => x -> x .== "test",
@@ -59,9 +67,9 @@ queries = zip([high_inf_query, hawk_query, low_inf_query, dove_query], ["high_in
 df_pred = []
 for (query,name) in queries
     df = DataFrame(
-        query = query,
-        level = cumsum(text_to_probe(tfm, mod, query)),
-        sentence = 1:length(query),
+        query = [missing,query...],
+        level = [0,cumsum(text_to_probe(tfm, mod, query))...],
+        sentence = 0:length(query),
         cat = name,
         dir = name ∈ ["high_inf", "hawk"] ? "Up" : "Down",
         topic = name ∈ ["high_inf", "low_inf"] ? "Prices" : "Birds"
@@ -70,16 +78,19 @@ for (query,name) in queries
 end
 df_pred = vcat(df_pred...)
 
-plt = data(df_pred) * mapping(
+df_plt = data(df_pred) * mapping(
     :sentence => "Sentence", 
-    :level => "CPI Level",
+    :level => "Predicted CPI\n(cumulative change)",
     color=:dir => "Direction",
     linestyle=:topic => "Topic",
 )
-layer = visual(Lines)
+layers = visual(Lines) + visual(Scatter)
 plt = draw(
-    layer * plt,
-    axis=(width=225, height=225)
+    layers * df_plt,
+    axis=(
+        xticks=1:5,
+        width=300, height=300
+    )
 )
 save(joinpath(save_dir, "figures", "attack.png"), plt, px_per_unit=3)
 
