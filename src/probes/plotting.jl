@@ -31,7 +31,7 @@ function plot_ts(
     if !ismissing(maturity)
         measure_name = "$measure_name ($maturity)"
     end
-    plt = plot(
+    plt = Plots.plot(
         dates,
         ts;
         label=[measure_name "AR($p)" "Probe (layer $layer)"],

@@ -39,7 +39,8 @@ function run_models(
     probes = []
     probe_data = []
     for (i, (train, test)) in enumerate(ts_splits)
-        _mkt_data = deepcopy(mkt_data)
+        _mkt_data = deepcopy(mkt_data) |>
+            x -> sort(x, [:sentence_id, :ym, :event_type, :speaker])
         # Run the baseline on the aggregated data:
         agg_data = groupby(_mkt_data, :ym) |>
             x -> combine(x, :value .=> mean; renamecols=false) |>
@@ -69,15 +70,15 @@ function run_models(
             U, Σ, V = svd(X_train)
             X_train = U[:, 1:n_pc]
             # Project all probe data:
-            X_probe = X_probe * inv(diagm(Σ) * V') |>
+            X_all = X_probe * inv(diagm(Σ) * V') |>
                 x -> x[:, 1:n_pc]
-            push!(probe_data, (X=X_train, Σ=Σ, V=V))
+            push!(probe_data, (data=_mkt_data, X=X_all, Σ=Σ, V=V))
         else
-            push!(probe_data, (X=X_train,))
+            push!(probe_data, (data=_mkt_data, X=X_all,))
         end
         mod = probe(X_train, y_train; λ=λ)
         push!(probes, mod)
-        yhat = mod(X_probe)
+        yhat = mod(X_all)
         _mkt_data[:, :y_probe] .= yhat
 
         # Aggregate the probe results:

@@ -245,7 +245,7 @@ Post-process the market data for a probe. This involves:
 function post_process_mkt_data(data::DataFrame)
     data = data[.!isinf.(data.value), :]
     data = data[.!isnan.(data.value), :]
-    select!(data, [:date, :ym, :sentence_id, :value, :event_type, :speaker, :indicator, :maturity])
+    select!(data, [:date, :ym, :sentence_id, :sentence, :value, :event_type, :speaker, :indicator, :maturity])
     sort!(data, [:sentence_id, :date, :ym])
     return data
 end

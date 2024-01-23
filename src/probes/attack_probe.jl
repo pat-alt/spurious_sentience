@@ -1,98 +1,101 @@
-n_pc = 128
-layer = 24
-indicator = "CPI"
-agg_data, probes, probe_data = run_models(
-    all_data; 
-    n_pc=n_pc, 
-    return_meta=true, 
-    layer=layer, 
-    indicator=indicator
+"""
+    get_best_probe(
+        agg_data, probes, probe_data;
+        agg_vars=[:indicator, :maturity, :layer, :split, :fold, :n_pc, :variable, :model],
+        eval_var="rmse"
+    )
+
+Get the best probe based on the evaluation metric `eval_var`.
+"""
+function get_best_probe(
+    agg_data, probes, probe_data;
+    agg_vars=[:indicator, :maturity, :layer, :split, :fold, :n_pc, :variable, :model],
+    eval_var="rmse"
 )
-agg_vars = [:indicator, :maturity, :layer, :split, :fold, :n_pc, :variable, :model]
-best_res = evaluate(agg_data, agg_vars=agg_vars) |>
-    df -> subset(
-        df, 
-        :split => x -> x .== "test",
-        :variable => x -> x .== "rmse",
-        :model => x -> x .== "y_probe"
-    ) |>
-    df -> argmin(df.value) 
-mod = probes[best_res]
-X, Σ, V = probe_data[best_res]
+    best_res = evaluate(agg_data, agg_vars=agg_vars) |>
+        df -> subset(
+            df, 
+            :split => x -> x .== "test",
+            :variable => x -> x .== String(eval_var),
+            :model => x -> x .== "y_probe"
+        ) |>
+        df -> argmin(df.value) 
+    mod = probes[best_res]
+    data, X, Σ, V = probe_data[best_res]
+    return mod, data, X, Σ, V
+end
 
 """
     encode_pca(X, Σ, V)
 
 Encode a matrix `X` using the principal components `Σ` and `V` from a previous PCA.
 """
-encode_pca(X, Σ=Σ, V=V) = X * inv(diagm(Σ) * V')
-
-tfm = load_model(; load_head=false)
+encode_pca(X, Σ, V) = X * inv(diagm(Σ) * V')
 
 """
     text_to_probe(tfm, probe, query)
 
 Run a probe on a query. First, the query is transformed using the transformer `tfm`. Then, the PCA is applied to the query. Finally, the probe is run on the PCA-encoded query.
 """
-function text_to_probe(tfm::BaselineModel, mod::Probe, query::Vector{<:AbstractString})
+function text_to_probe(
+    tfm::BaselineModel, mod::Probe, query::Vector{<:AbstractString}; 
+    n_pc=n_pc, Σ=Σ, V=V
+)
+    # Get the word embeddings:
+    X = embed_text(tfm, query)
+    return embedding_to_probe(mod, X; n_pc=n_pc, Σ=Σ, V=V)
+end
+
+"""
+    embedd_text(tfm::BaselineModel, query::Vector{<:AbstractString})
+
+Embed a query using a transformer `tfm`.
+"""
+function embed_text(tfm::BaselineModel, query::Vector{<:AbstractString})
     # Get the word embeddings:
     X = tfm(query) |>
-        x -> Transformers.HuggingFace.FirstTokenPooler()(x.hidden_state)
+        x -> Transformers.HuggingFace.FirstTokenPooler()(x.hidden_state) |>
+        x -> Matrix(x')
+    return X
+end
+
+"""
+    embedding_to_probe(mod::Probe, X::Matrix{<:Real}; n_pc=n_pc)
+
+Run a probe on a matrix of word embeddings `X`. First, the PCA is applied to the query. Finally, the probe is run on the PCA-encoded query.
+"""
+function embedding_to_probe(
+    mod::Probe, X::Matrix{<:Real}; 
+    n_pc=n_pc, Σ=Σ, V=V
+)
     # Encode using the PCA:
-    X = encode_pca(X')[:, 1:n_pc]
+    X = encode_pca(X, Σ, V) |>
+        x -> x[:, 1:n_pc]
     # Run the probe:
     yhat = mod(X)
     return yhat
 end
 
-high_inf_text = "Consumer prices are at all-time highs.;Inflation is expected to rise further.;The Fed is expected to raise interest rates to curb inflation.;Excessively loose monetary policy is the cause of the inflation.;It is essential to bring inflation back to target to avoid drifting into hyperinflation territory."
-high_inf_query = split(high_inf_text, ";") |> 
-    x -> String.(x)
+"""
+    plot_attack(df_pred::DataFrame)
 
-hawk_text = "The number of hawks is at all-time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise extremely high barriers to curb hawk migration.;Excessively loose immigration policy for hawks is the likely cause of their numbers being so far above target.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory."
-hawk_query = split(hawk_text, ";") |>
-    x -> String.(x)
-
-low_inf_text = "Consumer prices are at all-time lows.;Inflation is expected to fall further.;The Fed is expected to lower interest rates to boost inflation.;Excessively tight monetary policy is the cause of deflationary pressures.;It is essential to bring inflation back to target to avoid drifting into deflation territory."
-low_inf_query = split(low_inf_text, ";") |>
-    x -> String.(x)
-
-dove_text = "The number of doves is at all-time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry to doves.;Excessively tight immigration policy for doves is the likely cause of their numbers being so far below target.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory."
-
-dove_query = split(dove_text, ";") |>
-    x -> String.(x)
-
-queries = zip([high_inf_query, hawk_query, low_inf_query, dove_query], ["high_inf", "hawk", "low_inf", "dove"])
-
-df_pred = []
-for (query,name) in queries
-    df = DataFrame(
-        query = [missing,query...],
-        level = [0,cumsum(text_to_probe(tfm, mod, query))...],
-        sentence = 0:length(query),
-        cat = name,
-        dir = name ∈ ["high_inf", "hawk"] ? "Up" : "Down",
-        topic = name ∈ ["high_inf", "low_inf"] ? "Prices" : "Birds"
+Plot the attack results.
+"""
+function plot_attack(df_pred::DataFrame)
+    df_plt = data(df_pred) * mapping(
+        col = :indicator,
+        :dir => "Direction",
+        :level => "ŷ - mean(ŷ)",
+        color=:topic => "Topic",
+        dodge=:topic => "Topic",
     )
-    push!(df_pred, df)
+    layers = visual(BoxPlot)
+    plt = draw(
+        layers * df_plt,
+        facet=(; linkyaxes=:none),
+        axis=(width=300, height=300)
+    )
 end
-df_pred = vcat(df_pred...)
-
-df_plt = data(df_pred) * mapping(
-    :sentence => "Sentence", 
-    :level => "Predicted CPI\n(cumulative change)",
-    color=:dir => "Direction",
-    linestyle=:topic => "Topic",
-)
-layers = visual(Lines) + visual(Scatter)
-plt = draw(
-    layers * df_plt,
-    axis=(
-        xticks=1:5,
-        width=300, height=300
-    )
-)
-save(joinpath(save_dir, "figures", "attack.png"), plt, px_per_unit=3)
 
 
 
