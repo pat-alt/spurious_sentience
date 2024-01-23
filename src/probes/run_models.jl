@@ -61,6 +61,7 @@ function run_models(
 
         # Assign the split (train/test):
         transform!(_mkt_data, :ym => ByRow(x -> in(x, train) ? "train" : "test") => :split)
+        sort!(_mkt_data, [:sentence_id, :ym, :event_type, :speaker])
 
         # Run the probe:
         X_train, y_train = X_probe[_mkt_data.split .== "train", :], y_probe[_mkt_data.split .== "train"]
@@ -72,9 +73,9 @@ function run_models(
             # Project all probe data:
             X_all = X_probe * inv(diagm(Σ) * V') |>
                 x -> x[:, 1:n_pc]
-            push!(probe_data, (data=_mkt_data, X=X_all, Σ=Σ, V=V))
+            push!(probe_data, (X=X_train, Σ=Σ, V=V))
         else
-            push!(probe_data, (data=_mkt_data, X=X_all,))
+            push!(probe_data, (X=X_train,))
         end
         mod = probe(X_train, y_train; λ=λ)
         push!(probes, mod)

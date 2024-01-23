@@ -21,8 +21,8 @@ function get_best_probe(
         ) |>
         df -> argmin(df.value) 
     mod = probes[best_res]
-    data, X, Σ, V = probe_data[best_res]
-    return mod, data, X, Σ, V
+    X, Σ, V = probe_data[best_res]
+    return mod, X, Σ, V
 end
 
 """
@@ -86,7 +86,7 @@ function plot_attack(df_pred::DataFrame)
     if length(unique(df_pred.indicator)) == 1
         _map = mapping(
             :dir => "Direction",
-            :level => "ŷ - mean(ŷ)",
+            :level => "f(x) - 𝔼[f(ϵ)]",
             color=:topic => "Topic",
             dodge=:topic => "Topic",
         )
@@ -94,7 +94,7 @@ function plot_attack(df_pred::DataFrame)
         _map = mapping(
             col = :indicator,
             :dir => "Direction",
-            :level => "ŷ - mean(ŷ)",
+            :level => "f(x) - 𝔼[f(ϵ)]",
             color=:topic => "Topic",
             dodge=:topic => "Topic",
         )
