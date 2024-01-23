@@ -102,7 +102,7 @@ high_inf_text = "Consumer prices are at all-time highs.;Inflation is expected to
 high_inf_query = split(high_inf_text, ";") |>
     x -> String.(x)
 
-hawk_text = "The number of hawks is at all-time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise extremely high barriers to curb hawk migration.;Excessively loose migration policy for hawks is the likely cause of their numbers being so far above target.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory."
+hawk_text = "The number of hawks is at all-time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise barriers of entry for hawks to bring their numbers back down to the target level.;Excessively loose migration policy for hawks is the likely cause of their numbers being so far above target.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory."
 hawk_query = split(hawk_text, ";") |>
     x -> String.(x)
 
@@ -110,7 +110,7 @@ low_inf_text = "Consumer prices are at all-time lows.;Inflation is expected to f
 low_inf_query = split(low_inf_text, ";") |>
     x -> String.(x)
 
-dove_text = "The number of doves is at all-time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry to doves.;Excessively tight migration policy for doves is the likely cause of their numbers being so far below target.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory."
+dove_text = "The number of doves is at all-time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry for doves to bring their numbers back up to the target level.;Excessively tight migration policy for doves is the likely cause of their numbers being so far below target.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory."
 dove_query = split(dove_text, ";") |>
     x -> String.(x)
 
@@ -164,6 +164,8 @@ for (ind, mat) in indicators
 end
 predictions = vcat(predictions...)
 
-plt = plot_attack(predictions)
+plt_inflation = plot_attack(filter(x -> x.indicator == "PPI", predictions))
+plt_all = plot_attack(predictions)
 
-save(joinpath(save_dir, "figures", "attack.png"), plt, px_per_unit=3)
+save(joinpath(save_dir, "figures", "attack_inflation.png"), plt_inflation, px_per_unit=3)
+save(joinpath(save_dir, "figures", "attack_all.png"), plt_all, px_per_unit=3)

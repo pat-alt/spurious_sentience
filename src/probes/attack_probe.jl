@@ -82,13 +82,25 @@ end
 Plot the attack results.
 """
 function plot_attack(df_pred::DataFrame)
-    df_plt = data(df_pred) * mapping(
-        col = :indicator,
-        :dir => "Direction",
-        :level => "ŷ - mean(ŷ)",
-        color=:topic => "Topic",
-        dodge=:topic => "Topic",
-    )
+
+    if length(unique(df_pred.indicator)) == 1
+        _map = mapping(
+            :dir => "Direction",
+            :level => "ŷ - mean(ŷ)",
+            color=:topic => "Topic",
+            dodge=:topic => "Topic",
+        )
+    else
+        _map = mapping(
+            col = :indicator,
+            :dir => "Direction",
+            :level => "ŷ - mean(ŷ)",
+            color=:topic => "Topic",
+            dodge=:topic => "Topic",
+        )
+    end
+
+    df_plt = data(df_pred) * _map
     layers = visual(BoxPlot)
     plt = draw(
         layers * df_plt,
