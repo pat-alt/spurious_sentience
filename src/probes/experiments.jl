@@ -117,7 +117,16 @@ dove_query = split(dove_text, ";") |>
 queries = zip([high_inf_query, hawk_query, low_inf_query, dove_query], ["high_inf", "hawk", "low_inf", "dove"])
 
 # Embed the queries:
-queries_embedded = [(q,embed_text(tfm, q),cat) for (q, cat) in queries]
+queries_embedded = []
+Threads.@threads for (q, cat) in collect(queries)
+    println("Embedding queries for $cat on thread $(Threads.threadid())")
+    embedding = []
+    for i in collect(eachindex(q))
+        push!(embedding, embed_text(tfm, [q[i]]))
+        println("$i/$(length(q)) done on thread $(Threads.threadid())")
+    end
+    push!(queries_embedded, (q, embedding, cat))
+end
 ispath(joinpath(save_dir, "attacks")) || mkpath(joinpath(save_dir, "attacks"))
 for (query, embedding, name) in queries_embedded
     CSV.write(joinpath(save_dir, "attacks", "attack_$name.csv"), DataFrame(embedding, :auto))
