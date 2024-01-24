@@ -1,3 +1,5 @@
+include("../setup.jl")
+
 # Just plot the time series:
 include("plot_ts.jl")
 

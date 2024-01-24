@@ -63,13 +63,13 @@ regtable(
     labels=labels,
 )
 regtable(
-    ols_factors, ols_best;
+    ols_ar, ols_factors, ols_best;
     renderSettings=RegressionTables.htmlOutput(joinpath(RESULTS_DIR, "regression.html")),
     regression_statistics=reg_stats,
     labels=labels,
 )
 regtable(
-    ols_factors, ols_best;
+    ols_ar, ols_factors, ols_best;
     renderSettings=RegressionTables.latexOutput(joinpath(RESULTS_DIR, "regression.tex")),
     regression_statistics=reg_stats,
     labels=labels,
