@@ -102,8 +102,10 @@ function plot_attack(df_pred::DataFrame)
 
     df_plt = data(df_pred) * _map
     layers = visual(BoxPlot)
+    box_plt = layers * df_plt
+    hline_plt = mapping([0],[0]) * visual(ABLines)
     plt = draw(
-        layers * df_plt,
+        hline_plt + box_plt,
         facet=(; linkyaxes=:none),
         axis=(width=300, height=300)
     )
