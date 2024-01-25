@@ -72,17 +72,17 @@ function plot_measures(
     df::DataFrame;
     axis=(width=225, height=225),
     variable="rmse",
-    splits=["train", "test"],
+    split="test",
     indicators=["CPI", "PPI", "UST"],
-    models=["y_bl", "y_probe"],
+    model="y_probe",
     plot_interval=true,
 )
 
     # Filter the data:
-    df = filter(x -> x.split ∈ splits, df)
+    df = filter(x -> x.split == split, df)
     df = filter(x -> x.indicator ∈ indicators, df)
     df = filter(x -> x.variable == variable, df)
-    df = filter(x -> x.model ∈ models, df)
+    df = filter(x -> x.model == model, df)
 
     # Upper and lower bounds:
     df = transform(df, [:value, :std] => ByRow((x, s) -> (x + s, x - s)) => [:lb, :ub])
@@ -96,21 +96,19 @@ function plot_measures(
     # Plot the results:
     if plot_interval
         plt = data(df) * mapping(
-            :layer, :value,
+            :layer => "Layer", 
+            :value => "Value",
             lower=:lb, upper=:ub,
-            row=:split,
             col=:indicator,
-            color=:model => x -> x == "y_bl" ? "AR" : "Probe",
         )
         layer = visual(LinesFill)
     else
         plt = data(df) * mapping(
-            :layer, :value,
-            row=:split,
+            :layer => "Layer",
+            :value => "Value",
             col=:indicator,
-            color=:model => x -> x == "y_bl" ? "AR" : "Probe",
         )
-        layer = visual(Lines)
+        layer = smooth() + visual(Scatter)
     end
     plt = draw(
         layer * plt,
@@ -159,19 +157,21 @@ function plot_measures_for_ind(
     # Plot the results:
     if plot_interval 
         plt = data(df) * mapping(
-            :layer, :value, 
+            :layer => "Layer",
+            :value => "Value",
             lower=:lb, upper=:ub,
             row=:split,
             col=:variable, 
-            color=:model => x -> x=="y_bl" ? "AR" : "Probe",
+            color=:model => (x -> x=="y_bl" ? "AR" : "Probe") => "Model",
         )
         layer = visual(LinesFill)
     else
         plt = data(df) * mapping(
-            :layer, :value,
+            :layer => "Layer",
+            :value => "Value",
             row=:split,
             col=:variable,
-            color=:model => x -> x=="y_bl" ? "AR" : "Probe",
+            color=:model => (x -> x == "y_bl" ? "AR" : "Probe") => "Model",
         )
         layer = visual(Lines)
     end
@@ -189,7 +189,7 @@ end
 
 Plot the attack results.
 """
-function plot_attack(df_pred::DataFrame)
+function plot_attack(df_pred::DataFrame; axis=(width=150, height=150))
 
     if length(unique(df_pred.indicator)) == 1
         _map = mapping(
@@ -215,6 +215,7 @@ function plot_attack(df_pred::DataFrame)
     plt = draw(
         hline_plt + box_plt,
         facet=(; linkyaxes=:none),
-        axis=(width=300, height=300)
+        axis=axis
     )
+    return plt
 end

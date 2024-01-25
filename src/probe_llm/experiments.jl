@@ -21,18 +21,46 @@ if EVALUATE
 end
 
 # Plot the results:
+
 if PLOT_PROBES
+    axis = (width=150, height=150)
+    model = "y_probe"
+    _split = "test"
+    plot_interval = false
     ispath(joinpath(save_dir, "figures")) || mkdir(joinpath(save_dir, "figures"))
     df_evals = CSV.read(joinpath(save_dir, "evaluations.csv"), DataFrame)
-    plt = plot_measures(
-        df_evals;
-        axis=(width=225, height=225),
-        plot_interval=false,
-        models=["y_probe"],
-        splits=["test"],
-    )
+
+    for _var in sort(unique(df_evals.variable))
+        # Full (no PCA):
+        evals_full = filter(x -> ismissing(x.n_pc), df_evals)
+        plt = plot_measures(
+            evals_full;
+            axis=axis,
+            plot_interval=plot_interval,
+            model=model,
+            split=_split,
+            variable=_var
+        )
+        save(joinpath(save_dir, "figures", "$(_var)_full.png"), plt, px_per_unit=3)
+
+        # With PCA:
+        evals_pca = filter(x -> !ismissing(x.n_pc), df_evals)
+        for n_pc in sort(unique(evals_pca.n_pc))
+            _df = filter(x -> x.n_pc == n_pc, evals_pca)
+            plt = plot_measures(
+                _df;
+                axis=axis,
+                plot_interval=plot_interval,
+                model=model,
+                split=_split,
+                variable=_var
+            )
+            save(joinpath(save_dir, "figures", "$(_var)_pca_$(n_pc).png"), plt, px_per_unit=3)
+        end
+    end
+    
+    # By indicator:
     gdf = groupby(df_evals, [:indicator, :maturity, :n_pc]) 
-    axis = (width=225, height=225)
     for g in gdf
         g = DataFrame(g)
         i = g.indicator[1]
@@ -48,5 +76,7 @@ end
 
 # Attack probe:
 if RUN_ATTACKS
+    COMPUTE_EMBEDDINGS = false
+    USE_ALL_SENTENCES = false
     include("run_attacks.jl")
 end

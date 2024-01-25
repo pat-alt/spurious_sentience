@@ -1,12 +1,12 @@
-tfm = load_model(; load_head=false)
+if COMPUTE_EMBEDDINGS
+    tfm = load_model(; load_head=false)
+end
 n_pc = 128
 layer = 24
 ispath(joinpath(save_dir, "attacks")) || mkpath(joinpath(save_dir, "attacks"))
 attack_sentence_dir = "results/attacks/sentences"
 ispath(attack_sentence_dir) || mkpath(attack_sentence_dir)
-use_all = false
-prefx = use_all ? "all_" : ""
-compute_embeddings = true
+prefx = USE_ALL_SENTENCES ? "all_" : ""
 
 high_inf_text = readlines(joinpath(attack_sentence_dir, "$(prefx)high_inf.txt"))[1]
 high_inf_query = split(high_inf_text, ";") |>
@@ -28,7 +28,7 @@ queries = zip([high_inf_query, hawk_query, low_inf_query, dove_query], ["high_in
 
 # Embed the queries:
 queries_embedded = []
-if compute_embeddings
+if COMPUTE_EMBEDDINGS
     Threads.@threads for (q, cat) in collect(queries)
         println("Embedding queries for $cat on thread $(Threads.threadid())")
         embedding = []
