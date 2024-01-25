@@ -8,6 +8,7 @@ X = @select(df_wide, -Date) |> Matrix
 U, Σ, V = svd(X)
 dates = Date.(df_wide.Date)
 tick_years = Date.(unique(Dates.year.(dates)))
+tick_years = range(tick_years[1], tick_years[end], step=Year(5))
 date_tick = Dates.format.(tick_years, "yyyy")
 n_pc = 2
 plt_pc = plot(
@@ -19,7 +20,7 @@ plt_pc = plot(
     legend=:topright, 
     dpi=300
 )
-plot!(xticks=(tick_years,date_tick), xtickfontsize=6, yaxis=(formatter=y->@sprintf("%.2f",y)))
+plot!(xticks=(tick_years,date_tick), yaxis=(formatter=y->@sprintf("%.2f",y)))
 vline!(Date.([onset_date]), ls=:solid, color=:black, label="|GFC")
 vline!(Date.([aftermath_date]), ls=:dash, color=:black, label="GFC|")
 
