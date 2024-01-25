@@ -1,7 +1,6 @@
 using Pkg; Pkg.activate("src/mnist")
 
 using CounterfactualExplanations.Data: load_mnist
-using CounterfactualExplanations.Models: load_mnist_vae, load_mnist_mlp
 using CSV
 using DataFrames
 using Flux
@@ -21,7 +20,6 @@ FIGURE_DIR = joinpath(RESULTS_DIR, "figures")
 # Load MNIST data and pre-trained models:
 data = load_mnist()
 X = data.X
-vae = load_mnist_vae()
 
 # World Data (from https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv)
 world_data = CSV.read("data/world_place.csv", DataFrame)
@@ -73,7 +71,7 @@ latent = 64
 activation = sigmoid
 projector = Chain(
     Dense(size(Xtrain, 1) => latent, activation),
-    Dense(latent => vae.params.latent_dim),
+    Dense(latent => 8),
 )
 
 # Linear Probes ====================

@@ -173,16 +173,14 @@
 \date{}
 
 \begin{document}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, sharp corners, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, enhanced, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, interior hidden, sharp corners, boxrule=0pt, enhanced, borderline west={3pt}{0pt}{shadecolor}, breakable]}{\end{tcolorbox}}\fi
 
-\hypertarget{example-projecting-a-world-model-onto-a-latent-space}{%
-\subsection{Example: Projecting a World Model onto a latent
-space}\label{example-projecting-a-world-model-onto-a-latent-space}}
+\hypertarget{example-random-projections-of-world-models}{%
+\subsection{Example: Random Projections of World
+Models}\label{example-random-projections-of-world-models}}
 
 \begin{itemize}
 \tightlist
-\item
-  Take a variational autoencoder (VAE) that was pre-trained on MNIST.
 \item
   Take the
   \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv}
@@ -205,8 +203,8 @@ space}\label{example-projecting-a-world-model-onto-a-latent-space}}
 \item
   Initialize a small neural network, let's call it a \emph{projector},
   that maps from \(X\) to a single small hidden layer with sigmoid
-  activation and then form there to the latent space
-  \(\mathcal{Z} \subset \mathbb{R}\) of the pre-trained VAE.
+  activation and then from there to a lower-dimensional output space
+  \(\mathcal{Z} \subset \mathbb{R}\).
 \item
   Without performing any training on the \emph{projector}, simply
   compute a forward pass of the continuously encoded data \(X\) through
@@ -227,23 +225,16 @@ space}\label{example-projecting-a-world-model-onto-a-latent-space}}
 \end{itemize}
 
 \begin{quote}
-I think what's going on here is that we essentially randomly project a
-small set of features into a higher-dimensional space (\(d < k\)). The
-linear probe is then having an easy time separating features in the
-high-dimensional space, even though the projection is completely random.
-Even though one might be momentarily amazed by this, there is really
-nothing surprising at all going on here. We can still draw a very
-interesting parallel to Gurnee and Tegmark (2023): we know that
-geographical coordinates are in the training corpus of Llama-2; that
-information gets passed through a massive latent space (the model); they
-run probes on a subsapce of the model (still massive) and manage to
-linearly separate their variable of interest (coordinates). I don't know
-how accurate that parallel really is but it just seems striking to me
-that ultimately what they is regressing a 2-dimensional output variable
-on this massive feature matrix (``ranging from 4,096 to 8,192 features''
-for roughly 40,000 total samples, can't figure out how big the
-train/test sets are, respectively.). I'm not good enough at theory but
-maybe there's really just no surprise at all here?
+We can draw a very interesting parallel to Gurnee and Tegmark (2023): we
+know that geographical coordinates are in the training corpus of
+Llama-2; that information gets passed through a massive latent space
+(the model); they run probes on a subsapce of the model (still massive)
+and manage to linearly separate their variable of interest
+(coordinates). I don't know how accurate that parallel really is but it
+just seems striking to me that ultimately what they is regressing a
+2-dimensional output variable on this massive feature matrix (``ranging
+from 4,096 to 8,192 features'' for roughly 40,000 total samples, can't
+figure out how big the train/test sets are, respectively.).
 \end{quote}
 
 Relatedly, it is worth pointing out that
