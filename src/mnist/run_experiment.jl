@@ -22,7 +22,6 @@ FIGURE_DIR = joinpath(RESULTS_DIR, "figures")
 data = load_mnist()
 X = data.X
 vae = load_mnist_vae()
-mlp = load_mnist_mlp().model
 
 # World Data (from https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv)
 world_data = CSV.read("data/world_place.csv", DataFrame)
@@ -48,14 +47,12 @@ fifa_world_data = DataFrames.subset(world_data, :country => ByRow(x -> haskey(fi
     x -> DataFrames.transform(x, :country => ByRow(x -> fifa_world_ranking[x]) => :y) |>
     x -> DataFrames.select(x, :y, Not(:y, :country))
 
-# Tokenizer for FIFA World Data ====================
-# Goal: need a tokenizer that can map from the entities to the latent space of the VAE.
+# Projector for FIFA World Data ====================
+# Goal: need a projector that can map from the entities to the latent space of the VAE.
+
 # Continuous feature encoding:
-X = fifa_world_data[:,Not(:y)]
-model = (X -> coerce(
-        X,
-        :entity_type => Multiclass,
-)) |> 
+X = fifa_world_data[:,Not([:y])]
+model = (X -> coerce(X,:entity_type => Multiclass,)) |> 
     MLJModels.FillImputer() |>
     MLJModels.ContinuousEncoder() |> 
     MLJModels.Standardizer() 
@@ -70,47 +67,28 @@ y = fifa_world_data.y
 ytrain = OneHotArrays.onehotbatch(y, 0:9)
 # Dataloader:
 dl = Flux.DataLoader((Xtrain, ytrain), batchsize=32, shuffle=true)
-# Tokenizer:
+
+# Projector:
 latent = 64
-activation = relu
-function head(Xhat)
-    return mlp(Xhat)
-end
-# A small MLP as our backbone, then a linear layer to map to the latent space:
-tokenizer = Chain(
+activation = sigmoid
+projector = Chain(
     Dense(size(Xtrain, 1) => latent, activation),
-    Dense(latent => latent, activation),
     Dense(latent => vae.params.latent_dim),
 )
-# The decoder of our VAE:
-reconstructor = Chain(
-    vae.decoder,
-    x -> clamp.(x, -1, 1),
-)
-# A pre-trained MLP as our head to predict labels for the generated tokens:
-model = Chain(
-    tokenizer,
-    reconstructor,
-    head,
-)
-loss(ŷ,y) = Flux.logitcrossentropy(ŷ, y)
-opt_state = Flux.setup(Adam(), model)
-# Train:
-epochs = 10
-for epoch in 1:epochs
-    Flux.train!(model, dl, opt_state) do m, x, y
-        loss(m(x), y)
-    end
-end
 
 # Linear Probes ====================
 λ = 0.1
-A = tokenizer(Xtrain) |> permutedims
+A = projector(Xtrain) |> permutedims
 Y = fifa_world_data[:, [:longitude, :latitude]] |> matrix
 W = (A'A + UniformScaling(λ)) \ A'Y
 
 # Fitted values:
 labels = OneHotArrays.onecold(ytrain)
+sorted_names = collect(keys(fifa_world_ranking))[sortperm(collect(values(fifa_world_ranking)))]
+C = makecpt(
+    cmap=:categorical,
+    range=reduce((x, y) -> "$x,$y", sorted_names)
+)
 Ŷ = A * W
 coast(;
     region=:global,
@@ -122,9 +100,11 @@ coast(;
 GMT.scatter!(
     Ŷ[:, 1],
     Ŷ[:, 2];
-    color=:rainbow,
+    color=C.colormap,
     zcolor=labels,
-    show = false,
+    cmap=C,
+    colorbar=true,
+    show = true,
     ms = 0.05,
     savefig = joinpath(FIGURE_DIR, "map.png"),
 )
