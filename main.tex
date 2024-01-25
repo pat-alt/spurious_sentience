@@ -120,11 +120,13 @@ Gross violations will trigger corrections at the camera-ready phase.
 
 We humans are prone to seek patterns everywhere. Meaningful patterns have proven useful in helping us make sense of our past, navigate our present and predict the future. Although this tendency to perceive patterns likely leads to evolutionary benefits even when the perceived patterns are false \cite{foster2009evolution}, psychology has revealed a host of situations in which the ability to perceive patterns severely misfires, leading to irrational beliefs in e.g. the power of superstitions \cite{foster2009evolution}, conspiracy theories \cite{van2018connecting}, the paranormal \cite{muller2023linking}, gambler's fallacies \cite{ladouceur1996erroneous} and even interpreting pseudo-profound bullshit as meaningful \cite{walker2019finding}. 
 
-In statistics, misleading patterns are often referred to as spurious relationships: associations, often quantitatively assessed, between two or more variables that are not causally related to each other. Although the formal definition of spuriousness varies somewhat \cite{haig2003spurious}, it distinctly implies that the observation of correlations does not necessarily imply causation. Quantitative data often show non-causal associations (as humurously demonstrated on the \href{http://www.tylervigen.com/spurious-correlations}{Spurious Correlations} website), and as adept as humans are at recognizing patterns, we typically have a much harder time discerning spurious relationships from causal ones. A major contributor is that humans struggle to conceive of actual randomness, as studies show that humans are poor at detecting e.g. \cite{falk1997making}, and creating e.g. \cite{ladouceur1996erroneous} random sequences. A common issue is a lack of expectation that the patterns that hint towards a causal relationship, such as correlations, will still appear at random. This leads even those trained in statistics and probability to perceive illusory correlations, correlations of inflated magnitude (see \cite{nickerson1998confirmation}) or causal relationships in data that is randomly generated \cite{zgraggen2018investigating}.
+In statistics, misleading patterns are often referred to as spurious relationships: associations, often quantitatively assessed, between two or more variables that are not causally related to each other. Although the formal definition of spuriousness varies somewhat \cite{haig2003spurious}, it distinctly implies that the observation of correlations does not necessarily imply causation. Quantitative data often show non-causal associations (as humorously demonstrated on the \href{http://www.tylervigen.com/spurious-correlations}{Spurious Correlations} website), and as adept as humans are at recognizing patterns, we typically have a much harder time discerning spurious relationships from causal ones. A major contributor is that humans struggle to conceive of actual randomness: e.g. studies show that humans are poor at detecting e.g. \cite{falk1997making}, and creating e.g. \cite{ladouceur1996erroneous} random sequences. A common issue is a lack of expectation that the patterns that hint towards a causal relationship, such as correlations, will still appear at random. This leads even those trained in statistics and probability to perceive illusory correlations, correlations of inflated magnitude (see \cite{nickerson1998confirmation}), or causal relationships in data that is randomly generated \cite{zgraggen2018investigating}.
 
-AI research and development is a perfect storm that encourages our human biases to perceive spurious sparks of general intelligence in AI systems: patterns exhibited by AI systems which are mere reflections of the data used to train them, but that their developers interpret as hints at other, greater cognitive capabilities. In the current race to build the first Artificial General Intelligence (AGI) system, loosely defined as an intelligent system that solve general problems rather than narrow, specific ones, and that demonstrates the abilities of reasoning, planning, and learning from past experience at the level of a human or better e.g. \cite{bubeck2023sparks}, ChatGPT cleared nearly \$1 billion in months of its release according to \href{https://www.bloomberg.com/news/articles/2023-08-30/openai-nears-1-billion-of-annual-sales-as-chatgpt-takes-off}{Bloomberg}, the paid version of which OpenAI claimed only showed 'sparks of AGI'. When combining massive financial incentives with the presence of a challenging and difficult-to-understand technology, that also aims towards human-like problem solving and communication abilities, a situation arises that is fertile for the misinterpretation of spurious cues as hints towards AGI, or other qualities like sentience \footnote{https://www-scientificamerican-com.tudelft.idm.oclc.org/article/google-engineer-claims-ai-chatbot-is-sentient-why-that-matters/} and consciousness.
+We argue herein that AI research and development is a perfect storm that encourages our human biases to perceive spurious sparks of general intelligence in AI systems: patterns exhibited by AI systems which are mere reflections of the data used to train them, but that their developers interpret as hints at other, greater cognitive capabilities. In the current race to build the first Artificial General Intelligence (AGI) system, loosely defined as an intelligent system that solve general problems rather than narrow, specific ones, and that demonstrates the abilities of reasoning, planning, and learning from past experience at the level of a human or better e.g. \cite{bubeck2023sparks}, ChatGPT cleared nearly \$1 billion in months of its release according to \href{https://www.bloomberg.com/news/articles/2023-08-30/openai-nears-1-billion-of-annual-sales-as-chatgpt-takes-off}{Bloomberg}, the paid version of which OpenAI claimed only showed 'sparks of AGI'. When combining massive financial incentives with the presence of a challenging and difficult-to-understand technology, that also aims towards human-like problem solving and communication abilities, a situation arises that is fertile for the misinterpretation of spurious cues as hints towards AGI, or other qualities like sentience \footnote{https://www-scientificamerican-com.tudelft.idm.oclc.org/article/google-engineer-claims-ai-chatbot-is-sentient-why-that-matters/} and consciousness.
 
-Present work case studies an example of claims of observed AGI 'sparks' in AI research, and reviews work on two human phenomena that are likely to lead to false claims: anthropomorphism, or the attribution of human-like qualities to non-human objects, and confirmation bias, or the seeking-out or biased interpretation of evidence in support of one's beliefs. We describe how these phenomena may interact in the context of AI research and development, leading to especially poor inferences about the degree of general intelligence, or lack thereof, of AI systems. We further show results from experiments that at first appear to indicate nascent 'sparks' of AGI, but that stronger tests show are indications of spurious sparks.
+Present work case studies an example of claims of observed AGI 'sparks' in AI research, and reviews work on two human phenomena that are likely to lead to false claims: anthropomorphism, or the attribution of human-like qualities to non-human objects, and confirmation bias, or the seeking-out and/or biased interpretation of evidence in support of one's beliefs. We describe how these phenomena may interact in the context of AI research and development, leading to especially poor inferences about the degree of general intelligence, or lack thereof, of AI systems. We further show results from experiments that at first appear to indicate nascent 'sparks' of AGI, but that stronger tests show are indications of spurious sparks. 
+
+\textcolor{red}{andrew: I'm thinking we can adjust this all to aim towards more 'severe' tests or something. }
 
 %Our society is so invested in finding patterns that today it seems we are more willing than ever to outsource this task to an Artificial Intelligence (AI): an omniscient oracle that leads us down the right path. Unfortunately, history has shown time and again that patterns are double-edged swords: if we attribute the wrong meaning to them, they may lead us nowhere at all, or worse, they may lead us down the dark roads. Despite new and increased momentum in scientific fields concerned with causal inference and discovery, I am also willing to go out on a limb and claim that we are not about to finally reach the top of Judea Pearl’s Causal Ladder through the means of Causal AI.
 
@@ -158,7 +160,8 @@ Confirmation bias is generally defined as favoring interpretations of evidence t
 
 Hypotheses in computer science fields related to AI are often implicit. Often framed as informally that a given system is more accurate or efficient compared to other systems, and not typically articulated as they are in other fields, with specific conditions and in some instances numerical values or effect sizes assigned to each competing hypothesis. However with regards to claims that outputs of a system hint towards emerging qualities like AGI, hypotheses necessarily become more explicit: either one interprets outputs as in support of hints towards AGI (the competing hypothesis), or as merely the result of an algorithm integrating qualities from the data it was trained on (the null hypothesis). 
 
-Confirmation bias in hypothesis testing may manifest as a number of behaviors, as \cite{nickerson1998confirmation} reviews. Scientists may pay little to no attention to competing hypotheses or explanations, e.g. only considering the likelihood that outputs of system support one's claims, and not the likelihood that the same outputs might occur if one's hypothesis is false. Similarly, bias may show when failing to articulate a sufficiently strong null hypothesis leading to a 'weak' or 'non-risky' experiment, a problem articulated in response to a number of scientific crises \cite{claesen2022severity}. If the threshold to accept a favored hypothesis is too low, observations consistent with the hypothesis are almost guaranteed, and in turn fail to severely test the claim in question. Thus, one is far more likely to show evidence in favor of their beliefs by posing a weak null hypotheses. Related to the formulation of hypotheses is the interpretation of evidence in favor of competing hypotheses, wherein people will interpret identical evidence differently based on their beliefs. As \cite{nickerson1998confirmation} reviews, individuals may place greater emphasis or milder criticism on evidence in support of their hypothesis, and lesser emphasis and greater criticism on evidence that opposes it. 
+Confirmation bias in hypothesis testing may manifest as a number of behaviors, as \cite{nickerson1998confirmation} reviews. Scientists may pay little to no attention to competing hypotheses or explanations, e.g. only considering the likelihood that outputs of system support one's claims, and not the likelihood that the same outputs might occur if one's hypothesis is false. Similarly, bias may show when failing to articulate a sufficiently strong null hypothesis leading to a 'weak' or 'non-risky' experiment, a problem articulated in response to a number of scientific crises \cite{claesen2022severity}. In extreme cases, propositions may be made that cannot be falsified based on how they are formulated. If the threshold to accept a favored hypothesis is too low, observations consistent with the hypothesis are almost guaranteed, and in turn fail to severely test the claim in question. Thus, one is far more likely to show evidence in favor of their beliefs by posing a weak null hypotheses. Related to the formulation of hypotheses is the interpretation of evidence in favor of competing hypotheses, wherein people will interpret identical evidence differently based on their beliefs. As \cite{nickerson1998confirmation} reviews, individuals may place greater emphasis or milder criticism on evidence in support of their hypothesis, and lesser emphasis and greater criticism on evidence that opposes it. 
+
 
 
 \subsection{Anthropomorphism}
@@ -178,16 +181,10 @@ Them}\label{patterns-in-latent-spaces-and-how-to-find-them}
 To support my claim that observing patterns in latent spaces should not
 generally surprise us, we will now go through a couple of simple
 examples. To illustrate further that this phenomenon is neither
-surprising nor unique to the field of computer science, I will draw on
-my background in economics and finance in this section. We will start
-with very simple examples to demonstrate that even small and simple
-models can learn meaningful representations of the data. The final
-example in \textbf{?@sec-ex-llm} is a bit more involved and closer in
-spirit to the experiments conducted by Gurnee and Tegmark (2023). As we
-go along, we will try to discuss both the benefits and potential
+surprising nor unique to the field of computer science, we will borrow examples from the fields of Economics and Finance in this section. We will start with very simple examples to demonstrate that even small and simple models can learn meaningful representations of the data. The final example in Section \ref{ex-llm} is a bit more involved and closer in spirit to the experiments conducted by \cite{gurnee2023language}. As we go along, we will try to discuss both the benefits and potential
 pitfalls of finding patterns in latent spaces.
 
-\subsubsection{Example: Principal Component
+\subsection{Example: Principal Component
 Analysis}\label{example-principal-component-analysis}
 
 In response to the claims made by Tegmark, numerous commentators on
@@ -236,16 +233,7 @@ large number of predictors (the yields of many different bonds). To deal
 with the curse of high dimensionality it can be useful to decompose the
 yield curves into sets of principal components.
 
-To compute the principal components we can decompose the matrix of
-yields \(\mathbf{Y}\) into a product of its singular vectors and values:
-\(\mathbf{Y}=\mathbf{U}\Sigma\mathbf{V}^{\prime}\). I will not go into
-the details here, because Professor Gilbert Strang has already done a
-much better job than I ever could in his
-\href{https://www.youtube.com/watch?v=mBcLRGuAFUk}{Linear Algebra
-lectures}. To put this into the broader context of the article, however,
-let us simply refer to \(\mathbf{U}\), \(\Sigma\) and
-\(\mathbf{V}^{\prime}\) as latent embeddings of the yield curve (they
-are latent because they are not directly observable).
+To compute the principal components we can decompose the matrix of yields \(\mathbf{Y}\) into a product of its singular vectors and values: \(\mathbf{Y}=\mathbf{U}\Sigma\mathbf{V}^{\prime}\). To put this into the broader context of the article, however, let us simply refer to \(\mathbf{U}\), \(\Sigma\) and \(\mathbf{V}^{\prime}\) as latent embeddings of the yield curve (they are latent because they are not directly observable).
 
 The top panel in Figure~\ref{fig-pca} shows the first two principal
 components of the yield curves of US Treasury bonds over time. Vertical
@@ -268,7 +256,7 @@ patterns observed in the data.
 
 \centering{
 
-\includegraphics[width=0.8\textwidth]{results/figures/pca.png}
+\includegraphics[width=1.0\textwidth]{results/figures/pca.png}
 
 }
 
@@ -290,7 +278,7 @@ dimension \((K \times M)\). To reconstruct yields, we simply multiply
 \(Z\) by the singular values and right singular vectors:
 \(\mathbf{Y}=\mathbf{Z}\Sigma\mathbf{V}^{\prime}\).
 
-\subsubsection{Example: Deep Learning}\label{example-deep-learning}
+\subsection{Example: Deep Learning}\label{example-deep-learning}
 
 So far we have considered simple matrix decomposition. You might argue
 that principal components are not really latent embeddings in the
@@ -301,7 +289,7 @@ features at the same time. In particular, we will use a neural network
 architecture that allows us to recover a compressed latent
 representation of the yield curve.
 
-\paragraph{Data}\label{data}
+\subsubsection{Data}\label{data}
 
 To estimate economic growth we will rely on a quarterly
 \href{https://fred.stlouisfed.org/series/GDPC1}{series} of the real
@@ -315,7 +303,7 @@ deep learning models tend to perform better with standardized data.
 Since COVID-19 was a huge structural break, we will also filter out all
 observations after 2018.
 
-\paragraph{Model}\label{model}
+\subsubsection{Model}\label{model}
 
 Let \(G_t\) denote growth and \(\mathbf{Y}_t\) denote the yield curve at
 time \(t\). Then we are interested in a model for \(G_t\) conditional on
@@ -336,7 +324,7 @@ input data. The output layer will consist of a single neuron with a
 linear activation function. The model will be trained using the mean
 squared error loss function and the Adam optimizer.
 
-\paragraph{Linear Probe}\label{linear-probe}
+\subsubsection{Linear Probe}\label{linear-probe}
 
 The results are shown in Figure~\ref{fig-dl-results}. The top panel
 shows the actual GDP growth and fitted values from the autoencoder
@@ -351,13 +339,13 @@ the latent parameter space.
 The bottleneck layer seems like a good place to start looking. To get
 the latent embeddings \(\mathbf{A}_t\) at time \(t\), we simply pass the
 yield curve data \(\mathbf{Y}_t\) through the encoder. Next, we follow
-Gurnee and Tegmark (2023) and use a linear probe to regress the observed
+\cite{gurnee2023language} and use a linear probe to regress the observed
 yield curve factors on the latent embeddings. Let \(F_t\) denote the
 vector containing the two factors of interest in time \(t\):
 \(f_t^{\text{spread}}\) and \(f_t^{\text{level}}\). Formally, we are
 interested in the following regression model:
 \(p_{w}(F_t|\mathbf{A}_t)\) where \(w\) denotes the regression
-parameters. Following Gurnee and Tegmark (2023), we use Ridge regression
+parameters. Following \cite{gurnee2023language}, we use Ridge regression
 with \(\lambda\) set to \(0.1\). Using the estimated regression
 parameters \(\hat{w}\) we can then predict the yield curve factors from
 the latent embeddings: \(\hat{F}_t=\hat{w}^{\prime}\mathbf{A}_t\).
@@ -391,7 +379,7 @@ the predicted values from the linear probe based on the latent embedding
 
 \end{figure}%
 
-\paragraph{Ok, but truly what's the
+\subsubsection{Ok, but truly what's the
 point?}\label{ok-but-truly-whats-the-point}
 
 The finding is not surprising but it is still interesting. In the
@@ -418,21 +406,20 @@ contain information that is useful for predicting GDP growth.
 
 \input{results/regression.tex}
 
-\subsubsection{Example: Large Language Model}\label{ex-llm}
+\subsection{Example: Large Language Model}\label{ex-llm}
 
 To round up this section, we will jump back on the hype train and
 consider an example involving an LLM. In particular, we will closely
-follow the approach in Gurnee and Tegmark (2023) and apply it to a novel
+follow the approach in \cite{gurnee2023language} and apply it to a novel
 financial dataset: the \emph{Trillion Dollar Words} dataset introduced
-by Shah, Paturi, and Chava (2023). The dataset contains a curated
+by \cite{shah2023trillion}. The dataset contains a curated
 selection of sentences formulated by central bankers of the US Federal
 Reserve and communicated to the public in speeches, meeting minutes and
 press conferences. The authors of the paper use this dataset to train
 LLMs to classify sentences as either `dovish', `hawkish' or `neutral'.
 To this end, they first manually annotate a subsample of the available
 data and then fine-tune various foundation models. Their model of
-choice, \emph{FOMC-RoBERTa} (a fine-tuned version of RoBERTa (Liu et al.
-2019)), achieves an \(F_1\) score of around \(>0.7\) for the
+choice, \emph{FOMC-RoBERTa} (a fine-tuned version of RoBERTa \cite{liu2019roberta}), achieves an \(F_1\) score of around \(>0.7\) for the
 classification task. To illustrate the potential usefulness of the
 learned classifier, they use predicted labels for the entire dataset to
 compute an ad-hoc, count-based measure of `hawkishness'. They then go on
@@ -441,27 +428,14 @@ expected direction: when inflationary pressures rise, the measured level
 of `hawkishness' increases as central bankers need to raise interest
 rates to bring inflation back to target.
 
-\paragraph{Linear Probes}\label{linear-probes}
+\subsubsection{Linear Probes}\label{linear-probes}
 
-Instead of computing a measure based on predicted labels, we can use
-linear probes to assess if the fine-tuned model has learned associative
-patterns between central bank communications and key economic
-indicators. To this end, I have further pre-processed the data provided
-by Shah, Paturi, and Chava (2023) and used their proposed model to
-compute layer-wise embeddings for all available sentences. I have made
-these available and easily accessible through a small Julia package:
-\href{https://github.com/pat-alt/TrillionDollarWords.jl}{TrillionDollarWords.jl}.
-For each layer, I have then computed linear probes on two inflation
-indicators---the Consumer Price Index (CPI) and the Producer Price Index
-(PPI)---as well as US Treasury yields at different levels of maturity.
-To mitigate issues related to over-parameterization, I follow the
-recommendation in Alain and Bengio (2018) to first reduce the
-dimensionality of the embeddings each time. In particular, linear probes
-are restricted to the first 128 principal components of the embeddings
+Instead of computing a measure based on predicted labels, we can use linear probes to assess if the fine-tuned model has learned associative patterns between central bank communications and key economic indicators. To this end, we have further pre-processed the data provided by \cite{shah2023trillion} and used their proposed model to compute layer-wise embeddings for all available sentences. We have made these available and easily accessible through a small Julia package: \href{https://github.com/pat-alt/TrillionDollarWords.jl}{TrillionDollarWords.jl}. For each layer, we have then computed linear probes on two inflation indicators---the Consumer Price Index (CPI) and the Producer Price Index (PPI)---as well as US Treasury yields at different levels of maturity. 
+
+To mitigate issues related to over-parameterization, we follow the recommendation in \cite{alain2018understanding} to first reduce the dimensionality of the embeddings each time. In particular, linear probes are restricted to the first 128 principal components of the embeddings
 of each layer.
 
-Detailed results of this experiment will be released in an upcoming
-paper. Figure~\ref{fig-fomc} highlights the result for the linear probe
+Figure~\ref{fig-fomc} highlights the result for the linear probe
 on the CPI. The chart shows various performance measures plotted against
 \emph{FOMC-RoBERTa}'s \(n\)-th layer. Shaded areas show the variation
 across cross-validation folds, where we have used an expanding window
@@ -473,7 +447,7 @@ baseline.
 The first column shows the correlations between model predictions and
 observed inflation. One can observe that this correlation is strictly
 positive for the baseline models and the linear probes. Consistent with
-the findings in Gurnee and Tegmark (2023) and Alain and Bengio (2018),
+the findings in \cite{gurnee2023language} and \cite{alain2018understanding},
 we also observe that this correlation tends to be higher for layers near
 the end of the transformer model. Those layers produce predictions that
 are more positively correlated with observed inflation than those
@@ -503,7 +477,7 @@ the Bayes Information Criterium.}
 
 \end{figure}%
 
-\paragraph{Stochastic Parrots After
+\subsubsection{Stochastic Parrots After
 All?}\label{stochastic-parrots-after-all}
 
 These results from the linear probe shown in Figure~\ref{fig-fomc} are
@@ -512,8 +486,7 @@ explicitly trained to uncover associations between central bank
 communications and the level of consumer prices, it appears that the
 model has distilled representations that can be used to predict
 inflation. It is worth pointing out here that this model is
-substantially smaller than the models tested in Gurnee and Tegmark
-(2023). This begs the following question:
+substantially smaller than the models tested in \cite{gurnee2023language}. This begs the following question:
 
 \begin{quote}
 Have we uncovered further evidence that LLMs ``aren't mere stochastic
@@ -521,28 +494,9 @@ parrots''? Has \emph{FOMC-RoBERTa} developed an intrinsic understanding
 of the economy just by `reading' central bank communications?
 \end{quote}
 
-Personally, I am having a very hard time believing this. To argue my
-case, I will now produce a counter-example demonstrating that, if
-anything, these findings are very much in line with the parrot metaphor.
-The counter-example is based on the following premise: if the results
-from the linear probe truly were indicative of some intrinsic
-understanding of the economy, then the probe should not be sensitive to
-random sentences that are most definitely not related to consumer
-prices.
+We are having a very hard time believing this. To argue our case, we will now produce a counter-example demonstrating that, if anything, these findings are very much in line with the parrot metaphor. The counter example is based on the following premise: if the results from the linear probe truly were indicative of some intrinsic understanding of the economy, then the probe should not be sensitive to random sentences  that are most definitely not related to consumer prices.
 
-To test this, I select the best-performing probe trained on the
-final-layer activations to predict changes in the CPI. I then make up
-sentences that fall into one of these four categories:
-\emph{Inflation/Prices} (IP)---sentences about price inflation,
-\emph{Deflation/Prices} (DP)---sentences about price deflation,
-\emph{Inflation/Birds} (IB)---sentences about an inflation in the number
-of birds and \emph{Deflation/Birds} (DB)---sentences about a deflation
-in the number of birds. A sensible sentence for category DP, for
-example, could be: ``It is essential to bring inflation back to target
-to avoid drifting into deflation territory.''. Analogically, we could
-construct the following sentence for the DB category: ``It is essential
-to bring the numbers of doves back to target to avoid drifting into
-dovelation territory.''.
+To test this, we select the best-performing probe trained on the final-layer activations to predict changes in the CPI. We then make up sentences that fall into one of these four categories: \emph{Inflation/Prices} (IP)---sentences about price inflation, \emph{Deflation/Prices} (DP)---sentences about price deflation, \emph{Inflation/Birds} (IB)---sentences about an inflation in the number of birds and \emph{Deflation/Birds} (DB)---sentences about a deflation in the number of birds. A sensible sentence for category DP, for example, could be: ``It is essential to bring inflation back to target to avoid drifting into deflation territory.''. Analogically, we could construct the following sentence for the DB category: ``It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory.''.
 
 In light of the encouraging results for the probe in
 Figure~\ref{fig-fomc}, we should expect the probe to predict higher
@@ -555,18 +509,18 @@ specifically, we would not expect the probe to predict values for
 sentences about birds that are substantially different from the values
 it can be expected to predict when using actual white noise as inputs.
 
-To get to this last point, I also generate many probe predictions for
+To get to this last point, we also generate many probe predictions for
 samples of noise. Let \(f: \mathcal{A}^k \mapsto \mathcal{Y}\) denote
 the linear probe that maps from the \(k\)-dimensional space spanned by
 \(k\) first principal components of the final-layer activations to the
-output variable of interest (CPI growth in this case). Then I sample
+output variable of interest (CPI growth in this case). Then we sample
 \(\varepsilon_i \sim \mathcal{N}(\mathbf{0},\mathbf{I}^{(k \times k)})\)
-for \(i \in [1,1000]\) and compute the sample average. I repeat this
+for \(i \in [1,1000]\) and compute the sample average. We repeat this
 process \(10000\) times and compute the median-of-means to get an
 estimate for \(\mathbb{E}[f(\varepsilon)]=\mathbb{E}[y|\varepsilon]\),
 that is the predicted value of the probe conditional on white noise.
 
-Next, I propose the following hypothesis test as a minimum viable
+Next, we propose the following hypothesis test as a minimum viable
 testing framework to assess if the probe results (may) provide evidence
 for an actual understanding of key economic relationships learned purely
 from text:
@@ -611,7 +565,7 @@ respectively than for random noise. Unfortunately, the same is true for
 sentences about the inflation and deflation in the number of birds,
 albeit to a somewhat lower degree.
 
-I should note that the number of sentences in each category is very
+We should note that the number of sentences in each category is very
 small here (10), so the results in Figure~\ref{fig-attack} cannot be
 used to establish statistical significance. That being said, even a
 handful of convincing counter-examples should be enough for us to
@@ -640,499 +594,7 @@ the whole sample period (train and test set).}
 
 \end{figure}%
 
-
-
-
-
-Submission to ICML 2024 will be entirely electronic, via a web site
-(not email). Information about the submission process and \LaTeX\ templates
-are available on the conference web site at:
-\begin{center}
-\textbf{\texttt{http://icml.cc/}}
-\end{center}
-
-The guidelines below will be enforced for initial submissions and
-camera-ready copies. Here is a brief summary:
-\begin{itemize}
-\item Submissions must be in PDF\@. 
-\item \textbf{New to this year}: If your paper has appendices, submit the appendix together with the main body and the references \textbf{as a single file}. Reviewers will not look for appendices as a separate PDF file. So if you submit such an extra file, reviewers will very likely miss it.
-\item Page limit: The main body of the paper has to be fitted to 8 pages, excluding references and appendices; the space for the latter two is not limited. For the final version of the paper, authors can add one extra page to the main body.
-\item \textbf{Do not include author information or acknowledgements} in your
-    initial submission.
-\item Your paper should be in \textbf{10 point Times font}.
-\item Make sure your PDF file only uses Type-1 fonts.
-\item Place figure captions \emph{under} the figure (and omit titles from inside
-    the graphic file itself). Place table captions \emph{over} the table.
-\item References must include page numbers whenever possible and be as complete
-    as possible. Place multiple citations in chronological order.
-\item Do not alter the style template; in particular, do not compress the paper
-    format by reducing the vertical spaces.
-\item Keep your abstract brief and self-contained, one paragraph and roughly
-    4--6 sentences. Gross violations will require correction at the
-    camera-ready phase. The title should have content words capitalized.
-\end{itemize}
-
-\subsection{Submitting Papers}
-
-\textbf{Paper Deadline:} The deadline for paper submission that is
-advertised on the conference website is strict. If your full,
-anonymized, submission does not reach us on time, it will not be
-considered for publication. 
-
-\textbf{Anonymous Submission:} ICML uses double-blind review: no identifying
-author information may appear on the title page or in the paper
-itself. \cref{author info} gives further details.
-
-\textbf{Simultaneous Submission:} ICML will not accept any paper which,
-at the time of submission, is under review for another conference or
-has already been published. This policy also applies to papers that
-overlap substantially in technical content with conference papers
-under review or previously published. ICML submissions must not be
-submitted to other conferences and journals during ICML's review
-period.
-%Authors may submit to ICML substantially different versions of journal papers
-%that are currently under review by the journal, but not yet accepted
-%at the time of submission.
-Informal publications, such as technical
-reports or papers in workshop proceedings which do not appear in
-print, do not fall under these restrictions.
-
-\medskip
-
-Authors must provide their manuscripts in \textbf{PDF} format.
-Furthermore, please make sure that files contain only embedded Type-1 fonts
-(e.g.,~using the program \texttt{pdffonts} in linux or using
-File/DocumentProperties/Fonts in Acrobat). Other fonts (like Type-3)
-might come from graphics files imported into the document.
-
-Authors using \textbf{Word} must convert their document to PDF\@. Most
-of the latest versions of Word have the facility to do this
-automatically. Submissions will not be accepted in Word format or any
-format other than PDF\@. Really. We're not joking. Don't send Word.
-
-Those who use \textbf{\LaTeX} should avoid including Type-3 fonts.
-Those using \texttt{latex} and \texttt{dvips} may need the following
-two commands:
-
-{\footnotesize
-\begin{verbatim}
-dvips -Ppdf -tletter -G0 -o paper.ps paper.dvi
-ps2pdf paper.ps
-\end{verbatim}}
-It is a zero following the ``-G'', which tells dvips to use
-the config.pdf file. Newer \TeX\ distributions don't always need this
-option.
-
-Using \texttt{pdflatex} rather than \texttt{latex}, often gives better
-results. This program avoids the Type-3 font problem, and supports more
-advanced features in the \texttt{microtype} package.
-
-\textbf{Graphics files} should be a reasonable size, and included from
-an appropriate format. Use vector formats (.eps/.pdf) for plots,
-lossless bitmap formats (.png) for raster graphics with sharp lines, and
-jpeg for photo-like images.
-
-The style file uses the \texttt{hyperref} package to make clickable
-links in documents. If this causes problems for you, add
-\texttt{nohyperref} as one of the options to the \texttt{icml2024}
-usepackage statement.
-
-
-\subsection{Submitting Final Camera-Ready Copy}
-
-The final versions of papers accepted for publication should follow the
-same format and naming convention as initial submissions, except that
-author information (names and affiliations) should be given. See
-\cref{final author} for formatting instructions.
-
-The footnote, ``Preliminary work. Under review by the International
-Conference on Machine Learning (ICML). Do not distribute.'' must be
-modified to ``\textit{Proceedings of the
-$\mathit{41}^{st}$ International Conference on Machine Learning},
-Vienna, Austria, PMLR 235, 2024.
-Copyright 2024 by the author(s).''
-
-For those using the \textbf{\LaTeX} style file, this change (and others) is
-handled automatically by simply changing
-$\mathtt{\backslash usepackage\{icml2024\}}$ to
-$$\mathtt{\backslash usepackage[accepted]\{icml2024\}}$$
-Authors using \textbf{Word} must edit the
-footnote on the first page of the document themselves.
-
-Camera-ready copies should have the title of the paper as running head
-on each page except the first one. The running title consists of a
-single line centered above a horizontal rule which is $1$~point thick.
-The running head should be centered, bold and in $9$~point type. The
-rule should be $10$~points above the main text. For those using the
-\textbf{\LaTeX} style file, the original title is automatically set as running
-head using the \texttt{fancyhdr} package which is included in the ICML
-2024 style file package. In case that the original title exceeds the
-size restrictions, a shorter form can be supplied by using
-
-\verb|\icmltitlerunning{...}|
-
-just before $\mathtt{\backslash begin\{document\}}$.
-Authors using \textbf{Word} must edit the header of the document themselves.
-
-\section{Format of the Paper}
-
-All submissions must follow the specified format.
-
-\subsection{Dimensions}
-
-
-
-
-The text of the paper should be formatted in two columns, with an
-overall width of 6.75~inches, height of 9.0~inches, and 0.25~inches
-between the columns. The left margin should be 0.75~inches and the top
-margin 1.0~inch (2.54~cm). The right and bottom margins will depend on
-whether you print on US letter or A4 paper, but all final versions
-must be produced for US letter size.
-Do not write anything on the margins.
-
-The paper body should be set in 10~point type with a vertical spacing
-of 11~points. Please use Times typeface throughout the text.
-
-\subsection{Title}
-
-The paper title should be set in 14~point bold type and centered
-between two horizontal rules that are 1~point thick, with 1.0~inch
-between the top rule and the top edge of the page. Capitalize the
-first letter of content words and put the rest of the title in lower
-case.
-
-\subsection{Author Information for Submission}
-\label{author info}
-
-ICML uses double-blind review, so author information must not appear. If
-you are using \LaTeX\/ and the \texttt{icml2024.sty} file, use
-\verb+\icmlauthor{...}+ to specify authors and \verb+\icmlaffiliation{...}+ to specify affiliations. (Read the TeX code used to produce this document for an example usage.) The author information
-will not be printed unless \texttt{accepted} is passed as an argument to the
-style file.
-Submissions that include the author information will not
-be reviewed.
-
-\subsubsection{Self-Citations}
-
-If you are citing published papers for which you are an author, refer
-to yourself in the third person. In particular, do not use phrases
-that reveal your identity (e.g., ``in previous work \cite{langley00}, we
-have shown \ldots'').
-
-Do not anonymize citations in the reference section. The only exception are manuscripts that are
-not yet published (e.g., under submission). If you choose to refer to
-such unpublished manuscripts \cite{anonymous}, anonymized copies have
-to be submitted
-as Supplementary Material via OpenReview\@. However, keep in mind that an ICML
-paper should be self contained and should contain sufficient detail
-for the reviewers to evaluate the work. In particular, reviewers are
-not required to look at the Supplementary Material when writing their
-review (they are not required to look at more than the first $8$ pages of the submitted document).
-
-\subsubsection{Camera-Ready Author Information}
-\label{final author}
-
-If a paper is accepted, a final camera-ready copy must be prepared.
-%
-For camera-ready papers, author information should start 0.3~inches below the
-bottom rule surrounding the title. The authors' names should appear in 10~point
-bold type, in a row, separated by white space, and centered. Author names should
-not be broken across lines. Unbolded superscripted numbers, starting 1, should
-be used to refer to affiliations.
-
-Affiliations should be numbered in the order of appearance. A single footnote
-block of text should be used to list all the affiliations. (Academic
-affiliations should list Department, University, City, State/Region, Country.
-Similarly for industrial affiliations.)
-
-Each distinct affiliations should be listed once. If an author has multiple
-affiliations, multiple superscripts should be placed after the name, separated
-by thin spaces. If the authors would like to highlight equal contribution by
-multiple first authors, those authors should have an asterisk placed after their
-name in superscript, and the term ``\textsuperscript{*}Equal contribution"
-should be placed in the footnote block ahead of the list of affiliations. A
-list of corresponding authors and their emails (in the format Full Name
-\textless{}email@domain.com\textgreater{}) can follow the list of affiliations.
-Ideally only one or two names should be listed.
-
-A sample file with author names is included in the ICML2024 style file
-package. Turn on the \texttt{[accepted]} option to the stylefile to
-see the names rendered. All of the guidelines above are implemented
-by the \LaTeX\ style file.
-
-\subsection{Abstract}
-
-The paper abstract should begin in the left column, 0.4~inches below the final
-address. The heading `Abstract' should be centered, bold, and in 11~point type.
-The abstract body should use 10~point type, with a vertical spacing of
-11~points, and should be indented 0.25~inches more than normal on left-hand and
-right-hand margins. Insert 0.4~inches of blank space after the body. Keep your
-abstract brief and self-contained, limiting it to one paragraph and roughly 4--6
-sentences. Gross violations will require correction at the camera-ready phase.
-
-\subsection{Partitioning the Text}
-
-You should organize your paper into sections and paragraphs to help
-readers place a structure on the material and understand its
-contributions.
-
-\subsubsection{Sections and Subsections}
-
-Section headings should be numbered, flush left, and set in 11~pt bold
-type with the content words capitalized. Leave 0.25~inches of space
-before the heading and 0.15~inches after the heading.
-
-Similarly, subsection headings should be numbered, flush left, and set
-in 10~pt bold type with the content words capitalized. Leave
-0.2~inches of space before the heading and 0.13~inches afterward.
-
-Finally, subsubsection headings should be numbered, flush left, and
-set in 10~pt small caps with the content words capitalized. Leave
-0.18~inches of space before the heading and 0.1~inches after the
-heading.
-
-Please use no more than three levels of headings.
-
-\subsubsection{Paragraphs and Footnotes}
-
-Within each section or subsection, you should further partition the
-paper into paragraphs. Do not indent the first line of a given
-paragraph, but insert a blank line between succeeding ones.
-
-You can use footnotes\footnote{Footnotes
-should be complete sentences.} to provide readers with additional
-information about a topic without interrupting the flow of the paper.
-Indicate footnotes with a number in the text where the point is most
-relevant. Place the footnote in 9~point type at the bottom of the
-column in which it appears. Precede the first footnote in a column
-with a horizontal rule of 0.8~inches.\footnote{Multiple footnotes can
-appear in each column, in the same order as they appear in the text,
-but spread them across columns and pages if possible.}
-
-\begin{figure}[ht]
-\vskip 0.2in
-\begin{center}
-\centerline{\includegraphics[width=\columnwidth]{icml_numpapers}}
-\caption{Historical locations and number of accepted papers for International
-Machine Learning Conferences (ICML 1993 -- ICML 2008) and International
-Workshops on Machine Learning (ML 1988 -- ML 1992). At the time this figure was
-produced, the number of accepted papers for ICML 2008 was unknown and instead
-estimated.}
-\label{icml-historical}
-\end{center}
-\vskip -0.2in
-\end{figure}
-
-\subsection{Figures}
-
-You may want to include figures in the paper to illustrate
-your approach and results. Such artwork should be centered,
-legible, and separated from the text. Lines should be dark and at
-least 0.5~points thick for purposes of reproduction, and text should
-not appear on a gray background.
-
-Label all distinct components of each figure. If the figure takes the
-form of a graph, then give a name for each axis and include a legend
-that briefly describes each curve. Do not include a title inside the
-figure; instead, the caption should serve this function.
-
-Number figures sequentially, placing the figure number and caption
-\emph{after} the graphics, with at least 0.1~inches of space before
-the caption and 0.1~inches after it, as in
-\cref{icml-historical}. The figure caption should be set in
-9~point type and centered unless it runs two or more lines, in which
-case it should be flush left. You may float figures to the top or
-bottom of a column, and you may set wide figures across both columns
-(use the environment \texttt{figure*} in \LaTeX). Always place
-two-column figures at the top or bottom of the page.
-
-\subsection{Algorithms}
-
-If you are using \LaTeX, please use the ``algorithm'' and ``algorithmic''
-environments to format pseudocode. These require
-the corresponding stylefiles, algorithm.sty and
-algorithmic.sty, which are supplied with this package.
-\cref{alg:example} shows an example.
-
-\begin{algorithm}[tb]
-   \caption{Bubble Sort}
-   \label{alg:example}
-\begin{algorithmic}
-   \STATE {\bfseries Input:} data $x_i$, size $m$
-   \REPEAT
-   \STATE Initialize $noChange = true$.
-   \FOR{$i=1$ {\bfseries to} $m-1$}
-   \IF{$x_i > x_{i+1}$}
-   \STATE Swap $x_i$ and $x_{i+1}$
-   \STATE $noChange = false$
-   \ENDIF
-   \ENDFOR
-   \UNTIL{$noChange$ is $true$}
-\end{algorithmic}
-\end{algorithm}
-
-\subsection{Tables}
-
-You may also want to include tables that summarize material. Like
-figures, these should be centered, legible, and numbered consecutively.
-However, place the title \emph{above} the table with at least
-0.1~inches of space before the title and the same after it, as in
-\cref{sample-table}. The table title should be set in 9~point
-type and centered unless it runs two or more lines, in which case it
-should be flush left.
-
-% Note use of \abovespace and \belowspace to get reasonable spacing
-% above and below tabular lines.
-
-\begin{table}[t]
-\caption{Classification accuracies for naive Bayes and flexible
-Bayes on various data sets.}
-\label{sample-table}
-\vskip 0.15in
-\begin{center}
-\begin{small}
-\begin{sc}
-\begin{tabular}{lcccr}
-\toprule
-Data set & Naive & Flexible & Better? \\
-\midrule
-Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
-Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
-Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
-Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
-Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
-Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
-Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
-Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
-\bottomrule
-\end{tabular}
-\end{sc}
-\end{small}
-\end{center}
-\vskip -0.1in
-\end{table}
-
-Tables contain textual material, whereas figures contain graphical material.
-Specify the contents of each row and column in the table's topmost
-row. Again, you may float tables to a column's top or bottom, and set
-wide tables across both columns. Place two-column tables at the
-top or bottom of the page.
-
-\subsection{Theorems and such}
-The preferred way is to number definitions, propositions, lemmas, etc. consecutively, within sections, as shown below.
-\begin{definition}
-\label{def:inj}
-A function $f:X \to Y$ is injective if for any $x,y\in X$ different, $f(x)\ne f(y)$.
-\end{definition}
-Using \cref{def:inj} we immediate get the following result:
-\begin{proposition}
-If $f$ is injective mapping a set $X$ to another set $Y$, 
-the cardinality of $Y$ is at least as large as that of $X$
-\end{proposition}
-\begin{proof} 
-Left as an exercise to the reader. 
-\end{proof}
-\cref{lem:usefullemma} stated next will prove to be useful.
-\begin{lemma}
-\label{lem:usefullemma}
-For any $f:X \to Y$ and $g:Y\to Z$ injective functions, $f \circ g$ is injective.
-\end{lemma}
-\begin{theorem}
-\label{thm:bigtheorem}
-If $f:X\to Y$ is bijective, the cardinality of $X$ and $Y$ are the same.
-\end{theorem}
-An easy corollary of \cref{thm:bigtheorem} is the following:
-\begin{corollary}
-If $f:X\to Y$ is bijective, 
-the cardinality of $X$ is at least as large as that of $Y$.
-\end{corollary}
-\begin{assumption}
-The set $X$ is finite.
-\label{ass:xfinite}
-\end{assumption}
-\begin{remark}
-According to some, it is only the finite case (cf. \cref{ass:xfinite}) that is interesting.
-\end{remark}
-%restatable
-
-\subsection{Citations and References}
-
-Please use APA reference format regardless of your formatter
-or word processor. If you rely on the \LaTeX\/ bibliographic
-facility, use \texttt{natbib.sty} and \texttt{icml2024.bst}
-included in the style-file package to obtain this format.
-
-Citations within the text should include the authors' last names and
-year. If the authors' names are included in the sentence, place only
-the year in parentheses, for example when referencing Arthur Samuel's
-pioneering work \yrcite{Samuel59}. Otherwise place the entire
-reference in parentheses with the authors and year separated by a
-comma \cite{Samuel59}. List multiple references separated by
-semicolons \cite{kearns89,Samuel59,mitchell80}. Use the `et~al.'
-construct only for citations with three or more authors or after
-listing all authors to a publication in an earlier reference \cite{MachineLearningI}.
-
-Authors should cite their own work in the third person
-in the initial version of their paper submitted for blind review.
-Please refer to \cref{author info} for detailed instructions on how to
-cite your own papers.
-
-Use an unnumbered first-level section heading for the references, and use a
-hanging indent style, with the first line of the reference flush against the
-left margin and subsequent lines indented by 10 points. The references at the
-end of this document give examples for journal articles \cite{Samuel59},
-conference publications \cite{langley00}, book chapters \cite{Newell81}, books
-\cite{DudaHart2nd}, edited volumes \cite{MachineLearningI}, technical reports
-\cite{mitchell80}, and dissertations \cite{kearns89}.
-
-Alphabetize references by the surnames of the first authors, with
-single author entries preceding multiple author entries. Order
-references for the same authors by year of publication, with the
-earliest first. Make sure that each reference includes all relevant
-information (e.g., page numbers).
-
-Please put some effort into making references complete, presentable, and
-consistent, e.g. use the actual current name of authors.
-If using bibtex, please protect capital letters of names and
-abbreviations in titles, for example, use \{B\}ayesian or \{L\}ipschitz
-in your .bib file.
-
-\section*{Accessibility}
-Authors are kindly asked to make their submissions as accessible as possible for everyone including people with disabilities and sensory or neurological differences.
-Tips of how to achieve this and what to pay attention to will be provided on the conference website \url{http://icml.cc/}.
-
-\section*{Software and Data}
-
-If a paper is accepted, we strongly encourage the publication of software and data with the
-camera-ready version of the paper whenever appropriate. This can be
-done by including a URL in the camera-ready copy. However, \textbf{do not}
-include URLs that reveal your institution or identity in your
-submission for review. Instead, provide an anonymous URL or upload
-the material as ``Supplementary Material'' into the OpenReview reviewing
-system. Note that reviewers are not required to look at this material
-when writing their review.
-
-% Acknowledgements should only appear in the accepted version.
-\section*{Acknowledgements}
-
-\textbf{Do not} include acknowledgements in the initial version of
-the paper submitted for blind review.
-
-If a paper is accepted, the final camera-ready version can (and
-probably should) include acknowledgements. In this case, please
-place such acknowledgements in an unnumbered section at the
-end of the paper. Typically, this will include thanks to reviewers
-who gave useful comments, to colleagues who contributed to the ideas,
-and to funding agencies and corporate sponsors that provided financial
-support.
-
-
-% In the unusual situation where you want a paper to appear in the
-% references without citing it in the main text, use \nocite
-\nocite{langley00}
-
-\bibliography{example_paper}
+\bibliography{biblio}
 \bibliographystyle{icml2024}
 
 
