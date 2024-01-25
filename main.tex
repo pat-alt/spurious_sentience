@@ -124,7 +124,7 @@ In statistics, misleading patterns are often referred to as spurious relationshi
 
 We argue herein that AI research and development is a perfect storm that encourages our human biases to perceive spurious sparks of general intelligence in AI systems: patterns exhibited by AI systems which are mere reflections of the data used to train them, but that their developers interpret as hints at other, greater cognitive capabilities. In the current race to build the first Artificial General Intelligence (AGI) system, loosely defined as an intelligent system that solve general problems rather than narrow, specific ones, and that demonstrates the abilities of reasoning, planning, and learning from past experience at the level of a human or better e.g. \cite{bubeck2023sparks}, ChatGPT cleared nearly \$1 billion in months of its release according to \href{https://www.bloomberg.com/news/articles/2023-08-30/openai-nears-1-billion-of-annual-sales-as-chatgpt-takes-off}{Bloomberg}, the paid version of which OpenAI claimed only showed 'sparks of AGI'. When combining massive financial incentives with the presence of a challenging and difficult-to-understand technology, that also aims towards human-like problem solving and communication abilities, a situation arises that is fertile for the misinterpretation of spurious cues as hints towards AGI, or other qualities like sentience \footnote{https://www-scientificamerican-com.tudelft.idm.oclc.org/article/google-engineer-claims-ai-chatbot-is-sentient-why-that-matters/} and consciousness.
 
-Present work case studies an example of claims of observed AGI 'sparks' in AI research, and reviews work on two human phenomena that are likely to lead to false claims: anthropomorphism, or the attribution of human-like qualities to non-human objects, and confirmation bias, or the seeking-out and/or biased interpretation of evidence in support of one's beliefs. We describe how these phenomena may interact in the context of AI research and development, leading to especially poor inferences about the degree of general intelligence, or lack thereof, of AI systems. We further show results from experiments that at first appear to indicate nascent 'sparks' of AGI, but that stronger tests show are indications of spurious sparks. 
+Present work case studies an example, to which claims of observed AGI 'sparks' in AI research, and reviews work on two human phenomena that are likely to lead to false claims: anthropomorphism, or the attribution of human-like qualities to non-human objects, and confirmation bias, or the seeking-out and/or biased interpretation of evidence in support of one's beliefs. We describe how these phenomena may interact in the context of AI research and development, leading to especially poor inferences about the degree of general intelligence, or lack thereof, within AI systems. We further display results from experiments that at first appear to indicate nascent 'sparks' of AGI, but that stronger tests show are indications of spurious sparks. 
 
 \textcolor{red}{andrew: I'm thinking we can adjust this all to aim towards more 'severe' tests or something. }
 
@@ -459,11 +459,11 @@ is gradually reduced as we move along the horizontal axis, which is
 again indicative of the notion that layers closer to the end of the
 neural network have distilled more useful representations.
 
-\begin{figure}
+\begin{figure*}
 
 \centering{
 
-\includegraphics[width=0.5\textwidth]{results/figures/measures_CPI (n_pc=128).png}
+\includegraphics[width=1.0\textwidth]{results/figures/rmse_pca_128.png}
 
 }
 
@@ -475,7 +475,23 @@ series. Results for the linear probes are shown along with results for
 autoregressive models (AR). The optimal lag length was determined using
 the Bayes Information Criterium.}
 
-\end{figure}%
+\end{figure*}%
+
+\begin{figure*}
+
+\centering{
+
+\includegraphics[width=1.0\textwidth]{results/figures/attack_all_measures.png}
+
+}
+
+\caption{\label{fig-attack}Probe predictions for sentences about
+inflation of prices (IP), deflation of prices (DP), inflation of birds
+(IB) and deflation of birds (DB). The vertical axis shows predicted
+inflation levels subtracted by the average predicted inflation level for
+the whole sample period (train and test set).}
+
+\end{figure*}%
 
 \subsubsection{Stochastic Parrots After
 All?}\label{stochastic-parrots-after-all}
@@ -577,22 +593,6 @@ sentence for which any
 Strong alternative hypothesis to address own confirmation bias
 Articulating a test to better differentiate
 \end{quote}
-
-\begin{figure}
-
-\centering{
-
-\includegraphics[width=0.5\textwidth]{results/figures/attack_inflation.png}
-
-}
-
-\caption{\label{fig-attack}Probe predictions for sentences about
-inflation of prices (IP), deflation of prices (DP), inflation of birds
-(IB) and deflation of birds (DB). The vertical axis shows predicted
-inflation levels subtracted by the average predicted inflation level for
-the whole sample period (train and test set).}
-
-\end{figure}%
 
 \bibliography{biblio}
 \bibliographystyle{icml2024}
