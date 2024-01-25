@@ -1,29 +1,48 @@
 yhat = model(X')'
+
+dates = Date.(df_all.Date)
+tick_years = Date.(unique(Dates.year.(dates)))
+tick_years = range(tick_years[1], tick_years[end], step=Year(5))
+date_tick = Dates.format.(tick_years, "yyyy")
+
 plt_gdp = plot(
     df_all.Date, y;
-    label="Actual", color=:green,
-    title="Modelling GDP Growth",
+    label="g", color=:green,
+    size=(1000,200),
+    dpi=300
 )
 plot!(
     df_all.Date, yhat;
-    label="Predicted", color=:green, ls=:dash,
+    label="ĝ", color=:green, ls=:dash,
 )
+plot!(xticks=(tick_years, date_tick), yaxis=(formatter = y -> @sprintf("%.2f", y)))
+savefig(plt_gdp, joinpath(FIGURE_DIR, "gdp.png"))
 
 λ = 1.0
 Y = df_factors[:, [:spread, :level]] |> Matrix
 A = encoder(X')'
 W = (A'A + UniformScaling(λ)) \ A'Y
 Ŷ = A * W
+
 plt_probe = plot(
-    df_all.Date, Y;
+    dates, Y;
     color=[:blue :orange],
-    label=["Spread" "Level"],
-    title="Linear Probe"
+    label=["yₛ" "yₗ"],
+    size=(1000, 200),
+    dpi=300
 )
 plot!(
-    df_all.Date, Ŷ;
+    dates, Ŷ;
     color=[:blue :orange], ls=:dash,
-    label=["Spread (predicted)" "Level (predicted)"]
+    label=["ŷₛ" "ŷₗ"]
 )
-plt = plot(plt_gdp, plt_probe, layout=(2, 1), size=(800, 600), left_margin=5mm)
+plot!(xticks=(tick_years, date_tick), yaxis=(formatter = y -> @sprintf("%.2f", y)))
+savefig(plt_probe, joinpath(FIGURE_DIR, "factor_probe.png"))
+
+# Combine:
+plt = plot(
+    plt_gdp, plt_probe, layout=(1, 2), 
+    size=(1000, 200), left_margin=5mm,
+    dpi=300
+)
 savefig(plt, joinpath(FIGURE_DIR, "dl.png"))

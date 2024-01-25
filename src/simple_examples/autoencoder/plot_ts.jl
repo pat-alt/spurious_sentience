@@ -40,4 +40,4 @@ p_yields = plot(
     alpha=0.5,
     size=(800,400)
 )
-plot(p_gdp, p_yields, layout=(2,1), size=(800, 600), left_margin=5mm)
+plot(p_gdp, p_yields, layout=(2,1), size=(800, 600), left_margin=5mm, dpi=300)
