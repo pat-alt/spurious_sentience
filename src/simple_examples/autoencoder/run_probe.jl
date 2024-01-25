@@ -7,13 +7,13 @@ date_tick = Dates.format.(tick_years, "yyyy")
 
 plt_gdp = plot(
     df_all.Date, y;
-    label="g", color=:green,
+    label="g", color=:black,
     size=(1000,200),
     dpi=300
 )
 plot!(
     df_all.Date, yhat;
-    label="ĝ", color=:green, ls=:dash,
+    label="ĝ", color=:black, ls=:dash,
 )
 plot!(xticks=(tick_years, date_tick), yaxis=(formatter = y -> @sprintf("%.2f", y)))
 savefig(plt_gdp, joinpath(FIGURE_DIR, "gdp.png"))
@@ -26,14 +26,13 @@ Ŷ = A * W
 
 plt_probe = plot(
     dates, Y;
-    color=[:blue :orange],
     label=["yₛ" "yₗ"],
     size=(1000, 200),
     dpi=300
 )
 plot!(
     dates, Ŷ;
-    color=[:blue :orange], ls=:dash,
+    color=[palette(:default)[1] palette(:default)[2]], ls=:dash,
     label=["ŷₛ" "ŷₗ"]
 )
 plot!(xticks=(tick_years, date_tick), yaxis=(formatter = y -> @sprintf("%.2f", y)))
