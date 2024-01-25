@@ -73,6 +73,34 @@ Compute the root mean squared error of a model `mod` on the output `y` and predi
 rmse(y, ŷ; weights::Union{Nothing,AbstractArray}=nothing) = sqrt(mse(y, ŷ; weights=weights))
 
 """
+    mape(mod::Model, X, y)
+
+Compute the mean absolute percentage error of a model `mod` on the input `X` and output `y`.
+"""
+mape(mod::Model, X, y) = mape(y, predict(mod, X))
+
+"""
+    mape(y, ŷ)
+
+Compute the mean absolute percentage error of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+mape(y, ŷ) = mean(replace(abs.((y .- ŷ) ./ y), Inf => 0.0))
+
+"""
+    mda(mod::Model, X, y)
+
+Compute the mean directional accuracy of a model `mod` on the input `X` and output `y`.
+"""
+mda(mod::Model, X, y) = mda(y, predict(mod, X))
+
+"""
+    mda(y, ŷ)
+
+Compute the mean directional accuracy of a model `mod` on the output `y` and predicted output `ŷ`.
+"""
+mda(y, ŷ) = mean(sign.(y) .== sign.(ŷ))
+
+"""
     r2(mod::Model, X, y)
 
 Compute the R² of a model `mod` on the input `X` and output `y`.
@@ -95,6 +123,8 @@ function r2(y, ŷ)
     sst = sum((y .- ȳ) .^ 2)
     return 1 - _ssr/sst
 end
+
+
 
 struct Probe <: Model
     β::Vector{Float64}

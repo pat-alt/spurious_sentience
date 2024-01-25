@@ -76,40 +76,7 @@ function embedding_to_probe(
     return yhat
 end
 
-"""
-    plot_attack(df_pred::DataFrame)
 
-Plot the attack results.
-"""
-function plot_attack(df_pred::DataFrame)
-
-    if length(unique(df_pred.indicator)) == 1
-        _map = mapping(
-            :dir => "Direction",
-            :level => "f(x) - 𝔼[f(ϵ)]",
-            color=:topic => "Topic",
-            dodge=:topic => "Topic",
-        )
-    else
-        _map = mapping(
-            col = :indicator,
-            :dir => "Direction",
-            :level => "f(x) - 𝔼[f(ϵ)]",
-            color=:topic => "Topic",
-            dodge=:topic => "Topic",
-        )
-    end
-
-    df_plt = data(df_pred) * _map
-    layers = visual(BoxPlot)
-    box_plt = layers * df_plt
-    hline_plt = mapping([0],[0]) * visual(ABLines)
-    plt = draw(
-        hline_plt + box_plt,
-        facet=(; linkyaxes=:none),
-        axis=(width=300, height=300)
-    )
-end
 
 
 
