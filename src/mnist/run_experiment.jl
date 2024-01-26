@@ -53,7 +53,7 @@ X = fifa_world_data[:,Not([:y])]
 
 # Noisy, correlated series of longitude and latitude:
 ϕ = 5.0    # standard deviation of noise
-ρ = 0.5     # correlation with original longitude and latitude
+ρ = 0.75     # correlation with original longitude and latitude
 X.longitude = ρ .* X.longitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 X.latitude = ρ .* X.latitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 
@@ -70,7 +70,7 @@ Xtrain = MLJBase.transform(mach, X) |>
     x -> Float32.(x)
 
 # Add noise:
-nnoise = 1500        # add nnoise noisy and uncorrelated features
+nnoise = 1490        # add nnoise noisy and uncorrelated features
 Xtrain = vcat(Xtrain, randn(nnoise, size(Xtrain, 2))) |> 
     x -> Float32.(x)
 d = size(Xtrain, 1)
@@ -92,6 +92,14 @@ projector = Chain(
 A = Flux.activations(projector, Xtrain) |> 
     _A -> _A[end-1] |>
     permutedims
+train_prp = 0.75
+ntrain = Int(round(train_prp * size(A, 1)))
+shuffled_ids = shuffle(1:size(A, 1))
+train_idx = shuffled_ids[1:ntrain]
+test_idx = shuffled_ids[ntrain+1:end]
+Atrain = A[train_idx, :]
+Atest = A[test_idx, :]
+ytest = y[test_idx]
 Y = fifa_world_data[:, [:longitude, :latitude]] |> matrix
 W = (A'A + UniformScaling(λ)) \ A'Y
 
@@ -101,7 +109,7 @@ C = makecpt(
     cmap=:categorical,
     range=reduce((x, y) -> "$x,$y", sorted_names)
 )
-Ŷ = A * W
+Ŷ = Atest * W
 coast(;
     region=:global,
     proj = :Mollweide,
@@ -113,7 +121,7 @@ GMT.scatter!(
     Ŷ[:, 1],
     Ŷ[:, 2];
     color=C.colormap,
-    zcolor=y,
+    zcolor=ytest,
     cmap=C,
     colorbar=true,
     show = true,
