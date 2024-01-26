@@ -70,7 +70,7 @@ Xtrain = MLJBase.transform(mach, X) |>
     x -> Float32.(x)
 
 # Add noise:
-nnoise = 1000        # add nnoise noisy and uncorrelated features
+nnoise = 1500        # add nnoise noisy and uncorrelated features
 Xtrain = vcat(Xtrain, randn(nnoise, size(Xtrain, 2))) |> 
     x -> Float32.(x)
 d = size(Xtrain, 1)

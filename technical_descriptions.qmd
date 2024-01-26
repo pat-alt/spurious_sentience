@@ -7,21 +7,24 @@ bibliography: biblio.bib
 
 ## Example: Random Projections of World Models
 
+The Llama-2 model has ingested huge amounts of publicly available data from the internet including Wikipedia dumps from the June-August 2022 period [@touvron2023llama]. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance, before being passed through a series of layers which are gradually trained for downstream tasks.
+
+In our first example in this section, we simulate this scenario, stop short of training the model. In particular, we 
+
 - Take the [world_place.csv]( https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv) that was used in @gurnee2023language, which maps locations/areas to their latitude and longitude. For each place, it also indicates the corresponding country.
 - Take the subset that contains countries that are currently part of the top 10 [FIFA world ranking](https://www.fifa.com/fifa-world-ranking/men?dateId=id14142).
 - Assign the current rank to each country, i.e. Argentina gets 1, France gets 2, ...
-- Encode all features excluding the FIFA world rank indicator but including `longitude` and `latitude` as continuous variables: $X^{(n \times d)}$ where $n$ is the number of samples and $d$ is the number of resulting features.
-- Initialize a small neural network, let's call it a *projector*, that maps from $X$ to a single small hidden layer with sigmoid activation and then from there to a lower-dimensional output space $\mathcal{Z} \subset \mathbb{R}$.
-- Without performing any training on the *projector*, simply compute a forward pass of the continuously encoded data $X$ through the *projector* and store the output: $\mathbf{Z}^{(n \times k)}$ where $k$ is the dimension of the latent space of the VAE.
+- Transform the longitude and latitude data, respectively, as follows: $\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon$ where $\rho=0.5$ and $\epsilon \sim \mathcal{N}(0, 5)$. This is to ensure that the training data only involves a noisy version of the coordinates.
+- Next, encode all features except the FIFA world rank indicator as continuous variables: $X^{(n \times m)}$ where $n$ is the number of samples and $m$ is the number of resulting features.
+- Additionally, add a large number of random features to $X$ to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. Let $d$ denote the final number of features, i.e. $d=m+k$ where $k$ is the number of random features.
+- Initialize a small neural network, let's call it a *projector*, that maps from $X$ to a single hidden layer with $h<d$ hidden units and sigmoid activation and then from there to a lower-dimensional output space.
+- Without performing any training on the *projector*, we simply compute a forward pass of $X$ through the *projector* and retrieve the activations $\mathbf{Z}^{(n\times h)}$.
 - Next, we perform the linear probe on $\mathbf{Z}$ through Ridge regression: $\mathbf{W} = (\mathbf{Z}'\mathbf{Z} + \lambda \mathbf{I}) (\mathbf{Z}'\mathbf{Y})^{-1}$ where $\mathbf{Y}$ is the $(n \times 2)$ matrix containing the longitude and latitude for each sample. 
-- Finally, compute the predicted coordinate for each samples as $\widehat{\mathbf{Y}}=\mathbf{Z}\mathbf{W}$
-- Plot the results on a world map and be amazed. 
+- Finally, we compute the predicted coordinates for each samples as $\widehat{\mathbf{Y}}=\mathbf{Z}\mathbf{W}$ and plot the results on a world map (see @fig-map).
 
-> We can draw a very interesting parallel to @gurnee2023language: we know that geographical coordinates are in the training corpus of Llama-2; that information gets passed through a massive latent space (the model); they run probes on a subsapce of the model (still massive) and manage to linearly separate their variable of interest (coordinates). I don't know how accurate that parallel really is but it just seems striking to me that ultimately what they is regressing a 2-dimensional output variable on this massive feature matrix ("ranging from 4,096 to 8,192 features" for roughly 40,000 total samples, can't figure out how big the train/test sets are, respectively.). 
+![Probe predictions for a random projection.](results/figures/map.png){#fig-map}
 
-Relatedly, it is worth pointing out that
-
-- a recent paper has shown that the double-descent phenomenon is not exclusive to deep learning but also applies to linear regression with many features [LINK].
+While this is admittedly a somewhat contrived example, it serves to illustrate the point that if we randomly project a small number of features that are highly correlated or predictive of the target into a large enough space, we should expect to be able to recover meaningful represenations of the target from the latent space. Similarly, @alain2018understanding observe that even before training a convolutional neural network on MNIST data, the layer-wise activations can already be used to perform binary classification. In fact, it is well-known that random projections can be used for prediction tasks [@dasgupta2013experiments].
 
 ## Example: PCA
 
