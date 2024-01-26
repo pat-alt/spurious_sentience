@@ -180,67 +180,87 @@ These pressures extend to experts as well, in both scholarly and commercial fiel
 \section{Patterns in Latent Spaces and How to Find
 Them}\label{patterns-in-latent-spaces-and-how-to-find-them}
 
-To support my claim that observing patterns in latent spaces should not
-generally surprise us, we will now go through a couple of simple
-examples. To illustrate further that this phenomenon is neither
-surprising nor unique to the field of computer science, we will borrow examples from the fields of Economics and Finance in this section. We will start with very simple examples to demonstrate that even small and simple models can learn meaningful representations of the data. The final example in Section \ref{ex-llm} is a bit more involved and closer in spirit to the experiments conducted by \cite{gurnee2023language}. As we go along, we will try to discuss both the benefits and potential
-pitfalls of finding patterns in latent spaces.
+To support our claim that observing patterns in latent spaces should not generally surprise us, we will now go through a couple of simple examples. To illustrate further that this phenomenon is neither surprising nor unique to the field of computer science, we will borrow draw on ideas from the fields of Economics and Finance in this section. We will start with very simple examples to demonstrate that even small and simple models can learn meaningful representations of the data. The final example in Section \ref{ex-llm} is a bit more involved and closer in spirit to the experiments conducted by \citet{gurnee2023language}. As we go along, we will try to discuss both the benefits and potential pitfalls of finding patterns in latent spaces.
 
-\subsection{Example: Injecting a World Model}\label{example-deep-learning}
+\subsection{Example: Random Projections of World Models}\label{example-deep-learning}
+
+The Llama-2 model has ingested huge amounts of publicly available data from the internet including Wikipedia dumps from the June-August 2022 period \citep{touvron2023llama}. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance, before being passed through a series of layers which are gradually trained for downstream tasks.
+
+In our first example in this section, we simulate this scenario, stopping short of training the model. In particular, we
+
+\begin{itemize}
+\tightlist
+\item
+  Take the
+  \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv}
+  that was used in \cite{gurnee2023language}, which maps locations/areas
+  to their latitude and longitude. For each place, it also indicates the
+  corresponding country.
+\item
+  Take the subset that contains countries that are currently part of the
+  top 10
+  \href{https://www.fifa.com/fifa-world-ranking/men?dateId=id14142}{FIFA
+  world ranking}.
+\item
+  Assign the current rank to each country, i.e.~Argentina gets 1, France
+  gets 2, \ldots{}
+\item
+  Transform the longitude and latitude data, respectively, as follows:
+  \(\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon\) where
+  \(\rho=0.5\) and \(\epsilon \sim \mathcal{N}(0, 5)\). This is to
+  ensure that the training data only involves a noisy version of the
+  coordinates.
+\item
+  Next, encode all features except the FIFA world rank indicator as
+  continuous variables: \(X^{(n \times m)}\) where \(n\) is the number
+  of samples and \(m\) is the number of resulting features.
+\item
+  Additionally, add a large number of random features to \(X\) to
+  simulate the fact that not all features ingested by Llama-2 are
+  necessarily correlated with geographical coordinates. Let \(d\) denote
+  the final number of features, i.e.~\(d=m+k\) where \(k\) is the number
+  of random features.
+\item
+  Initialize a small neural network, let's call it a \emph{projector},
+  that maps from \(X\) to a single hidden layer with \(h<d\) hidden
+  units and sigmoid activation and then from there to a
+  lower-dimensional output space.
+\item
+  Without performing any training on the \emph{projector}, we simply
+  compute a forward pass of \(X\) through the \emph{projector} and
+  retrieve the activations \(\mathbf{Z}^{(n\times h)}\).
+\item
+  Next, we perform the linear probe on \(\mathbf{Z}\) through Ridge
+  regression:
+  \(\mathbf{W} = (\mathbf{Z}'\mathbf{Z} + \lambda \mathbf{I}) (\mathbf{Z}'\mathbf{Y})^{-1}\)
+  where \(\mathbf{Y}\) is the \((n \times 2)\) matrix containing the
+  longitude and latitude for each sample.
+\item
+  Finally, we compute the predicted coordinates for each samples as
+  \(\widehat{\mathbf{Y}}=\mathbf{Z}\mathbf{W}\) and plot the results on
+  a world map (see Figure~\ref{fig-map}).
+\end{itemize}
 
 \begin{figure}
 
-\centering{
-
-\includegraphics[width=0.5\textwidth]{results/figures/map.png}
+{\centering \includegraphics[width=0.5\textwidth]{results/figures/map.png}
 
 }
 
-\caption{\label{fig-map}Mapping MNIST digits to FIFA World Rankings.}
+\caption{\label{fig-map}Predicted coordinate values (in-sample) from a linear probe on final-layer activations of an untrained neural network.}
 
-\end{figure}%
+\end{figure}
 
+While this is admittedly a somewhat contrived example, it serves to illustrate the point that if we randomly project a small number of features that are highly correlated or predictive of the target into a large enough space, we should expect to be able to recover meaningful representations of the target from the latent space. Similarly, \cite{alain2018understanding} observe that even before training a convolutional neural network on MNIST data, the layer-wise activations can already be used to perform binary classification. In fact, it is well-known that random projections can be used for prediction tasks \cite{dasgupta2013experiments}.
 
 \subsection{Example: Principal Component
 Analysis}\label{example-principal-component-analysis}
 
-In response to the claims made by Tegmark, numerous commentators on
-social media have pointed out that even the simplest of models can
-exhibit structure in their latent spaces. One of the most popular and
-illustrative examples I remember from my time at the Bank of England is
-yield curve decomposition through PCA. The yield curve is a popular tool
-for investors and economists to gauge the health of the economy. It
-plots the yields of bonds against their maturities. The slope of the
-yield curve is often used as a predictor of future economic activity: a
-steep yield curve is associated with a growing economy, while a flat or
-inverted yield curve is associated with a contracting economy.
+For our next example, we will move beyond randomness and illustrate how principal component analysis can be used to recover meaningful and compact latent representations from data in an unsupervised manner. 
 
-% To understand this better, let us go on a quick detour into economics
-% and look at actual yield curves observed in the US during the Global
-% Financial Crisis (GFC). Figure~\ref{fig-gfc-1} shows the yield curve of
-% US Treasury bonds on 27 February 2007, which according to
-% \href{https://money.cnn.com/2007/02/27/markets/markets_0630/index.htm?cnn=yes}{CNN}
-% was a ``brutal day on Wall Street''.\footnote{The
-%   \href{https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202310}{data}
-%   is taken from the US Department of the Treasury.} This followed
-% \href{https://money.cnn.com/2007/02/26/news/economy/greenspan/index.htm?postversion=2007022609}{reports}
-% on the previous day of former Federal Reserve Chairman Alan Greenspan's
-% warning that the US economy was at risk of a recession. The yield curve
-% was inverted with a sharp negative spread between the 10-year and
-% 3-month yields, indicative of the market's expectation of a recession.
+The yield curve is a popular tool for investors and economists to gauge the health of the economy. It plots the yields of bonds against their maturities. The slope of the yield curve is often used as a predictor of future economic activity: a steep yield curve is associated with a growing economy, while a flat or inverted yield curve is associated with a contracting economy.
 
-% Figure~\ref{fig-gfc-2} shows the corresponding yield curve during the
-% aftermath of the GFC on 20 April 2009. On that day the influential Time
-% Magazine
-% \href{https://content.time.com/time/business/article/0,8599,1890560,00.html}{reported}
-% that the ``Banking Crisis is Over''. The yield curve was steeply sloped
-% with a positive spread between the 10-year and 3-month yields,
-% indicative of the market's expectation of a recovery. The overall level
-% of the yield curve was still very low though, indicative of the fact
-% that US economy had not fully recovered at that point.
-
-Of course, US Treasuries are not the only bonds that are traded in the
-market. To get a more complete picture of the economy, analysts might
+Of course, US Treasuries are not the only bonds that are traded in the market. To get a more complete picture of the economy, analysts might
 therefore be interested in looking at the yield curves of other bonds as
 well. In particular, we might be interested in predicting economic
 growth based on the yield curves of many different bonds. The problem
@@ -610,6 +630,10 @@ sentence for which any
 Strong alternative hypothesis to address own confirmation bias
 Articulating a test to better differentiate
 \end{quote}
+
+\subsection{Discussion of Examples}
+
+Our examples should not be seen as an attempt to conclusively refute claims that LLMs can develop on actual "understanding" of the world by distilling knowledge in more compact representations. We hope that they serve to illustrate, however, that the use of diagnostic tools is potentially misleading and most definitely insufficient in providing evidence in favor of "understanding". Linear probes and related tools from mechanistic interpretability were proposed in the context of monitoring models and diagnosing potential problems \citep{alain2018understanding}. Favourable outcomes from probes merely indicate that the model "has learned information relevant for the property [of interest]" \citep{belinkov2021probing}. Our examples demonstrate that this is achievable even for small models, that most readers will agree have certainly not developed an intrinsic "understanding" of the world. The fact that even these models distill meaningful representations goes to show that more conservative and rigorous tests are needed to draw conclusions about the emerging capabilities of AI models.
 
 \bibliography{biblio}
 \bibliographystyle{icml2024}
