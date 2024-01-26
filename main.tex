@@ -146,11 +146,13 @@ Present work case studies an example, to which claims of observed AGI 'sparks' i
 \textcolor{red}{antony: I will be adding citations and other links later, just getting text down for now.}
 As previously mentioned, AGI is the current objective for which the global AI community is shooting for. As observed in 2023, the mainstream implementation of Large Language Models (LLMs) resulted in numerous societal impacts. This enabled those companies with the more mature models to reap considerable monetary returns, despite the numerous negative news feeds. True AGI will be another global milestone for AI and the entire scientific community, thus we already witness massive claims towards it.
 
-Recently, Google DeepMind made claims their AlphaGeometry model reached a 'milestone' towards AGI. This model has the ability to solve complex geometry problems, which, they state it does without the need for human demonstrations during training. Although this is a fantastic achievement by the team, where we observe the model outperforming previous state of the art (SOTA) models, the underlying model is far from AGI. As discussed in the paper \cite{}, AlphaGeometry utilizes a rule-bound deduction engine, allowing the use of an NLP model for further suggestions when it is unable to locate a logical answer. With this combination, it was able to score highly (\textit{25/30} questions solved) where the gold standard human equivalent was \textit{25.9/30}.
+Recently, Google DeepMind made claims their AlphaGeometry model \cite{trinh2024geometry} reached a 'milestone' towards AGI. This model has the ability to solve complex geometry problems, which, they state it does without the need for human demonstrations during training. Although this is a fantastic achievement by the team, where we observe the model outperforming previous state of the art (SOTA) models, the underlying model is far from AGI. As discussed in the paper \cite{trinh2024geometry}, AlphaGeometry utilizes a rule-bound deduction engine, allowing the use of an NLP model for further suggestions when it is unable to locate a logical answer. With this combination, it was able to score highly (\textit{25/30} questions solved) where the gold standard human equivalent was \textit{25.9/30}.
 
-However, it is worth noting, that work such as this had been initially introduced in the 1950s. Without the use of an LLM, logical inference systems proved 100\% accurate in proving all the theorems of Euclidean Geometry. They were able to achieve this success due to geometry being an axiomatically closed system. Therefore, despite DeepMinds success in creating a powerfully fast Geometry solving machine, it is still far from being an AGI.
+However, as noted by Hector Zenil \cite{hector2024linkedin}, that work such as this had been initially introduced in the 1950s. Without the use of an LLM, logical inference systems proved 100\% accurate in proving all the theorems of Euclidean Geometry. They were able to achieve this success due to geometry being an axiomatically closed system. Therefore, despite DeepMinds success in creating a powerfully fast Geometry solving machine, it is still far from being an AGI.
 
-One of the more contentious pieces of literature recently studied is the paper by \cite{gurnee2023language}
+One of the more contentious pieces of literature recently studied is the paper by \cite{gurnee2023language}. This paper, which was the inspiration for our work, received numerous points of critical feedback when they discussed their work on the X\footnote{https://twitter.com} (formally Twitter) platform. Although not directly mentioning AGI, they do hint at the emergence of intelligence, specifically with the creation of the world model.
+
+They claim said models generate an internal representation of the world, with which spatiotemporal representations are created. Further to this we see claim to the generalization of tasks, in which the model can answer questions regarding spatial and temporal relationships, without the need for further training. Although these can be seen as building blocks for a more comprehensive model, it is also fair to assume that it is mere conjecture and more likely spurious correlations.
 
 As we also consider the paper by the Microsoft Research team \cite{}, despite the illusion of a claim that GPT-4 shows sparks of AGI, they do not directly claim that GPT-4 has AGI. However they do claim that we are moving closer to this goal, which is not an outlandish claim given the advancements we have seen with AI in recent years.
 
@@ -183,6 +185,21 @@ generally surprise us, we will now go through a couple of simple
 examples. To illustrate further that this phenomenon is neither
 surprising nor unique to the field of computer science, we will borrow examples from the fields of Economics and Finance in this section. We will start with very simple examples to demonstrate that even small and simple models can learn meaningful representations of the data. The final example in Section \ref{ex-llm} is a bit more involved and closer in spirit to the experiments conducted by \cite{gurnee2023language}. As we go along, we will try to discuss both the benefits and potential
 pitfalls of finding patterns in latent spaces.
+
+\subsection{Example: Injecting a World Model}\label{example-deep-learning}
+
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.5\textwidth]{results/figures/map.png}
+
+}
+
+\caption{\label{fig-map}Mapping MNIST digits to FIFA World Rankings.}
+
+\end{figure}%
+
 
 \subsection{Example: Principal Component
 Analysis}\label{example-principal-component-analysis}
@@ -278,7 +295,7 @@ dimension \((K \times M)\). To reconstruct yields, we simply multiply
 \(Z\) by the singular values and right singular vectors:
 \(\mathbf{Y}=\mathbf{Z}\Sigma\mathbf{V}^{\prime}\).
 
-\subsection{Example: Deep Learning}\label{example-deep-learning}
+\subsection{Example: Autoencoder}\label{example-deep-learning}
 
 So far we have considered simple matrix decomposition. You might argue
 that principal components are not really latent embeddings in the
@@ -371,10 +388,10 @@ economic growth. It's sentient indeed!
 
 }
 
-\caption{\label{fig-dl-results}The top panel shows the actual GDP growth
-and fitted values from the autoencoder model. The bottom panel shows the
+\caption{\label{fig-dl-results}The left chart shows the actual GDP growth
+and fitted values from the autoencoder model. The right chart shows the
 observed average level and spread of the yield curve (solid) along with
-the predicted values from the linear probe based on the latent embedding
+the predicted values (in-sample) from the linear probe based on the latent embeddings
 (dashed).}
 
 \end{figure*}%
@@ -430,7 +447,7 @@ rates to bring inflation back to target.
 
 \subsubsection{Linear Probes}\label{linear-probes}
 
-Instead of computing a measure based on predicted labels, we can use linear probes to assess if the fine-tuned model has learned associative patterns between central bank communications and key economic indicators. To this end, we have further pre-processed the data provided by \cite{shah2023trillion} and used their proposed model to compute layer-wise embeddings for all available sentences. We have made these available and easily accessible through a small Julia package: \href{https://github.com/pat-alt/TrillionDollarWords.jl}{TrillionDollarWords.jl}. For each layer, we have then computed linear probes on two inflation indicators---the Consumer Price Index (CPI) and the Producer Price Index (PPI)---as well as US Treasury yields at different levels of maturity. 
+Instead of computing a measure based on predicted labels, we can use linear probes to assess if the fine-tuned model has learned associative patterns between central bank communications and key economic indicators. To this end, we have further pre-processed the data provided by \cite{shah2023trillion} and used their proposed model to compute layer-wise embeddings for all available sentences. We have made these available and easily accessible through a small Julia package: \href{https://anonymous.4open.science/r/TrillionDollarWords/README.md}{TrillionDollarWords.jl}. For each layer, we have then computed linear probes on two inflation indicators---the Consumer Price Index (CPI) and the Producer Price Index (PPI)---as well as US Treasury yields at different levels of maturity. 
 
 To mitigate issues related to over-parameterization, we follow the recommendation in \cite{alain2018understanding} to first reduce the dimensionality of the embeddings each time. In particular, linear probes are restricted to the first 128 principal components of the embeddings
 of each layer.
