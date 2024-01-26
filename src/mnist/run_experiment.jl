@@ -50,6 +50,14 @@ fifa_world_data = DataFrames.subset(world_data, :country => ByRow(x -> haskey(fi
 
 # Continuous feature encoding:
 X = fifa_world_data[:,Not([:y])]
+
+# Noisy, correlated series of longitude and latitude:
+ϕ = 5.0    # standard deviation of noise
+ρ = 0.5     # correlation with original longitude and latitude
+X.longitude = ρ .* X.longitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
+X.latitude = ρ .* X.latitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
+
+# Encode the features:
 model = (X -> coerce(X,:entity_type => Multiclass,)) |> 
     MLJModels.FillImputer() |>
     MLJModels.ContinuousEncoder() |> 
@@ -60,28 +68,34 @@ Xtrain = MLJBase.transform(mach, X) |>
     MLJBase.matrix |> 
     permutedims |>
     x -> Float32.(x)
+
+# Add noise:
+nnoise = 1000        # add nnoise noisy and uncorrelated features
+Xtrain = vcat(Xtrain, randn(nnoise, size(Xtrain, 2))) |> 
+    x -> Float32.(x)
+d = size(Xtrain, 1)
+
 # One-hot encoding:
-y = fifa_world_data.y
-ytrain = OneHotArrays.onehotbatch(y, 0:9)
-# Dataloader:
-dl = Flux.DataLoader((Xtrain, ytrain), batchsize=32, shuffle=true)
+y = fifa_world_data.y .+ 1
 
 # Projector:
-latent = 64
+latent = 1000
+nfinal = 2
 activation = sigmoid
 projector = Chain(
     Dense(size(Xtrain, 1) => latent, activation),
-    Dense(latent => 8),
+    Dense(latent => nfinal),
 )
 
 # Linear Probes ====================
 λ = 0.1
-A = projector(Xtrain) |> permutedims
+A = Flux.activations(projector, Xtrain) |> 
+    _A -> _A[end-1] |>
+    permutedims
 Y = fifa_world_data[:, [:longitude, :latitude]] |> matrix
 W = (A'A + UniformScaling(λ)) \ A'Y
 
 # Fitted values:
-labels = OneHotArrays.onecold(ytrain)
 sorted_names = collect(keys(fifa_world_ranking))[sortperm(collect(values(fifa_world_ranking)))]
 C = makecpt(
     cmap=:categorical,
@@ -99,7 +113,7 @@ GMT.scatter!(
     Ŷ[:, 1],
     Ŷ[:, 2];
     color=C.colormap,
-    zcolor=labels,
+    zcolor=y,
     cmap=C,
     colorbar=true,
     show = true,
