@@ -53,7 +53,7 @@ X = fifa_world_data[:,Not([:y])]
 
 # Noisy, correlated series of longitude and latitude:
 ϕ = 5.0    # standard deviation of noise
-ρ = 0.75     # correlation with original longitude and latitude
+ρ = 0.5     # correlation with original longitude and latitude
 X.longitude = ρ .* X.longitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 X.latitude = ρ .* X.latitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 
@@ -70,7 +70,7 @@ Xtrain = MLJBase.transform(mach, X) |>
     x -> Float32.(x)
 
 # Add noise:
-nnoise = 1490        # add nnoise noisy and uncorrelated features
+nnoise = 2490        # add nnoise noisy and uncorrelated features
 Xtrain = vcat(Xtrain, randn(nnoise, size(Xtrain, 2))) |> 
     x -> Float32.(x)
 d = size(Xtrain, 1)
@@ -79,7 +79,7 @@ d = size(Xtrain, 1)
 y = fifa_world_data.y .+ 1
 
 # Projector:
-latent = 1000
+latent = 2000
 nfinal = 2
 activation = sigmoid
 projector = Chain(
