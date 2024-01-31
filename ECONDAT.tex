@@ -56,7 +56,7 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Submission and Formatting Instructions for ICML 2024}
+\icmltitlerunning{Against Spurious Understanding: Dovelating Inflated AI Claims}
 
 \begin{document}
 
@@ -185,7 +185,7 @@ While the manuscript immediately received public criticism~\cite{marcus2023muddl
 
 \end{figure}
 
-\subsection{Do neural networks get born with world models?}\label{example-deep-learning}
+\subsection{A Neural Networks Born with World Models?}\label{example-deep-learning}
 
 \citet{gurnee2023languagev2} extract and visualize the alleged geographical world model by training linear regression probes on internal activations in LLMs (including Llama-2) for the names of places, to predict geographical coordinates associated with these places. Now, the Llama-2 model has ingested huge amounts of publicly available data from the internet, including Wikipedia dumps from the June-August 2022 period \citep{touvron2023llama}. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance, before being passed through a series of layers which are gradually trained for downstream tasks.
 
@@ -216,7 +216,7 @@ Similarly, \citet{alain2018understanding} observe that even before training a co
 \end{figure*}
 
 
-\subsection{PCA as a yield curve interpreter}\label{example-principal-component-analysis}
+\subsection{PCA as a Yield Curve Interpreter}\label{example-principal-component-analysis}
 %\subsection{Example: Principal Component Analysis}\label{example-principal-component-analysis}
 
 We now move to a concrete application domain: Economics. Here, the yield curve, plotting the yields of bonds against their maturities, is a popular tool for investors and economists to gauge the health of the economy.
@@ -232,78 +232,73 @@ The top panel in Figure~\ref{fig-pca} shows the first two principal components o
 %Of course, even though it is reassuring to see that these latent embeddings are meaningful, none of this is surprising at all: 
 Again, it should not be surprising that these latent embeddings are meaningful: by construction, principal components are orthogonal linear combinations of the data itself, each of which explains most of the residual variance after controlling for the effect of all previous components.
 
-% \begin{figure*}
+\begin{figure*}
 
-% \centering{
+\centering{
 
-% \includegraphics[width=1.0\textwidth]{results/figures/dl.png}[tb]
+\includegraphics[width=1.0\textwidth]{results/figures/dl.png}[tb]
 
-% }
+}
 
-% \caption{\label{fig-dl-results}The left chart shows the actual GDP growth
-% and fitted values from the autoencoder model. The right chart shows the
-% observed average level and spread of the yield curve (solid) along with
-% the predicted values (in-sample) from the linear probe based on the latent embeddings
-% (dashed).}
+\caption{\label{fig-dl-results}The left chart shows the actual GDP growth
+and fitted values from the autoencoder model. The right chart shows the
+observed average level and spread of the yield curve (solid) along with
+the predicted values (in-sample) from the linear probe based on the latent embeddings
+(dashed).}
 
-% \end{figure*}%
-% %\subsection{Example: Autoencoder}\label{example-deep-learning}
-% \subsection{Autoencoders as economic growth predictors}\label{example-deep-learning}
+\end{figure*}%
+%\subsection{Example: Autoencoder}\label{example-deep-learning}
+\subsection{Autoencoders as Economic Growth Predictors}\label{example-deep-learning}
 
-% %So far we have considered simple linear transformations of data. One might argue that the previous examples to not really involve latent embeddings in the way that they are typically thought of in the context of deep learning. Our next example will therefore involve a deep neural network.
+%So far we have considered simple linear transformations of data. One might argue that the previous examples to not really involve latent embeddings in the way that they are typically thought of in the context of deep learning. Our next example will therefore involve a deep neural network.
 
-% Our goal in this section is to not only predict economic growth from the yield curve, but also extract meaningful features for downstream inference tasks. In particular, we will now use a neural network architecture.
-% %, that allows us to recover a compact latent representation of the yield curve.
+Our goal in this section is to not only predict economic growth from the yield curve, but also extract meaningful features for downstream inference tasks. In particular, we will now use a neural network architecture.
+%, that allows us to recover a compact latent representation of the yield curve.
 
-% \subsubsection{Data}\label{data}
+\subsubsection{Data}\label{data}
 
-% To estimate economic growth, we will rely on a quarterly
-% \href{https://fred.stlouisfed.org/series/GDPC1}{series} of the real gross domestic product (GDP) provided by the Federal Reserve Bank of St.~Louis. The data arrives in terms of levels of real GDP. In order to estimate growth, we transform the data using log differences. Since
-% our yield curve data is daily, we aggregate it to the
-% quarterly frequency by taking averages of daily yields for each maturity. We also standardize yields since deep learning models tend to perform better with standardized data \cite{gal2019standardization}. Since COVID-19 was a substantial structural break in the time series, we also filter out all observations after 2018.
+To estimate economic growth, we will rely on a quarterly
+\href{https://fred.stlouisfed.org/series/GDPC1}{series} of the real gross domestic product (GDP) provided by the Federal Reserve Bank of St.~Louis. The data arrives in terms of levels of real GDP. In order to estimate growth, we transform the data using log differences. Since
+our yield curve data is daily, we aggregate it to the
+quarterly frequency by taking averages of daily yields for each maturity. We also standardize yields since deep learning models tend to perform better with standardized data \cite{gal2019standardization}. Since COVID-19 was a substantial structural break in the time series, we also filter out all observations after 2018.
 
-% \subsubsection{Model}\label{model}
+\subsubsection{Model}\label{model}
 
-% %Let \(g_t\) denote growth and \(\mathbf{r}_t\) denote the matrix of aggregated Treasury yield rates at time \(t\). Then we are interested in a model for \(g_t\) conditional on \(\mathbf{r}_t\). Let \(\theta\) denote our model parameters then formally we are interested in maximizing the likelihood, \(p_{\theta}(g_t|\mathbf{r}_t)\). 
+%Let \(g_t\) denote growth and \(\mathbf{r}_t\) denote the matrix of aggregated Treasury yield rates at time \(t\). Then we are interested in a model for \(g_t\) conditional on \(\mathbf{r}_t\). Let \(\theta\) denote our model parameters then formally we are interested in maximizing the likelihood, \(p_{\theta}(g_t|\mathbf{r}_t)\). 
 
-% %To do this, we use a simple autoencoder architecture. With this
-% Using a simple autoencoder architecture, we let our model \(g_t\) denote growth and our conditional \(\mathbf{r}_t\) the matrix of aggregated Treasury yield rates at time \(t\). Finally, we let \(\theta\) denote our model parameters. Formally, we are interested in maximizing the likelihood \(p_{\theta}(g_t|\mathbf{r}_t)\). 
+%To do this, we use a simple autoencoder architecture. With this
+Using a simple autoencoder architecture, we let our model \(g_t\) denote growth and our conditional \(\mathbf{r}_t\) the matrix of aggregated Treasury yield rates at time \(t\). Finally, we let \(\theta\) denote our model parameters. Formally, we are interested in maximizing the likelihood \(p_{\theta}(g_t|\mathbf{r}_t)\). 
 
-% %To do this, we use a simple autoencoder architecture: 
-% The encoder consists of a single fully connected hidden layer with 32 neurons and a hyperbolic tangent activation function. The bottleneck layer connecting the encoder to the decoder, is a fully connected layer with 6 neurons. The decoder consists of two fully connected layers, each with a hyperbolic tangent activation function: the first layer consists of 32 neurons and the second layer will have the same dimension as the input data. The output layer consists of a single neuron for our output variable, \(g_t\). We train the model over 1,000 epochs to minimize mean squared error loss using the Adam optimizer~\citep{kingma2017adam}.
+%To do this, we use a simple autoencoder architecture: 
+The encoder consists of a single fully connected hidden layer with 32 neurons and a hyperbolic tangent activation function. The bottleneck layer connecting the encoder to the decoder, is a fully connected layer with 6 neurons. The decoder consists of two fully connected layers, each with a hyperbolic tangent activation function: the first layer consists of 32 neurons and the second layer will have the same dimension as the input data. The output layer consists of a single neuron for our output variable, \(g_t\). We train the model over 1,000 epochs to minimize mean squared error loss using the Adam optimizer~\citep{kingma2017adam}.
 
-% The in-sample fit of the model is shown in the left chart of Figure~\ref{fig-dl-results}, which shows actual GDP growth and fitted values from the autoencoder
-% model. The model has a large number of free parameters and captures the relationship between economic growth and the yield curve reasonably well, as expected. Since our primary goal is not out-of-sample prediction accuracy but feature extraction for inference, we use all of the available data instead of reserving a hold-out set. As discussed above, we also know that the relationship between economic growth and the yield curve is characterized by two main factors: the level and the spread. Since the model itself is fully characterized by its parameters, we would expect that these two important factors are reflected somewhere in the latent parameter space. 
+The in-sample fit of the model is shown in the left chart of Figure~\ref{fig-dl-results}, which shows actual GDP growth and fitted values from the autoencoder
+model. The model has a large number of free parameters and captures the relationship between economic growth and the yield curve reasonably well, as expected. Since our primary goal is not out-of-sample prediction accuracy but feature extraction for inference, we use all of the available data instead of reserving a hold-out set. As discussed above, we also know that the relationship between economic growth and the yield curve is characterized by two main factors: the level and the spread. Since the model itself is fully characterized by its parameters, we would expect that these two important factors are reflected somewhere in the latent parameter space. 
 
-% \subsubsection{Linear Probe}\label{linear-probe}
+\subsubsection{Linear Probe}\label{linear-probe}
 
-% While the loss function applies most direct pressure on layers near the final output layer, any information useful for the downstream task first needs to pass through the bottleneck layer \citep{alain2018understanding}. On a per-neuron basis, the pressure to distill useful representation is therefore likely maximized there. Consequently, the bottleneck layer activations seem like a natural place to start looking for compact, meaningful representations of distilled information.  We compute and extract these activations \(A_t\) for all time periods \(t=1,...,T\). Next, we use a linear probe to regress the observed
-% yield curve factors on the latent embeddings. Let \(Y_t\) denote the vector containing the two factors of interest in time \(t\): \(y_{t,l}\) and \(y_{t,s}\) for the level and spread, respectively. Formally, we are interested in the following regression model: \(p_{w}(Y_t|A_t)\) where \(w\) denotes the regression
-% parameters. We use Ridge regression with \(\lambda\) set to \(0.1\). Using the estimated regression parameters \(\hat{w}\), we then predict the yield curve factors% from the latent embeddings
-% : \(\hat{Y}_t=\hat{w}^{\prime}A_t\).
+While the loss function applies most direct pressure on layers near the final output layer, any information useful for the downstream task first needs to pass through the bottleneck layer \citep{alain2018understanding}. On a per-neuron basis, the pressure to distill useful representation is therefore likely maximized there. Consequently, the bottleneck layer activations seem like a natural place to start looking for compact, meaningful representations of distilled information.  We compute and extract these activations \(A_t\) for all time periods \(t=1,...,T\). Next, we use a linear probe to regress the observed
+yield curve factors on the latent embeddings. Let \(Y_t\) denote the vector containing the two factors of interest in time \(t\): \(y_{t,l}\) and \(y_{t,s}\) for the level and spread, respectively. Formally, we are interested in the following regression model: \(p_{w}(Y_t|A_t)\) where \(w\) denotes the regression
+parameters. We use Ridge regression with \(\lambda\) set to \(0.1\). Using the estimated regression parameters \(\hat{w}\), we then predict the yield curve factors% from the latent embeddings
+: \(\hat{Y}_t=\hat{w}^{\prime}A_t\).
 
-% The in-sample predictions of the probe are shown in the right chart of Figure~\ref{fig-dl-results}. Solid lines show the observed yield curve factors over time, while dashed lines show predicted values. We find that the latent embeddings predict the two yield curve factors reasonably well, in particular the spread. %As in all of the other examples we have presented so, we do not find this result particularly surprising. 
+The in-sample predictions of the probe are shown in the right chart of Figure~\ref{fig-dl-results}. Solid lines show the observed yield curve factors over time, while dashed lines show predicted values. We find that the latent embeddings predict the two yield curve factors reasonably well, in particular the spread. %As in all of the other examples we have presented so, we do not find this result particularly surprising. 
 
-% Did the neural network now learn an intrinsic understanding of the economic relationship between growth and the yield curve? To us, that would be too big of statement. Still, the current form of information distillation can be useful, even beyond its intended use for monitoring models.
-% %It may serve as a reasonable diagnostic tool to reassure us that the model has picked up on meaningful patterns in the underlying data. But we would certainly not conclude that the model has somehow implicitly developed an intrinsic "understanding" of the economic relationship between growth and the yield curve. While we do not prescribe to this particular view, we still support the idea that this form of information distillation can be useful even beyond its intended use for monitoring models, which we will turn to next.
-% %\subsubsection{Potential Use-Case: Inference}\label{ok-but-truly-whats-the-point}
-% For example, an interesting idea could be to use the latent embeddings as features in a more traditional and interpretable econometric model. To demonstrate this, let us consider a simple linear regression model for GDP growth. We might be interested in understanding to what degree economic growth in the past is associated with economic growth today. As we might expect, linearly regressing economic growth on lagged growth, as in column (1) of Table \ref{tab-reg}, yields a statistically significant coefficient. But this coefficient suffers from confounding bias, since there are many other confounding variables at play, of which some may be readily observable and measurable, but others may not.
+Did the neural network now learn an intrinsic understanding of the economic relationship between growth and the yield curve? To us, that would be too big of statement. Still, the current form of information distillation can be useful, even beyond its intended use for monitoring models.
 
-% % A less risky/strong term than confounding bias that we could use here is omitted variable bias. Difference is nuanced: https://stats.stackexchange.com/questions/496328/difference-omitted-variable-bias-and-confounding
+For example, an interesting idea could be to use the latent embeddings as features in a more traditional and interpretable econometric model. To demonstrate this, let us consider a simple linear regression model for GDP growth. We might be interested in understanding to what degree economic growth in the past is associated with economic growth today. As we might expect, linearly regressing economic growth on lagged growth, as in column (1) of Table \ref{tab-reg}, yields a statistically significant coefficient. But this coefficient suffers from confounding bias, since there are many other confounding variables at play, of which some may be readily observable and measurable, but others may not.
 
-% We
-% %have, for example, 
-% e.g.\ already mentioned the relationship between interest rates and economic growth. To account for that, while keeping our regression model as parsimonious as possible, we could include the level and the spread of the US Treasury yield curve as additional regressors. While this slightly changes the estimated magnitude of the coefficient on lagged growth, the coefficients on the observed level and spread are statistically insignificant (column (2) in Table \ref{tab-reg}). This indicates that these measures may be too crude to capture valuable information about the relationship between yields and economic growth. Because we have included two additional regressors with little to no predictive power, the model fit as measured by the Bayes Information Criterium (BIC) has actually deteriorated.
+We e.g.\ already mentioned the relationship between interest rates and economic growth. To account for that, while keeping our regression model as parsimonious as possible, we could include the level and the spread of the US Treasury yield curve as additional regressors. While this slightly changes the estimated magnitude of the coefficient on lagged growth, the coefficients on the observed level and spread are statistically insignificant (column (2) in Table \ref{tab-reg}). This indicates that these measures may be too crude to capture valuable information about the relationship between yields and economic growth. Because we have included two additional regressors with little to no predictive power, the model fit as measured by the Bayes Information Criterium (BIC) has actually deteriorated.
 
-% Column (3) of Table \ref{tab-reg} shows the effect of instead including one of the latent embeddings that we recovered above in the regression model. In particular, we pick the one latent embedding that we have found to exhibit the most significant effect on the output variable in a separate regression of growth on all latent embeddings. The estimated coefficient on this latent factor is small in magnitude, but statistically significant. The overall model fit, as measured by the BIC as improved and the magnitude of the coefficient on lagged growth, has changed quite a bit. While this is still a very incomplete toy model of economic growth, it appears that the compact latent representation we recovered can  be used in order to mitigate confounding bias.
+Column (3) of Table \ref{tab-reg} shows the effect of instead including one of the latent embeddings that we recovered above in the regression model. In particular, we pick the one latent embedding that we have found to exhibit the most significant effect on the output variable in a separate regression of growth on all latent embeddings. The estimated coefficient on this latent factor is small in magnitude, but statistically significant. The overall model fit, as measured by the BIC as improved and the magnitude of the coefficient on lagged growth, has changed quite a bit. While this is still a very incomplete toy model of economic growth, it appears that the compact latent representation we recovered can  be used in order to mitigate confounding bias.
 
-% \begin{table}
-% \caption{Regression output for various models.}\label{tab-reg}%
-% \input{results/regression.tex}
-% \end{table}
+\begin{table}
+\caption{Regression output for various models.}\label{tab-reg}%
+\input{results/regression.tex}
+\end{table}
 
 %\subsection{Example: Large Language Model}\label{ex-llm}
-\subsection{LLMs for economic sentiment prediction}\label{ex-llm}
+\subsection{LLMs for Economic Sentiment Prediction}\label{ex-llm}
 
 So far we have considered simple linear transformations of data. One might argue that the previous examples to not really involve latent embeddings in the way that they are typically thought of in the context of deep learning. Our next example will therefore involve a deep-learning based LLM.
 
@@ -359,7 +354,9 @@ To better assess the predictive power of our probes, we compare their prediction
 %The results from the linear probes shown in Figure~\ref{fig-fomc} are certainly not unimpressive:
 Even though \emph{FOMC-RoBERTa} (which is substantially smaller than the models tested in~\citet{gurnee2023languagev2} was not explicitly trained to uncover associations between central bank communications and the level of consumer prices, it appears that the model has distilled representations that can be used to predict inflation (although they certainly will not win any forecasting competitions). So, have we uncovered further evidence that LLMs ``aren't mere stochastic
 parrots''? Has \emph{FOMC-RoBERTa} developed an intrinsic `understanding'
-of the economy just by `reading' central bank communications? Thus, can economists readily adopt FOMC-RoBERTa as a domain-relevant tool?
+of the economy just by `reading' central bank communications? Should the FOMC use this LLM to direct their forward guidance? 
+
+% ICML sentence: Thus, can economists readily adopt FOMC-RoBERTa as a domain-relevant tool?
 
 %It is worth pointing out here that this model is substantially smaller than the models tested in \citet{gurnee2023language}. This may tempt us to ask the following questions:
 
@@ -379,34 +376,32 @@ In light of the encouraging results for the probe in Figure~\ref{fig-fomc}, we s
 
 To get to this last point, we also generate many probe predictions for samples of noise. Let \(f: \mathcal{A}^k \mapsto \mathcal{Y}\) denote the linear probe that maps from the \(k\)-dimensional space spanned by \(k\) first principal components of the final-layer activations to the output variable of interest (CPI growth in this case). Then we sample \(\varepsilon_i \sim \mathcal{N}(\mathbf{0},\mathbf{I}^{(k \times k)})\) for \(i \in [1,1000]\) and compute the sample average. We repeat this process \(10000\) times and compute the median-of-means to get an estimate for \(\mathbb{E}[f(\varepsilon)]=\mathbb{E}[y|\varepsilon]\), that is the predicted value of the probe conditional on random noise.
 
-Figure~\ref{fig-attack} shows the results of this small test: it shows predicted inflation levels subtracted by \(\mathbb{E}[f(\varepsilon)]\). The median linear probe predictions for sentences about inflation and deflation are indeed substantially higher and lower, respectively than for random noise. Unfortunately, the same is true for sentences about the inflation and deflation in the number of birds, albeit to a somewhat lower degree. This finding holds for both inflation indicators and to a lesser degree also for yields at different maturities, at least qualitatively.
+Next, we propose the following hypothesis test as a minimum viable testing framework to assess if the probe results (may) provide evidence for an actual `understanding' of key economic relationships learned purely from text:
 
-% Next, we propose the following hypothesis test as a minimum viable testing framework to assess if the probe results (may) provide evidence for an actual `understanding' of key economic relationships learned purely from text:
+\begin{proposition}[Parrot
+Test]\protect\hypertarget{prp-line}{}\label{prp-line}
 
-% \begin{proposition}[Parrot
-% Test]\protect\hypertarget{prp-line}{}\label{prp-line}
+~
 
-% ~
-
-% \begin{itemize}
-% \setlength\itemsep{1px}
-% \item
-%   \emph{H0} (Null \emph{WEAK}): The probe never predicts values that are statistically significantly different from \(\mathbb{E}[f(\varepsilon)]\).
-% \item
-%   \emph{H1} (Stochastic Parrots \emph{RISKIER}): The probe predicts values that are statistically significantly different from \(\mathbb{E}[f(\varepsilon)]\) for sentences related to the outcome of interest \emph{and} those that are independent (i.e. sentences in all categories).
-% \item
-%   \emph{H2} (More than Mere Stochastic Parrots \emph{RISKIEST}): The probe predicts values that are statistically significantly different from \(\mathbb{E} [f(\varepsilon)]\) for sentences in that are related to the outcome variable (IP and DP), but not for sentences that are independent of the outcome (IB and DB).
-% \end{itemize}
-% \end{proposition}
+\begin{itemize}
+\setlength\itemsep{1px}
+\item
+  \emph{H0} (Null): The probe never predicts values that are statistically significantly different from \(\mathbb{E}[f(\varepsilon)]\).
+\item
+  \emph{H1} (Stochastic Parrots): The probe predicts values that are statistically significantly different from \(\mathbb{E}[f(\varepsilon)]\) for sentences related to the outcome of interest \emph{and} those that are independent (i.e. sentences in all categories).
+\item
+  \emph{H2} (More than Mere Stochastic Parrots): The probe predicts values that are statistically significantly different from \(\mathbb{E} [f(\varepsilon)]\) for sentences in that are related to the outcome variable (IP and DP), but not for sentences that are independent of the outcome (IB and DB).
+\end{itemize}
+\end{proposition}
 
 
-% To be clear, if in such a test we did find substantial evidence in favour of rejecting both \emph{HO} and \emph{H1}, this would not automatically imply that \emph{H2} is true. But to even continue investigating, if based on having learned meaningful representation the underlying LLM is more than just a parrot, it should be able to pass this simple test.
+To be clear, if in such a test we did find substantial evidence in favour of rejecting both \emph{HO} and \emph{H1}, this would not automatically imply that \emph{H2} is true. But to even continue investigating, if based on having learned meaningful representation the underlying LLM is more than just a parrot, it should be able to pass this simple test.
 
-% In this particular case, Figure~\ref{fig-attack} demonstrates that we find some evidence to reject \emph{H0} but not \emph{H1} for \emph{FOMC-RoBERTa}. The median linear probe predictions for sentences about inflation and deflation are indeed substantially higher and lower, respectively than for random noise. Unfortunately, the same is true for sentences about the inflation and deflation in the number of birds, albeit to a somewhat lower degree. This finding holds for both inflation indicators and to a lesser degree also for yields at different maturities, at least qualitatively.
+In this particular case, Figure~\ref{fig-attack} demonstrates that we find some evidence to reject \emph{H0} but not \emph{H1} for \emph{FOMC-RoBERTa}. The median linear probe predictions for sentences about inflation and deflation are indeed substantially higher and lower, respectively than for random noise. Unfortunately, the same is true for sentences about the inflation and deflation in the number of birds, albeit to a somewhat lower degree. This finding holds for both inflation indicators and to a lesser degree also for yields at different maturities, at least qualitatively.
 
-% We should note that the number of sentences in each category is very small here (10), so the results in Figure~\ref{fig-attack} cannot be used to establish statistical significance. That being said, even a handful of convincing counter-examples should be enough for us to seriously question the claim, that results from linear probes provide evidence in favor of real `understanding'. In fact, even a handful of sentences for which any human annotator would easily arrive at the conclusion of independence, a prediction by the probe in either direction casts doubt.
+We should note that the number of sentences in each category is very small here (10), so the results in Figure~\ref{fig-attack} cannot be used to establish statistical significance. That being said, even a handful of convincing counter-examples should be enough for us to seriously question the claim, that results from linear probes provide evidence in favor of real `understanding'. In fact, even a handful of sentences for which any human annotator would easily arrive at the conclusion of independence, a prediction by the probe in either direction casts doubt.
 
-\section{On human proneness to over-interpretation}
+\section{On Human Proneness to Over-Interpretation}
 Linear probes and related tools from mechanistic interpretability were proposed in the context of monitoring models and diagnosing potential problems \citep{alain2018understanding}. Favorable outcomes from probes merely indicate that the model ``has learned information relevant for the property [of interest]" \citep{belinkov2021probing}. Our examples demonstrate, that this is achievable even for small models, while these models have certainly not developed an intrinsic ``understanding'' of the world. Thus, to draw conclusions about the emerging capabilities of AI models, we argue that more conservative and rigorous tests are needed.
 
 %that most readers will agree, have certainly not developed an intrinsic "understanding" of the world. The fact that even these models distill meaningful representations, goes to show, that more conservative and rigorous tests are needed, to draw conclusions about the emerging capabilities of AI models.
@@ -418,7 +413,7 @@ Generally, humans are prone to seek patterns everywhere. Meaningful patterns hav
 We argue herein that AI research and development is a perfect storm that encourages our human biases to perceive spurious sparks of general intelligence in AI systems. When an AI system extracts patterns in the corpus not originally (thought to be) perceived during training, from a human perspective, we can easily be misled to perceive and interpret this as the AI system having greater cognitive capabilities. We further elaborate on this by highlighting the risks of finding spurious patterns, and reviewing social science knowledge on the tendency of humans to anthropomorphize and have cognitive bias.
 %. This `emergence' of understanding is more frequently observed (mistaken) thanks in part to the humongous, obscured data with which these models are trained upon.
 
-\subsection{Spurious relationships}
+\subsection{Spurious Relationships}
 In statistics, misleading patterns are often referred to as spurious relationships: associations, often quantitatively assessed, between two or more variables that are not causally related to each other. Although the formal definition of spuriousness varies somewhat \cite{haig2003spurious}, it distinctly implies that the observation of correlations does not necessarily imply causation. Quantitative data often show non-causal associations (as humorously demonstrated on the \href{http://www.tylervigen.com/spurious-correlations}{Spurious Correlations} website), and as adept as humans are at recognizing patterns, we typically have a much harder time discerning spurious relationships from causal ones. A major contributor is that humans struggle to tell the difference between random and non-random sequences \cite{falk1997making}, and to generate sequences that appear random \cite{ladouceur1996erroneous}. A common issue is a lack of expectation that randomness that hints towards a causal relationship, such as correlations, will still appear at random. This leads even those trained in statistics and probability to perceive illusory correlations, correlations of inflated magnitude (see \citet{nickerson1998confirmation}), or causal relationships in data that is randomly generated \cite{zgraggen2018investigating}.
 
 
@@ -518,26 +513,6 @@ Thus, we as academic researchers carry great responsibility on how the narrative
 
 \bibliography{biblio}
 \bibliographystyle{icml2024}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% APPENDIX
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\appendix
-\onecolumn
-\section{You \emph{can} have an appendix here.}
-
-You can have as much text here as you want. The main body must be at most $8$ pages long.
-For the final version, one more page can be added.
-If you want, you can use an appendix like this one.  
-
-The $\mathtt{\backslash onecolumn}$ command above can be kept in place if you prefer a one-column appendix, or can be removed if you prefer a two-column appendix.  Apart from this possible change, the style (font size, spacing, margins, page numbering, etc.) should be kept the same as the main body.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \end{document}
 
