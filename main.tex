@@ -56,7 +56,7 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Submission and Formatting Instructions for ICML 2024}
+\icmltitlerunning{Against Spurious Understanding: Dovelating Inflated AI Claims}
 
 \begin{document}
 
@@ -80,15 +80,15 @@
 \icmlsetsymbol{equal}{*}
 
 \begin{icmlauthorlist}
-\icmlauthor{Patrick Altmeyer}{yyy}
-\icmlauthor{Antony Bartlett}{equal, yyy}
-\icmlauthor{Andrew M. Demetriou}{equal, yyy}
+\icmlauthor{Patrick Altmeyer}{equal,yyy}
+\icmlauthor{Andrew M. Demetriou}{equal,yyy}
+\icmlauthor{Antony Bartlett}{yyy}
 \icmlauthor{Cynthia C. S. Liem}{yyy}
 \end{icmlauthorlist}
 
 \icmlaffiliation{yyy}{Department of Intelligent Systems, Delft University of Technology, Delft, the Netherlands}
 
-\icmlcorrespondingauthor{Firstname1 Lastname1}{first1.last1@xxx.edu}
+\icmlcorrespondingauthor{Patrick Altmeyer}{patrick.altmeyer@tudelft.nl}
 
 % You may provide any keywords that you
 % find helpful for describing your paper; these are used to populate
@@ -185,7 +185,7 @@ While the manuscript immediately received public criticism~\cite{marcus2023muddl
 
 \end{figure}
 
-\subsection{Do neural networks get born with world models?}\label{example-deep-learning}
+\subsection{Are Neural Networks Born with World Models?}\label{example-deep-learning}
 
 \citet{gurnee2023languagev2} extract and visualize the alleged geographical world model by training linear regression probes on internal activations in LLMs (including Llama-2) for the names of places, to predict geographical coordinates associated with these places. Now, the Llama-2 model has ingested huge amounts of publicly available data from the internet, including Wikipedia dumps from the June-August 2022 period \citep{touvron2023llama}. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance, before being passed through a series of layers which are gradually trained for downstream tasks.
 
@@ -216,7 +216,7 @@ Similarly, \citet{alain2018understanding} observe that even before training a co
 \end{figure*}
 
 
-\subsection{PCA as a yield curve interpreter}\label{example-principal-component-analysis}
+\subsection{PCA as a Yield Curve Interpreter}\label{example-principal-component-analysis}
 %\subsection{Example: Principal Component Analysis}\label{example-principal-component-analysis}
 
 We now move to a concrete application domain: Economics. Here, the yield curve, plotting the yields of bonds against their maturities, is a popular tool for investors and economists to gauge the health of the economy.
@@ -303,7 +303,7 @@ Again, it should not be surprising that these latent embeddings are meaningful: 
 % \end{table}
 
 %\subsection{Example: Large Language Model}\label{ex-llm}
-\subsection{LLMs for economic sentiment prediction}\label{ex-llm}
+\subsection{LLMs for Economic Sentiment Prediction}\label{ex-llm}
 
 So far we have considered simple linear transformations of data. One might argue that the previous examples to not really involve latent embeddings in the way that they are typically thought of in the context of deep learning. Our next example will therefore involve a deep-learning based LLM.
 
@@ -406,7 +406,7 @@ Figure~\ref{fig-attack} shows the results of this small test: it shows predicted
 
 % We should note that the number of sentences in each category is very small here (10), so the results in Figure~\ref{fig-attack} cannot be used to establish statistical significance. That being said, even a handful of convincing counter-examples should be enough for us to seriously question the claim, that results from linear probes provide evidence in favor of real `understanding'. In fact, even a handful of sentences for which any human annotator would easily arrive at the conclusion of independence, a prediction by the probe in either direction casts doubt.
 
-\section{On human proneness to over-interpretation}
+\section{On Human Proneness to Over-Interpretation}
 Linear probes and related tools from mechanistic interpretability were proposed in the context of monitoring models and diagnosing potential problems \citep{alain2018understanding}. Favorable outcomes from probes merely indicate that the model ``has learned information relevant for the property [of interest]" \citep{belinkov2021probing}. Our examples demonstrate, that this is achievable even for small models, while these models have certainly not developed an intrinsic ``understanding'' of the world. Thus, to draw conclusions about the emerging capabilities of AI models, we argue that more conservative and rigorous tests are needed.
 
 %that most readers will agree, have certainly not developed an intrinsic "understanding" of the world. The fact that even these models distill meaningful representations, goes to show, that more conservative and rigorous tests are needed, to draw conclusions about the emerging capabilities of AI models.
@@ -418,7 +418,7 @@ Generally, humans are prone to seek patterns everywhere. Meaningful patterns hav
 We argue herein that AI research and development is a perfect storm that encourages our human biases to perceive spurious sparks of general intelligence in AI systems. When an AI system extracts patterns in the corpus not originally (thought to be) perceived during training, from a human perspective, we can easily be misled to perceive and interpret this as the AI system having greater cognitive capabilities. We further elaborate on this by highlighting the risks of finding spurious patterns, and reviewing social science knowledge on the tendency of humans to anthropomorphize and have cognitive bias.
 %. This `emergence' of understanding is more frequently observed (mistaken) thanks in part to the humongous, obscured data with which these models are trained upon.
 
-\subsection{Spurious relationships}
+\subsection{Spurious Relationships}
 In statistics, misleading patterns are often referred to as spurious relationships: associations, often quantitatively assessed, between two or more variables that are not causally related to each other. Although the formal definition of spuriousness varies somewhat \cite{haig2003spurious}, it distinctly implies that the observation of correlations does not necessarily imply causation. Quantitative data often show non-causal associations (as humorously demonstrated on the \href{http://www.tylervigen.com/spurious-correlations}{Spurious Correlations} website), and as adept as humans are at recognizing patterns, we typically have a much harder time discerning spurious relationships from causal ones. A major contributor is that humans struggle to tell the difference between random and non-random sequences \cite{falk1997making}, and to generate sequences that appear random \cite{ladouceur1996erroneous}. A common issue is a lack of expectation that randomness that hints towards a causal relationship, such as correlations, will still appear at random. This leads even those trained in statistics and probability to perceive illusory correlations, correlations of inflated magnitude (see \citet{nickerson1998confirmation}), or causal relationships in data that is randomly generated \cite{zgraggen2018investigating}.
 
 
