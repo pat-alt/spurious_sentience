@@ -1,4 +1,4 @@
-using Pkg; Pkg.activate("src/mnist")
+using Pkg; Pkg.activate("src/world_map")
 
 using CounterfactualExplanations.Data: load_mnist
 using CSV
