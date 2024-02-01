@@ -112,7 +112,7 @@
 Humans have a tendency to see `human'-like qualities in objects around them. We name our cars, and talk to pets and even household appliances, as if they could understand us as other humans do. This behavior, called anthropomorphism, is also seeing traction in Machine Learning (ML), where human-like intelligence is claimed to be perceived in Large Language Models (LLMs). 
 In this position paper, considering professional incentives, human biases, and general methodological setups, we discuss how the current search for Artificial General Intelligence (AGI) is a perfect storm for over-attributing human-like qualities to LLMs.
 %why humans invariably anthropomorphize objects, and how the search for Artificial General Intelligence (AGI) is a perfect storm to overemphasize the performance of LLMs. To combat this,
-In several experiments, we demonstrate that the discovery of human-interpretable patterns in latent spaces should not be a surprising outcome. Also in consideration of common AI portrayal in the media, we call for the academic community to exercise extra caution, and to be extra aware of principles of academic integrity, in interpretating and communicating about AI research outcomes.
+In several experiments, we demonstrate that the discovery of human-interpretable patterns in latent spaces should not be a surprising outcome. Also in consideration of common AI portrayal in the media, we call for the academic community to exercise extra caution, and to be extra aware of principles of academic integrity, in interpreting and communicating about AI research outcomes.
 %Finally, we discuss how the popularity in media and the race for AGI enforces spurious over-interpretation of intelligence in the models we use.
 
 \end{abstract}
@@ -133,7 +133,7 @@ At the same time, in the way in which academic research is disseminated in the A
 
 Where AI used to be a computational modeling tool to better understand human cognition~\cite{vanrooij2023aitheoretical}, the recent interest in AI and LLMs has been turning into one in which AI is seen as a tool that can mimic, surpass and potentially replace human intelligence. In this, the achievement of Artificial General Intelligence (AGI) has become a grand challenge, and in some cases, an explicit business goal. The definition of AGI itself is not as clear-cut or consistent; loosely, it is a phenomenon contrasting with `narrow AI' systems, that were trained for specific tasks~\cite{bubeck2023sparks}. In practice, to demonstrate that the achievement of AGI may be getting closer, researchers have sought to show that AI models generalize to different (and possibly unseen) tasks, with little human intervention, or show performance considered `surprising' to humans.
 
-For example, Google DeepMind claimed their AlphaGeometry model~\cite{trinh2024geometry} reached a `milestone' towards AGI. This model has the ability to solve complex geometry problems, allegedly without the need for human demonstrations during training. However, as noted by Hector Zenil~\cite{hector2024linkedin}, work such as this had been initially introduced in the 1950s. Without the use of an LLM, logical inference systems proved 100\% accurate in proving all the theorems of Euclidean Geometry, due to geometry being an axiomatically closed system. Therefore, despite DeepMind's success in creating a powerfully fast geometry-solving machine, it is still far from being AGI.
+For example, Google DeepMind claimed their AlphaGeometry model~\cite{trinh2024geometry} reached a `milestone' towards AGI. This model has the ability to solve complex geometry problems, allegedly without the need for human demonstrations during training. However, work such as this had been initially introduced in the 1950s~\cite{hector2024linkedin}: without the use of an LLM, logical inference systems proved 100\% accurate in proving all the theorems of Euclidean Geometry, due to geometry being an axiomatically closed system. Therefore, despite DeepMind's success in creating a powerfully fast geometry-solving machine, it is still far from being AGI.
 
 Generally, in the popularity of ChatGPT and the integration of generative AI in productivity tools (e.g.\ through Microsoft's Copilot integrations in GitHub and Office applications), one also can wonder whether the promise of AI is more in computationally achieving general intelligence, or rather in the engineering of general-purpose tools\footnote{A Swiss army knife is an effective general-purpose tool, without people wondering whether it is intelligent.}. Regardless, stakes and interests are high, e.g.\ with ChatGPT clearing nearly \$1 billion in months of its release\footnote{\url{https://www.bloomberg.com/news/articles/2023-08-30/openai-nears-1-billion-of-annual-sales-as-chatgpt-takes-off}}.
 
@@ -194,7 +194,7 @@ platform~\cite{gurnee2023languagev1}. Through linear probing experiments, the cl
 
 \citet{gurnee2023languagev2} extract and visualize the alleged geographical world model by training linear regression probes on internal activations in LLMs (including Llama-2) for the names of places, to predict geographical coordinates associated with these places. Now, the Llama-2 model has ingested huge amounts of publicly available data from the internet, including Wikipedia dumps from the June-August 2022 period \citep{touvron2023llama}. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance before being passed through a series of layers which are gradually trained for downstream tasks.
 
-In our first example in this section, we simulate this scenario, stopping short of training the model. In particular, we take the \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv} that was used in \citet{gurnee2023languagev2}, which maps locations/areas to their latitude and longitude. For each place, it also indicates the corresponding country. From this, we take the subset that contains countries that are currently part of the top 10 \href{https://www.fifa.com/fifa-world-ranking/men?dateId=id14142}{FIFA world ranking}, and assign the current rank to each country (i.e., Argentina gets 1, France gets 2, \ldots{}). To ensure that the training data only involves a noisy version of the coordinates, we transform the longitude and latitude data as follows: \(\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon\) where \(\rho=0.5\) and \(\epsilon \sim \mathcal{N}(0, 5)\).
+In our first example, we simulate this scenario, stopping short of training the model. In particular, we take the \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv} that was used in \citet{gurnee2023languagev2}, which maps locations/areas to their latitude and longitude. For each place, it also indicates the corresponding country. From this, we take the subset that contains countries that are currently part of the top 10 \href{https://www.fifa.com/fifa-world-ranking/men?dateId=id14142}{FIFA world ranking}, and assign the current rank to each country (i.e., Argentina gets 1, France gets 2, \ldots{}). To ensure that the training data only involves a noisy version of the coordinates, we transform the longitude and latitude data as follows: \(\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon\) where \(\rho=0.5\) and \(\epsilon \sim \mathcal{N}(0, 5)\).
 
 Next, we encode all features except the FIFA world rank indicator as continuous variables: \(X^{(n \times m)}\) where \(n\) is the number of samples and \(m\) is the number of resulting features. Additionally, we add a large number of random features to \(X\) to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. Let \(d\) denote the final number of features, i.e.~\(d=m+k\) where \(k\) is the number of random features.
 
@@ -210,7 +210,7 @@ this simple example illustrates that meaningful target representations should be
 
 \centering{
 
-\includegraphics[width=0.8\textwidth]{results/figures/pca.png}
+\includegraphics[width=0.7\textwidth]{results/figures/pca.png}
 
 }
 
@@ -239,7 +239,7 @@ are strongly positively correlated with the actual observed first two moments of
 
 \centering{
 
-\includegraphics[width=0.8\textwidth]{results/figures/pca_yield.png}
+\includegraphics[width=0.7\textwidth]{results/figures/pca_yield.png}
 
 }
 
@@ -261,9 +261,10 @@ Closely following the approach in \citet{gurnee2023languagev2}, we apply it to t
 %Instead of computing a measure based on predicted labels,
 We now use linear probes to assess if the fine-tuned model has learned associative patterns between central bank communications and key economic indicators. Therefore, we further pre-process the data provided by \citet{shah2023trillion} and use their proposed model to compute activations of the hidden state, on the first entity token for each layer. We have made these available and easily accessible through a small Julia package: \href{https://anonymous.4open.science/r/TrillionDollarWords/README.md}{TrillionDollarWords.jl}. 
 
-For each layer, we compute linear probes through Ridge regression on two inflation indicators---the Consumer Price Index (CPI) and the Producer Price Index (PPI)---as well as US Treasury yields at different levels of maturity. To allow for a comparison with \citet{shah2023trillion}, we let yields enter the regressions in levels. To measure price inflation we use percentage changes proxied by log differences.
-
-To mitigate issues related to over-parameterization, we follow the recommendation in \citet{alain2018understanding} to first reduce the dimensionality of the computed activations each time. In particular, we restrict our linear probes to the first 128 principal components of the embeddings of each layer.
+For each layer, we compute linear probes through Ridge regression on two inflation indicators (the Consumer Price Index (CPI) and the Producer Price Index (PPI)) and US Treasury yields at different levels of maturity. To allow
+%for a 
+comparison with \citet{shah2023trillion}, we let yields enter the regressions in levels. To measure price inflation we use percentage changes proxied by log differences. To mitigate issues related to over-parameterization, we follow the recommendation in \citet{alain2018understanding} to first reduce the dimensionality of the computed activations.% each time.
+In particular, we restrict our linear probes to the first 128 principal components of the embeddings of each layer.
 %We found that not doing so would generally lead to poor out-of-sample performance.
 To account for stochasticity, we use an expanding window scheme with 5 folds for each indicator and layer. To avoid look-ahead bias, PCA is always computed on the sub-samples used for training the probe. 
 
@@ -329,7 +330,9 @@ Figure~\ref{fig-attack} shows the results of this small test: it shows predicted
 
 \section{Human Proneness to Over-Interpretation}
 
-Linear probes and related tools from mechanistic interpretability were proposed in the context of monitoring models and diagnosing potential problems \citep{alain2018understanding}. Favorable outcomes from probes merely indicate that the model ``has learned information relevant for the property [of interest]" \citep{belinkov2021probing}. Our examples demonstrate that this is achievable even for small models, while these models have certainly not developed an intrinsic ``understanding'' of the world. Thus, to draw conclusions about the emerging capabilities of AI models, we argue that more conservative and rigorous tests are needed.
+Linear probes and related tools from mechanistic interpretability were proposed in the context of monitoring models and diagnosing potential problems \citep{alain2018understanding}. Favorable outcomes from probes merely indicate that the model ``has learned information relevant for the property [of interest]" \citep{belinkov2021probing}. Our examples demonstrate that this is achievable even for small models, while these have certainly not developed intrinsic ``understanding'' of the world. Thus, 
+%to draw conclusions about the emerging capabilities of AI models,
+we argue that more conservative and rigorous tests for emerging capabilities of AI model are needed.
 
 %that most readers will agree, have certainly not developed an intrinsic "understanding" of the world. The fact that even these models distill meaningful representations, goes to show, that more conservative and rigorous tests are needed, to draw conclusions about the emerging capabilities of AI models.
 
@@ -386,7 +389,9 @@ The third component is the motivation as a human to be competent (effectance mot
 
 These pressures extend to AI experts, as well as laypersons. In both scholarly and commercial fields, AI experts face considerable pressure to demonstrate competence in their work. Citation metrics and scholarly publications remain the primary metric for tenure and promotion, e.g. \cite{alperin2019significant}, and the number of publications in the AI field has boomed as evidenced by overall (pre-print and peer-reviewed) scholarly publications\footnote{\url{https://ourworldindata.org/grapher/annual-scholarly-publications-on-artificial-intelligence?time=2010..2021} }~\cite{Maslej2023-pi}.
 %, with both more than doubling from 2010 to 2020.
-The adoption of techniques underlying technologies with the AI label, i.e.\ machine learning, has spread to fields beyond Computer Science, e.g.\ Astronomy, Physics, Medicine and Psychology\footnote{Retrieved 23/01/23 using the search string "TITLE-ABS-KEY ( ( machine  AND  learning )  OR  ( artificial  AND  intelligence )  OR  ai )  AND  PUBYEAR  $>$  2009  AND  PUBYEAR  $<$  2024 " from the \href{https://www.scopus.com/}{SCOPUS} database}. Outside of academia, the number of jobs requiring AI expertise has increased severalfold, with demand for 'Machine Learning' skills clusters having increased over 500\% from 2010 to 2020 \cite{Maslej2023-pi}. Thus, according to theory, the pressure to demonstrate AI-competence is fertile ground for anthropomorphism to occur. 
+The adoption of techniques underlying technologies with the AI label, i.e.\ machine learning, has spread to fields beyond Computer Science, e.g.\ Astronomy, Physics, Medicine and Psychology\footnote{Retrieved 23/01/23 using the search string "TITLE-ABS-KEY ( ( machine  AND  learning )  OR  ( artificial  AND  intelligence )  OR  ai )  AND  PUBYEAR  $>$  2009  AND  PUBYEAR  $<$  2024 " from the \href{https://www.scopus.com/}{SCOPUS} database}. Outside of academia, the number of jobs requiring AI expertise increases rapidly,
+%has increased severalfold, 
+with demand for `Machine Learning' skills clusters having increased over 500\% from 2010 to 2020 \cite{Maslej2023-pi}. Thus, according to theory, the pressure to demonstrate AI-competence is fertile ground for anthropomorphism to occur. 
 
 
 \subsection{Confirmation Bias}
@@ -448,14 +453,13 @@ Thus, we as academic researchers carry great responsibility for how the narrativ
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \appendix
-\section{Additional Experiments}\label{appendix:autoencoder}
+\section{Additional Experiments and Details}\label{appendix:autoencoder}
 
-In this section, we present additional experimental results that we did not include in the body of the paper for the sake of brevity. We still choose to provide them as additional substantiation of our arguments here.
+In this section, we present additional experimental results that we did not include in the body of the paper for the sake of brevity. We still choose to provide them as additional substantiation of our arguments here. This section also contains additional details concerning the experiment setup for our examples where applicable. 
 
 \subsection{PCA as a Yield Curve Interpreter}
 
 Figure~\ref{fig-pca-yield} shows the first two principal components of US Treasury yields over time along with the actual observed yield curve factors.
-
 
 %\subsection{Example: Autoencoder}\label{example-deep-learning}
 \subsection{Autoencoders as Economic Growth Predictors}\label{example-deep-learning}
@@ -526,6 +530,14 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 \input{results/regression.tex}
 \end{table}
 
+\subsection{LLMs for Economic Sentiment Prediction}
+
+\subsubsection{Details}
+
+\subsubsection{Additional Results}
+
+Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures across folds for all indicators each time for the train and test set. We report the correlation between predictions and observed values (`cor'), the mean directional accuracy (`mda'), the mean squared error (`mse') and the root mean squared error (`rmse').
+ 
 % ---------- CPI ----------
 
 \begin{figure*}
@@ -540,17 +552,7 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 
 \end{figure*}%
 
-\begin{figure*}
 
-\centering{
-
-\includegraphics[width=1.0\textwidth]{results/figures/measures_CPI (n_pc=128).png}
-
-}
-
-\caption{\label{fig-cpi-b}Average performance measures across folds for the CPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
-
-\end{figure*}%
 
 % ---------- PPI ----------
 
@@ -563,18 +565,6 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 }
 
 \caption{\label{fig-ppi}Average performance measures across folds for the PPI for the train and test set.}
-
-\end{figure*}%
-
-\begin{figure*}
-
-\centering{
-
-\includegraphics[width=1.0\textwidth]{results/figures/measures_PPI (n_pc=128).png}
-
-}
-
-\caption{\label{fig-ppi-b}Average performance measures across folds for the PPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -592,18 +582,6 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 
 \end{figure*}%
 
-\begin{figure*}
-
-\centering{
-
-\includegraphics[width=1.0\textwidth]{results/figures/measures_UST (1 Mo).png}
-
-}
-
-\caption{\label{fig-ust-1-b}Average performance measures across folds for the UST (1 Mo) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
-
-\end{figure*}%
-
 % ---------- UST (1 Yr)  ----------
 
 \begin{figure*}
@@ -615,18 +593,6 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 }
 
 \caption{\label{fig-ust-1y}Average performance measures across folds for the UST (1 Yr) for the train and test set.}
-
-\end{figure*}%
-
-\begin{figure*}
-
-\centering{
-
-\includegraphics[width=1.0\textwidth]{results/figures/measures_UST (1 Yr).png}
-
-}
-
-\caption{\label{fig-ust-1y-b}Average performance measures across folds for the UST (1 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -643,6 +609,64 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 \caption{\label{fig-ust-10}Average performance measures across folds for the UST (1 Yr) for the train and test set.}
 
 \end{figure*}%
+
+% -------- CPI benchmark --------
+
+\begin{figure*}
+
+\centering{
+
+\includegraphics[width=1.0\textwidth]{results/figures/measures_CPI (n_pc=128).png}
+
+}
+
+\caption{\label{fig-cpi-b}Average performance measures across folds for the CPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+
+\end{figure*}%
+
+% -------- PPI benchmark --------
+
+\begin{figure*}
+
+\centering{
+
+\includegraphics[width=1.0\textwidth]{results/figures/measures_PPI (n_pc=128).png}
+
+}
+
+\caption{\label{fig-ppi-b}Average performance measures across folds for the PPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+
+\end{figure*}%
+
+% -------- UST (1 Mo) benchmark --------
+
+\begin{figure*}
+
+\centering{
+
+\includegraphics[width=1.0\textwidth]{results/figures/measures_UST (1 Mo).png}
+
+}
+
+\caption{\label{fig-ust-1-b}Average performance measures across folds for the UST (1 Mo) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+
+\end{figure*}%
+
+% -------- UST (1 Yr) benchmark --------
+
+\begin{figure*}
+
+\centering{
+
+\includegraphics[width=1.0\textwidth]{results/figures/measures_UST (1 Yr).png}
+
+}
+
+\caption{\label{fig-ust-1y-b}Average performance measures across folds for the UST (1 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+
+\end{figure*}%
+
+% -------- UST (10 Yr) benchmark --------
 
 \begin{figure*}
 
