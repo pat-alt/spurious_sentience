@@ -33,9 +33,8 @@ function evaluate(
             [:y, :yhat] => ((y, yhat) -> mse(y, yhat)) => :mse,
             [:y, :yhat] => ((y, yhat) -> rmse(y, yhat)) => :rmse,
             [:y, :yhat] => ((y, yhat) -> mda(y, yhat)) => :mda,
-            [:y, :yhat] => ((y, yhat) -> r2(y, yhat)) => :r2,
         )
-    res = stack(res, [:cor, :mse, :rmse, :r2, :mda]) |>
+    res = stack(res, [:cor, :mse, :rmse, :mda]) |>
         x -> groupby(x, agg_vars) |>
         x -> combine(x, :value => mean => :value, :value => std => :std) |>
         x -> sort(x, agg_vars)
