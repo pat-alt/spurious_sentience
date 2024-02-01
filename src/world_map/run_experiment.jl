@@ -53,7 +53,7 @@ X = fifa_world_data[:,Not([:y])]
 
 # Noisy, correlated series of longitude and latitude:
 ϕ = 5.0    # standard deviation of noise
-ρ = 0.5     # correlation with original longitude and latitude
+ρ = 0.5    # correlation with original longitude and latitude
 X.longitude = ρ .* X.longitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 X.latitude = ρ .* X.latitude .+ (1-ρ) .* ϕ .* randn(size(X, 1))
 
@@ -70,7 +70,7 @@ Xtrain = MLJBase.transform(mach, X) |>
     x -> Float32.(x)
 
 # Add noise:
-nnoise = 2490        # add nnoise noisy and uncorrelated features
+nnoise = 490        # add nnoise noisy and uncorrelated features
 Xtrain = vcat(Xtrain, randn(nnoise, size(Xtrain, 2))) |> 
     x -> Float32.(x)
 d = size(Xtrain, 1)
@@ -79,7 +79,7 @@ d = size(Xtrain, 1)
 y = fifa_world_data.y .+ 1
 
 # Projector:
-latent = 2000
+latent = 400
 nfinal = 2
 activation = sigmoid
 projector = Chain(
@@ -92,7 +92,7 @@ projector = Chain(
 A = Flux.activations(projector, Xtrain) |> 
     _A -> _A[end-1] |>
     permutedims
-train_prp = 0.75
+train_prp = 0.8
 ntrain = Int(round(train_prp * size(A, 1)))
 shuffled_ids = shuffle(1:size(A, 1))
 train_idx = shuffled_ids[1:ntrain]
@@ -101,7 +101,8 @@ Atrain = A[train_idx, :]
 Atest = A[test_idx, :]
 ytest = y[test_idx]
 Y = fifa_world_data[:, [:longitude, :latitude]] |> matrix
-W = (A'A + UniformScaling(λ)) \ A'Y
+Ytrain = Y[train_idx, :]
+W = (Atrain'Atrain + UniformScaling(λ)) \ Atrain'Ytrain
 
 # Fitted values:
 sorted_names = collect(keys(fifa_world_ranking))[sortperm(collect(values(fifa_world_ranking)))]
