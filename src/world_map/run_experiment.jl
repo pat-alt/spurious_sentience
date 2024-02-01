@@ -126,6 +126,6 @@ GMT.scatter!(
     cmap=C,
     colorbar=true,
     show = true,
-    ms = 0.05,
+    ms = 0.1,
     savefig = joinpath(FIGURE_DIR, "map.png"),
 )
