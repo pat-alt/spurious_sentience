@@ -194,29 +194,15 @@ platform~\cite{gurnee2023languagev1}. Through linear probing experiments, the cl
 
 \citet{gurnee2023languagev2} extract and visualize the alleged geographical world model by training linear regression probes on internal activations in LLMs (including Llama-2) for the names of places, to predict geographical coordinates associated with these places. Now, the Llama-2 model has ingested huge amounts of publicly available data from the internet, including Wikipedia dumps from the June-August 2022 period \citep{touvron2023llama}. It is therefore highly likely that the training data contains geographical coordinates, either directly or indirectly. At the very least, we should expect that the model has seen features during training that are highly correlated with geographical coordinates. The model itself is essentially a very large latent space to which all features are randomly projected in the very first instance before being passed through a series of layers which are gradually trained for downstream tasks.
 
-In our first example, we simulate this scenario, stopping short of training the model. In particular, we take the \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv} that was used in \citet{gurnee2023languagev2}, which maps locations/areas to their latitude and longitude. For each place, it also indicates the corresponding country. From this, we take the subset that contains countries that are currently part of the top 10 \href{https://www.fifa.com/fifa-world-ranking/men?dateId=id14142}{FIFA world ranking}, and assign the current rank to each country (i.e., Argentina gets 1, France gets 2, \ldots{}). To ensure that the training data only involves a noisy version of the coordinates, we transform the longitude and latitude data as follows: \(\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon\) where \(\rho=0.5\) and \(\epsilon \sim \mathcal{N}(0, 5)\).
+In our first example, we simulate this scenario, stopping short of training the model. In particular, we take the \href{https://github.com/wesg52/world-models/blob/main/data/entity_datasets/world_place.csv}{world\_place.csv} that was used in \citet{gurnee2023languagev2}, which maps locations/areas to their latitude and longitude. For each place, it also indicates the corresponding country. From this, we take the subset that contains countries that are currently part of the top 10 \href{https://www.fifa.com/fifa-world-ranking/men?dateId=id14142}{FIFA world ranking}, and assign the current rank to each country (i.e., Argentina gets 1, France gets 2, \ldots{}). To ensure that the training data only involves a noisy version of the coordinates, we transform the longitude and latitude data as follows: \(\rho \cdot \text{coord} + (1-\rho) \cdot \epsilon\) where \(\rho=0.5\) and \(\epsilon \sim \mathcal{N}(0, 5)\). Next, we encode all features except the FIFA world rank indicator as continuous variables: \(X^{(n \times m)}\) where \(n\) is the number of samples and \(m\) is the number of resulting features. Additionally, we add a large number of random features to \(X\) to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. Let \(d\) denote the final number of features, i.e.~\(d=m+k\) where \(k\) is the number of random features.
 
-Next, we encode all features except the FIFA world rank indicator as continuous variables: \(X^{(n \times m)}\) where \(n\) is the number of samples and \(m\) is the number of resulting features. Additionally, we add a large number of random features to \(X\) to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. Let \(d\) denote the final number of features, i.e.~\(d=m+k\) where \(k\) is the number of random features.
-
-We then initialize a small neural network, considered as a \emph{projector}, that maps from \(X\) to a single hidden layer with \(h<d\) hidden units and sigmoid activation, and from there, to a lower-dimensional output space. Without performing any training on the \emph{projector}, we simply compute a forward pass of \(X\) %through it
+We then initialize a small neural network, considered a \emph{projector}, mapping from \(X\) to a single hidden layer with \(h<d\) hidden units and sigmoid activation, and from there, to a lower-dimensional output space. Without performing any training on the \emph{projector}, we simply compute a forward pass of \(X\) %through it
 %the \emph{projector}
-and retrieve the activations \(\mathbf{Z}^{(n\times h)}\). Next, we perform the linear probe on a subset of \(\mathbf{Z}\) through Ridge regression: \(\mathbf{W} = (\mathbf{Z}_{\text{train}}'\mathbf{Z}_{\text{train}} + \lambda \mathbf{I}) (\mathbf{Z}_{\text{train}}'\textbf{coord})^{-1}\), where \(\textbf{coord}\) is the \((n \times 2)\) matrix containing the longitude and latitude for each sample. A hold-out set is reserved for testing, on which we compute predicted coordinates for each sample as \(\widehat{\textbf{coord}}=\mathbf{Z}_{\text{test}}\mathbf{W}\) and then plot the results on a world map ( Figure~\ref{fig-map}).  
+and retrieve activations \(\mathbf{Z}^{(n\times h)}\). Next, we perform the linear probe on a subset of \(\mathbf{Z}\) through Ridge regression: \(\mathbf{W} = (\mathbf{Z}_{\text{train}}'\mathbf{Z}_{\text{train}} + \lambda \mathbf{I}) (\mathbf{Z}_{\text{train}}'\textbf{coord})^{-1}\), where \(\textbf{coord}\) is the \((n \times 2)\) matrix containing the longitude and latitude for each sample. A hold-out set is reserved for testing, on which we compute predicted coordinates for each sample as \(\widehat{\textbf{coord}}=\mathbf{Z}_{\text{test}}\mathbf{W}\) and plot these on a world map ( Figure~\ref{fig-map}).  
 %. Finally, we compute the predicted coordinates for each sample in the hold-out set as \(\widehat{\textbf{coord}}=\mathbf{Z}_{\text{test}}\mathbf{W}\) and plot the results on a world map (see Figure~\ref{fig-map}).  
 
 While the fit certainly is not perfect, the results do indicate that the random projection contains representations that are useful for the task at hand. Thus, %with this simple example, we
 this simple example illustrates that meaningful target representations should be recoverable from a sufficiently large latent space, given the projection of a small number of highly correlated features. Similarly, \citet{alain2018understanding} observe that even before training a convolutional neural network on MNIST data, the layer-wise activations can already be used to perform binary classification. In fact, it is well-known that random projections can be used for prediction tasks \cite{dasgupta2013experiments}.
-
-\begin{figure*}[htp]
-
-\centering{
-
-\includegraphics[width=0.7\textwidth]{results/figures/pca.png}
-
-}
-
-\caption{\label{fig-pca}The first two principal components of US Treasury yields over time at daily frequency. Vertical stalks roughly indicate the onset ($|$GFC) and the beginning of the aftermath (GFC$|$) of the Global Financial Crisis.}
-
-\end{figure*}
 
 
 \subsection{PCA as a Yield Curve Interpreter}\label{example-principal-component-analysis}
@@ -230,16 +216,14 @@ To leverage this information in downstream modelling tasks, economists regularly
 %Being primarily interested in understanding the nature of this low-dimensional projection, we limit our scope to the US Treasury yield curve. To this end, we
 To understand the nature of this low-dimensional projection, we collect daily Treasury par yield curve rates at all available maturities from the US Department of the Treasury. Computing principal components involves decomposing the matrix of all yields \(\mathbf{r}\) into a product of its singular vectors and values: \(\mathbf{r}=\mathbf{U}\Sigma\mathbf{V}^{\prime}\). Let us simply refer to \(\mathbf{U}\), \(\Sigma\) and \(\mathbf{V}^{\prime}\) as latent embeddings of the yield curve.
 
-Figure~\ref{fig-pca} shows the first two principal components of the yield curves of US Treasury bonds over time. Vertical stalks indicate key dates related to the Global Financial Crisis (GFC). During its onset, on 27 February 2007, financial markets were in turmoil following a warning from the Federal Reserve (Fed) that the US economy was at risk of a recession. The Fed later reacted to mounting economic pressures by gradually reducing short-term interest rates to unprecedented lows. Consequently, the average level of yields decreased and the curve steepened. In Figure~\ref{fig-pca}, we can observe that the first two principal components appear to capture this level shift and steepening, respectively. In fact, they
-%two components
-are strongly positively correlated with the actual observed first two moments of the yield curve (Figure~\ref{fig-pca-yield}).
+The top chart in Figure~\ref{fig-pca-yield} shows the first two principal components of the yield curves of US Treasury bonds over time. Vertical stalks indicate key dates related to the Global Financial Crisis (GFC). During its onset, on 27 February 2007, financial markets were in turmoil following a warning from the Federal Reserve (Fed) that the US economy was at risk of a recession. The Fed later reacted to mounting economic pressures by gradually reducing short-term interest rates to unprecedented lows. Consequently, the average level of yields decreased and the curve steepened. In Figure~\ref{fig-pca}, we can observe that the first two principal components appear to capture this level shift and steepening, respectively. In fact, they are strongly positively correlated with the actual observed first two moments of the yield curve (Figure~\ref{fig-pca-yield}).
 
 
 \begin{figure*}[tb]
 
 \centering{
 
-\includegraphics[width=0.7\textwidth]{results/figures/pca_yield.png}
+\includegraphics[width=1.0\textwidth]{results/figures/pca_yield.png}
 
 }
 
@@ -457,16 +441,16 @@ Thus, we as academic researchers carry great responsibility for how the narrativ
 
 In this section, we present additional experimental results that we did not include in the body of the paper for the sake of brevity. We still choose to provide them as additional substantiation of our arguments here. This section also contains additional details concerning the experiment setup for our examples where applicable. 
 
-\subsection{PCA as a Yield Curve Interpreter}
+\subsection{Are Neural Networks Born with World Maps?}
 
-Figure~\ref{fig-pca-yield} shows the first two principal components of US Treasury yields over time along with the actual observed yield curve factors.
+The initial feature matrix \(X^{(n \times m)}\) is made up of \(n=4,217\) and \(m=10\) features.  We add a total of \(490\) random features to \(X\) to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. That yields \(500\) features in total. The training subset contains \(3,374\) randomly drawn samples, while the remaining \(843\) are held out for testing. The single hidden layer of the untrained neural network has \(400\) neurons.
 
 %\subsection{Example: Autoencoder}\label{example-deep-learning}
 \subsection{Autoencoders as Economic Growth Predictors}\label{example-deep-learning}
 
 %So far we have considered simple linear transformations of data. One might argue that the previous examples to not really involve latent embeddings in the way that they are typically thought of in the context of deep learning. Our next example will therefore involve a deep neural network.
 
-Here, we build forth on an application in Economics. However, we now seek to not only predict economic growth from the yield curve, but also extract meaningful features for downstream inference tasks. For this, we will use a neural network architecture.
+This is an additional example that we have not discuss in the body of the paper. Here, we build forth on an application in Economics. However, we now seek to not only predict economic growth from the yield curve, but also extract meaningful features for downstream inference tasks. For this, we will use a neural network architecture.
 %, that allows us to recover a compact latent representation of the yield curve.
 
 \subsubsection{Data}\label{data}
@@ -536,7 +520,9 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 
 \subsubsection{Additional Results}
 
-Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures across folds for all indicators each time for the train and test set. We report the correlation between predictions and observed values (`cor'), the mean directional accuracy (`mda'), the mean squared error (`mse') and the root mean squared error (`rmse').
+Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures across folds for all indicators each time for the train and test set. We report the correlation between predictions and observed values (`cor'), the mean directional accuracy (`mda'), the mean squared error (`mse') and the root mean squared error (`rmse'). The model depth---as indicated by the number of the layer---increases along the horizontal axis.
+
+Figures~\ref{fig-cpi-b} to~\ref{fig-ust-10-b} present the same performance measures, also for the baseline autoregressive model. Shaded areas show the variation across folds.
  
 % ---------- CPI ----------
 
@@ -548,7 +534,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-cpi}Average performance measures across folds for the CPI for the train and test set.}
+\caption{\label{fig-cpi}Average performance measures across folds plotted against model depth (number of layer) for the CPI for the train and test set.}
 
 \end{figure*}%
 
@@ -564,7 +550,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ppi}Average performance measures across folds for the PPI for the train and test set.}
+\caption{\label{fig-ppi}Average performance measures across folds plotted against model depth (number of layer) for the PPI for the train and test set.}
 
 \end{figure*}%
 
@@ -578,7 +564,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-1}Average performance measures across folds for the UST (1 Mo) for the train and test set.}
+\caption{\label{fig-ust-1}Average performance measures across folds plotted against model depth (number of layer) for the UST (1 Mo) for the train and test set.}
 
 \end{figure*}%
 
@@ -592,7 +578,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-1y}Average performance measures across folds for the UST (1 Yr) for the train and test set.}
+\caption{\label{fig-ust-1y}Average performance measures across folds plotted against model depth (number of layer) for the UST (1 Yr) for the train and test set.}
 
 \end{figure*}%
 
@@ -606,7 +592,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-10}Average performance measures across folds for the UST (1 Yr) for the train and test set.}
+\caption{\label{fig-ust-10}Average performance measures across folds plotted against model depth (number of layer) for the UST (1 Yr) for the train and test set.}
 
 \end{figure*}%
 
@@ -620,7 +606,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-cpi-b}Average performance measures across folds for the CPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+\caption{\label{fig-cpi-b}Average performance measures across folds plotted against model depth (number of layer) for the CPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -634,7 +620,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ppi-b}Average performance measures across folds for the PPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+\caption{\label{fig-ppi-b}Average performance measures across folds plotted against model depth (number of layer) for the PPI for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -648,7 +634,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-1-b}Average performance measures across folds for the UST (1 Mo) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+\caption{\label{fig-ust-1-b}Average performance measures across folds plotted against model depth (number of layer) for the UST (1 Mo) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -662,7 +648,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-1y-b}Average performance measures across folds for the UST (1 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+\caption{\label{fig-ust-1y-b}Average performance measures across folds plotted against model depth (number of layer) for the UST (1 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
@@ -676,7 +662,7 @@ Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures a
 
 }
 
-\caption{\label{fig-ust-10-b}Average performance measures across folds for the UST (10 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
+\caption{\label{fig-ust-10-b}Average performance measures across folds plotted against model depth (number of layer) for the UST (10 Yr) for the train and test set compared against the baseline autoregressive model. Shaded areas show the variation across folds.}
 
 \end{figure*}%
 
