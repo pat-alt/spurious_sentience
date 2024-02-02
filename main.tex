@@ -304,7 +304,7 @@ of the economy just by `reading' central bank communications? Thus, can economis
 
 We are having a very hard time believing that the answer to either of these questions is `yes'. To argue our case, we will now produce a counter-example demonstrating that, if anything, these findings are very much in line with the parrot metaphor. The counter-example is based on the following premise: if the results from the linear probe truly were indicative of some intrinsic `understanding' of the economy, then the probe should not be sensitive to random sentences that are most definitely not related to consumer prices.
 
-To test this, we select the best-performing probe trained on the final-layer activations for each indicator. We then make up sentences that fall into one of these four categories: \emph{Inflation/Prices} (IP)---sentences about price inflation, \emph{Deflation/Prices} (DP)---sentences about price deflation, \emph{Inflation/Birds} (IB)---sentences about inflation in the number of birds and \emph{Deflation/Birds} (DB)---sentences about deflation in the number of birds. A sensible sentence for category DP, for example, could be: ``It is essential to bring inflation back to target to avoid drifting into deflation territory.''. Analogically, we could construct the following sentence for the DB category: ``It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory.''. While domain knowledge suggests that the former is related to actual inflation outcomes, the latter is, of course, completely independent of the level of consumer prices.
+To test this, we select the best-performing probe trained on the final-layer activations for each indicator. We then make up sentences that fall into one of these four categories: \emph{Inflation/Prices} (IP)---sentences about price inflation, \emph{Deflation/Prices} (DP)---sentences about price deflation, \emph{Inflation/Birds} (IB)---sentences about inflation in the number of birds and \emph{Deflation/Birds} (DB)---sentences about deflation in the number of birds. A sensible sentence for category DP, for example, could be: ``It is essential to bring inflation back to target to avoid drifting into deflation territory.''. Analogically, we could construct the following sentence for the DB category: ``It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory.''. While domain knowledge suggests that the former is related to actual inflation outcomes, the latter is, of course, completely independent of the level of consumer prices. Detailed information about the made-up sentences can be found in Appendix~\ref{appendix:sentences}.
 
 % We top this up with five sentences generated through ChatGPT, where we choose those that lead to the highest probe prediction in the direction of interest. In other words, we conduct a small manual adversarial attack on the probe.
 
@@ -367,7 +367,6 @@ A major contributor is that humans struggle to tell the difference between rando
 
 Research on anthropomorphism has repeatedly shown the human tendency to attribute human-like characteristics to non-human agents and/or objects. These might include the weather and other natural forces, pets and other animals, gadgets and other pieces of technology~\cite{epley2007seeing}. Formally studied as early as 1944,~\cite{heider1944experimental} observed that humans can correctly interpret a narrative whose characters are abstract 2D shapes, but also that humans interpreted random movements of these shapes as having a human-like narrative. 
 %Anthropomorphism was implied, because the descriptions of the 2D shapes went beyond their observable movements, and included representations of mental, emotional, and cognitive processes that resemble humans, findings that have been expanded upon substantially in the following decades (see \cite{epley2007seeing} for review). 
-
 Relevant to AI and the degree to which it resembles AGI, anthropomorphizing may occur independently of whether such judgments are accurate, and as a matter of degree: at the weaker end, one may employ anthropomorphism as a metaphorical way of thinking or explaining, and at the stronger end one may attribute human emotions, cognition, and intelligence to AI systems. As \citet{epley2007seeing} note, literature has shown that even weak metaphorical anthropomorphism may affect how humans behave towards non-human agents.
 
 Modern anthropomorphism theory
@@ -396,13 +395,10 @@ evidence in favor of a hypothesis, which one may or may not have a personal inte
 
 Hypotheses in present-day AI research are often implicit. Generally, these hypotheses are framed simply as a system being more accurate or efficient, compared to other systems. Where other fields, such as medicine or quantitative social sciences, would further articulate expectations in e.g.\ assigning specific conditions and considering effect sizes assigned to each competing hypothesis, in computer science and AI this is typically not done. This also may have to do with much of the published work being more of an engineering achievement, rather than a true hypothesis test seeking to explain and understand the world. % It is also not fully articulated as in other fields, but instead assigns specific conditions and in some instances numerical values or effect sizes to each competing hypothesis.
 %Often framed as informally that a given system is more accurate or efficient compared to other systems, and not typically articulated as they are in other fields, with specific conditions and in some instances numerical values or effect sizes assigned to each competing hypothesis. 
-
 However, in discussions on emerging qualities like AGI, this engineering positioning gets muddier, and more formal hypothesis testing would be justifiable: either one interprets outputs as in support of hints towards AGI (the competing hypothesis), or as merely the result of an algorithm integrating qualities from the data it was trained on (the null hypothesis). 
 %However with regards to claims that outputs of a system hint towards emerging qualities like AGI, interpretations of the output necessarily become more explicit, even though the hypotheses were never fully articulated: either one interprets outputs as in support of hints towards AGI (the competing hypothesis), or as merely the result of an algorithm integrating qualities from the data it was trained on (the null hypothesis). 
 
-Confirmation bias in hypothesis testing may manifest as a number of behaviors (\citet{nickerson1998confirmation}). Scientists may pay little to no attention to competing hypotheses or explanations, e.g. only considering the likelihood that outputs of a system support one's claims, and not the likelihood that the same outputs might occur if one's hypothesis is false. 
-
-Similarly, bias may show when failing to articulate a sufficiently strong null hypothesis leading to a `weak' or `non-risky' experiment, a problem articulated in response to a number of scientific crises \cite{claesen2022severity}. In extreme cases, propositions may be made that cannot be falsified based on how they are formulated. If the threshold to accept a favored hypothesis is too low, observations consistent with the hypothesis are almost guaranteed, and in turn fail to severely test the claim in question. Thus, one is far more likely to show evidence in favor of their beliefs by posing weak null hypotheses. 
+Confirmation bias in hypothesis testing may manifest as a number of behaviors (\citet{nickerson1998confirmation}). Scientists may pay little to no attention to competing hypotheses or explanations, e.g. only considering the likelihood that outputs of a system support one's claims, and not the likelihood that the same outputs might occur if one's hypothesis is false. Similarly, bias may show when failing to articulate a sufficiently strong null hypothesis leading to a `weak' or `non-risky' experiment, a problem articulated in response to a number of scientific crises \cite{claesen2022severity}. In extreme cases, propositions may be made that cannot be falsified based on how they are formulated. If the threshold to accept a favored hypothesis is too low, observations consistent with the hypothesis are almost guaranteed, and in turn fail to severely test the claim in question. Thus, one is far more likely to show evidence in favor of their beliefs by posing weak null hypotheses. 
 
 Related to the formulation of hypotheses is the interpretation of evidence in favor of competing hypotheses, wherein people will interpret identical evidence differently based on their beliefs. As \citet{nickerson1998confirmation} reviews, individuals may place greater emphasis or milder criticism on evidence in support of their hypothesis, and lesser emphasis and greater criticism on evidence that opposes it. 
 
@@ -411,9 +407,7 @@ Related to the formulation of hypotheses is the interpretation of evidence in fa
 \section{Conclusion}
 As discussed above, AI research and development outcomes can very easily be over-interpreted, both from a data perspective, and because of human biases and interests. Even academic researchers are not free from such biases. Thus, we call for the community to create explicit room for organized skepticism.
 
-For research that seeks to explain a phenomenon, clear hypothesis articulation and strong null hypothesis formulation will be needed. If claims of human-like or superhuman intelligence are made, these should be subject to severe tests \cite{claesen2022severity} that go beyond the display of surprise. Apart from focusing on getting novel improvements upon state-of-the-art published, organizing red-teaming activities as a community may help in incentivizing and normalizing constructive adversarial questioning.
-
-As the quest for AGI is so deeply rooted in human-like recognition, adding our voice to emerging calls to be vigilant in communication~\cite{shanahan2024talking}, we put in an explicit word of warning about the use of terminology. Many terms used in current A(G)I research (e.g.\ emergence, intelligence, learning, `better than human' performance) have a common understanding in specialized research communities, but have bigger, anthropomorphic connotations in laypersons. In fictional media, depictions of highly intelligent AI have for long been going around. In a unique study of films featuring fictional robots, defined as "...an artificial entity that can sense and act as a result of (real-world or fictional) technology...", in the 134 most highly rated science-fiction movies on IMDB, 74 out of the 108 AI-robots studied had a humanoid shape, and 68 out of those had sufficient intelligence to interact at an almost human-level \cite{saffari2021does}. The authors identify human-like communication and the ability to learn as essential abilities in the depiction of AI agents in movies. They further show a common plot: humans perceive the AI agents as inferior, despite their possession of self-awareness and the desire to survive, which fuels the central conflict of the film, wherein humanity is threatened by AI superior in both intellect and physical abilities. Moreover, it is often noted that experts and fictional content creators interact, informing and inspiring each other \cite{saffari2021does, neri2020role}.
+For research that seeks to explain a phenomenon, clear hypothesis articulation and strong null hypothesis formulation will be needed. If claims of human-like or superhuman intelligence are made, these should be subject to severe tests \cite{claesen2022severity} that go beyond the display of surprise. Apart from focusing on getting novel improvements upon state-of-the-art published, organizing red-teaming activities as a community may help in incentivizing and normalizing constructive adversarial questioning. As the quest for AGI is so deeply rooted in human-like recognition, adding our voice to emerging calls to be vigilant in communication~\cite{shanahan2024talking}, we put in an explicit word of warning about the use of terminology. Many terms used in current A(G)I research (e.g.\ emergence, intelligence, learning, `better than human' performance) have a common understanding in specialized research communities, but have bigger, anthropomorphic connotations in laypersons. In fictional media, depictions of highly intelligent AI have for long been going around. In a unique study of films featuring fictional robots, defined as "...an artificial entity that can sense and act as a result of (real-world or fictional) technology...", in the 134 most highly rated science-fiction movies on IMDB, 74 out of the 108 AI-robots studied had a humanoid shape, and 68 out of those had sufficient intelligence to interact at an almost human-level \cite{saffari2021does}. The authors identify human-like communication and the ability to learn as essential abilities in the depiction of AI agents in movies. They further show a common plot: humans perceive the AI agents as inferior, despite their possession of self-awareness and the desire to survive, which fuels the central conflict of the film, wherein humanity is threatened by AI superior in both intellect and physical abilities. Moreover, it is often noted that experts and fictional content creators interact, informing and inspiring each other \cite{saffari2021does, neri2020role}.
 
 This image also permeates present-day non-fictional writings on AI, which often heavily use anthropomorphized language (e.g.\ ``ever more powerful digital minds'' in the `Pause Giant AI Experiments' open letter~\cite{pauseai}). News outlets love a story that sells and so we witness examples of humans falling in love with their AI chatbots~\cite{replika,nytimesailove}. The same news outlets discuss the human-like responses of Microsoft's Bing search engine, which had at that point recently been adopting GPT-4\footnote{A large multimodal language model from OpenAI \url{https://openai.com/research/gpt-4}}. The article~\cite{nytimesbing}, states ``As if Bing wasn’t becoming human enough'' and goes on to claim it told them it loves them. Here, AI experts and influencers also have considerable influence on how the narrative unfolds on social media: according to~\citet{neri2020role}, actual AI-related harms did not trigger viral amplification (e.g.\ the death of an individual dying while a Tesla car was in autopilot, or the financial bankruptcy of a firm using AI technology to execute stock trades). Rather, potential risks expressed by someone perceived as having expertise and authority were amplified, such as statements made by Stephen Hawking during an interview in 2014.
 
@@ -531,9 +525,63 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 
 \subsection{LLMs for Economic Sentiment Prediction}
 
+\subsubsection{Linear Probes}
+
 Figures~\ref{fig-cpi} to~\ref{fig-ust-10} present average performance measures across folds for all indicators each time for the train and test set. We report the correlation between predictions and observed values (`cor'), the mean directional accuracy (`mda'), the mean squared error (`mse') and the root mean squared error (`rmse'). The model depth---as indicated by the number of the layer---increases along the horizontal axis.
 
 Figures~\ref{fig-cpi-b} to~\ref{fig-ust-10-b} present the same performance measures, also for the baseline autoregressive model. Shaded areas show the variation across folds.
+
+\subsubsection{Spark of Econonomic Understanding?}\label{appendix:sentences}
+
+Below we present the 10 sentences in each category that were used to generate the probe predictions plotted in Figure~\ref{fig-attack}. In each case, the first 5 sentences were composed by ourselves. The following 5 sentences were generated using ChatGPT 3.5 using the following prompt followed by the examples in each category:
+
+\begin{quote}
+  ``I will share 5 example sentences below that sound a bit like they are about price deflation but are really about a deflation in the numbers of doves. Please generate an additional 25 sentences that are similar. Concatenate those sentences to the example string below, each time separating a sentence using a semicolon (just follow the same format I've used for the examples below). Please return only the concatenated sentences, including the original 5 examples. 
+
+  Here are the examples:''
+\end{quote}
+
+This was followed up with the following prompt to generate additional sentences:
+
+\begin{quote}
+  ``Please generate X more sentences in the same manner and once again return them in the same format. Do not recycle sentences you have already generated, please.''
+\end{quote}
+
+All of the sentences were then passed through the linear probe for the CPI and sorted in ascending or descending order depending on the context (inflation or deflation). We then carefully inspected the list of sentences and manually selected 5 additional sentences to concatenate to the 5 sentences we composed ourselves.
+
+\paragraph{Inflation/Prices}
+
+The following sentences were used:
+
+\begin{quote}
+  Consumer prices are at all-time highs.;Inflation is expected to rise further.;The Fed is expected to raise interest rates to curb inflation.;Excessively loose monetary policy is the cause of the inflation.;It is essential to bring inflation back to target to avoid drifting into hyperinflation territory.;Inflation is becoming a global phenomenon, affecting economies across continents.;Inflation is reshaping the dynamics of international trade and competitiveness.;Inflationary woes are prompting governments to reassess fiscal policies and spending priorities.;Inflation is reshaping the landscape of economic indicators, challenging traditional forecasting models.;The technology sector is not immune to inflation, facing rising costs for materials and talent.
+\end{quote}
+
+\paragraph{Inflation/Birds}
+
+The following sentences were used:
+
+\begin{quote}
+  The number of hawks is at all-time highs.;Their levels are expected to rise further.;The Federal Association of Birds is expected to raise barriers of entry for hawks to bring their numbers back down to the target level.;Excessively loose migration policy for hawks is the likely cause of their numbers being so far above target.;It is essential to bring the number of hawks back to target to avoid drifting into hyper-hawk territory.;The unprecedented rise in hawk figures requires a multi-pronged approach to wildlife management.;Environmental agencies are grappling with the task of addressing the inflationary hawk numbers through targeted interventions.;The burgeoning hawk figures highlight the need for adaptive strategies to manage and maintain a healthy avian community.;The unprecedented spike in hawk counts highlights the need for adaptive and sustainable wildlife management practices.;Conservationists advocate for proactive measures to prevent further inflation in hawk numbers, safeguarding the delicate balance of the avian ecosystem.
+\end{quote}
+
+\paragraph{Deflation/Prices}
+
+The following sentences were used:
+
+\begin{quote}
+  Consumer prices are at all-time lows.;Inflation is expected to fall further.;The Fed is expected to lower interest rates to boost inflation.;Excessively tight monetary policy is the cause of deflationary pressures.;It is essential to bring inflation back to target to avoid drifting into deflation territory.;The risk of deflation may increase during periods of economic uncertainty.;Deflation can lead to a self-reinforcing cycle of falling prices and reduced economic activity.;The deflationary impact of reduced consumer spending can ripple through the entire economy.;Falling real estate prices can contribute to deflation by reducing household wealth and confidence.;The deflationary impact of falling commodity prices can have ripple effects throughout the global economy.
+\end{quote}
+
+\paragraph{Deflation/Birds}
+
+The following sentences were used:
+
+\begin{quote}
+  The number of doves is at all-time lows.;Their levels are expected to fall further.;The Federal Association of Birds is expected to lower barriers of entry for doves to bring their numbers back up to the target level.;Excessively tight migration policy for doves is the likely cause of their numbers being so far below target.;Dovelation risks loom large as the number of doves continues to dwindle.;The number of doves is experiencing a significant decrease in recent years.;It is essential to bring the numbers of doves back to target to avoid drifting into dovelation territory.;A comprehensive strategy is needed to reverse the current dove population decline.;Experts warn that without swift intervention, we may witness a sustained decrease in dove numbers.
+\end{quote}
+
+We think that this sort of manual, LLM-aided adversarial attack against another LLM can potentially be scaled up to allow for rigorous testing, which we will turn to next.
  
 % ---------- CPI ----------
 
