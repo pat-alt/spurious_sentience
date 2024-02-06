@@ -8,62 +8,6 @@ In this section, we present additional experimental results that we did not incl
 
 The initial feature matrix \(X^{(n \times m)}\) is made up of \(n=4,217\) and \(m=10\) features.  We add a total of \(490\) random features to \(X\) to simulate the fact that not all features ingested by Llama-2 are necessarily correlated with geographical coordinates. That yields \(500\) features in total. The training subset contains \(3,374\) randomly drawn samples, while the remaining \(843\) are held out for testing. The single hidden layer of the untrained neural network has \(400\) neurons.
 
-\subsection{Autoencoders as Economic Growth Predictors}\label{example-deep-learning}
-
-This is an additional example that we have not discuss in the body of the paper. Here, we build forth on an application in Economics. However, we now seek to not only predict economic growth from the yield curve, but also extract meaningful features for downstream inference tasks. For this, we will use a neural network architecture.
-
-\subsubsection{Data}\label{data}
-
-To estimate economic growth, we will rely on a quarterly
-\href{https://fred.stlouisfed.org/series/GDPC1}{series} of the real gross domestic product (GDP) provided by the Federal Reserve Bank of St.~Louis. The data arrives in terms of levels of real GDP. In order to estimate growth, we transform the data using log differences. Since
-our yield curve data is daily, we aggregate it to the
-quarterly frequency by taking averages of daily yields for each maturity. We also standardize yields since deep learning models tend to perform better with standardized data \citep{gal2019standardization}. Since COVID-19 was a substantial structural break in the time series, we also filter out all observations after 2018.
-
-\subsubsection{Model}\label{model}
-
-Using a simple autoencoder architecture, we let our model \(g_t\) denote growth and our conditional \(\mathbf{r}_t\) the matrix of aggregated Treasury yield rates at time \(t\). Finally, we let \(\theta\) denote our model parameters. Formally, we are interested in maximizing the likelihood \(p_{\theta}(g_t|\mathbf{r}_t)\). 
-
-The encoder consists of a single fully connected hidden layer with 32 neurons and a hyperbolic tangent activation function. The bottleneck layer connecting the encoder to the decoder, is a fully connected layer with 6 neurons. The decoder consists of two fully connected layers, each with a hyperbolic tangent activation function: the first layer consists of 32 neurons and the second layer will have the same dimension as the input data. The output layer consists of a single neuron for our output variable, \(g_t\). We train the model over 1,000 epochs to minimize mean squared error loss using the Adam optimizer~\citep{kingma2017adam}.
-
-The in-sample fit of the model is shown in the left chart of Figure~\ref{fig-dl-results}, which shows actual GDP growth and fitted values from the autoencoder
-model. The model has a large number of free parameters and captures the relationship between economic growth and the yield curve reasonably well, as expected. Since our primary goal is not out-of-sample prediction accuracy but feature extraction for inference, we use all of the available data instead of reserving a hold-out set. As discussed above, we also know that the relationship between economic growth and the yield curve is characterized by two main factors: the level and the spread. Since the model itself is fully characterized by its parameters, we would expect that these two important factors are reflected somewhere in the latent parameter space. 
-
-\subsubsection{Linear Probe}\label{linear-probe}
-
-\begin{figure*}
-
-\centering{
-
-\includegraphics[width=1.0\textwidth]{results/figures/dl.png}
-
-}
-
-\caption{\label{fig-dl-results}The left chart shows the actual GDP growth
-and fitted values from the autoencoder model. The right chart shows the
-observed average level and spread of the yield curve (solid) along with
-the predicted values (in-sample) from the linear probe based on the latent embeddings
-(dashed).}
-
-\end{figure*}%
-
-While the loss function applies most direct pressure on layers near the final output layer, any information useful for the downstream task first needs to pass through the bottleneck layer \citep{alain2018understanding}. On a per-neuron basis, the pressure to distill useful representation is therefore likely maximized there. Consequently, the bottleneck layer activations seem like a natural place to start looking for compact, meaningful representations of distilled information.  We compute and extract these activations \(A_t\) for all time periods \(t=1,...,T\). Next, we use a linear probe to regress the observed
-yield curve factors on the latent embeddings. Let \(Y_t\) denote the vector containing the two factors of interest in time \(t\): \(y_{t,l}\) and \(y_{t,s}\) for the level and spread, respectively. Formally, we are interested in the following regression model: \(p_{w}(Y_t|A_t)\) where \(w\) denotes the regression
-parameters. We use Ridge regression with \(\lambda\) set to \(0.1\). Using the estimated regression parameters \(\hat{w}\), we then predict the yield curve factors% from the latent embeddings
-: \(\hat{Y}_t=\hat{w}^{\prime}A_t\).
-
-The in-sample predictions of the probe are shown in the right chart of Figure~\ref{fig-dl-results}. Solid lines show the observed yield curve factors over time, while dashed lines show predicted values. We find that the latent embeddings predict the two yield curve factors reasonably well, in particular the spread. %As in all of the other examples we have presented so, we do not find this result particularly surprising. 
-
-Did the neural network now learn an intrinsic understanding of the economic relationship between growth and the yield curve? To us, that would be too big of a statement. Still, the current form of information distillation can be useful, even beyond its intended use for monitoring models. For example, an interesting idea could be to use the latent embeddings as features in a more traditional and interpretable econometric model. To demonstrate this, let us consider a simple linear regression model for GDP growth. We might be interested in understanding to what degree economic growth in the past is associated with economic growth today. As we might expect, linearly regressing economic growth on lagged growth, as in column (1) of Table \ref{tab-reg}, yields a statistically significant coefficient. However, this coefficient suffers from confounding bias since there are many other confounding variables at play, of which some may be readily observable and measurable, but others may not.
-
-We e.g.\ already mentioned the relationship between interest rates and economic growth. To account for that, while keeping our regression model as parsimonious as possible, we could include the level and the spread of the US Treasury yield curve as additional regressors. While this slightly changes the estimated magnitude of the coefficient on lagged growth, the coefficients on the observed level and spread are statistically insignificant (column (2) in Table \ref{tab-reg}). This indicates that these measures may be too crude to capture valuable information about the relationship between yields and economic growth. Because we have included two additional regressors with little to no predictive power, the model fit as measured by the Bayes Information Criterium (BIC) has actually deteriorated.
-
-Column (3) of Table \ref{tab-reg} shows the effect of instead including one of the latent embeddings that we recovered above in the regression model. In particular, we pick the one latent embedding that we have found to exhibit the most significant effect on the output variable in a separate regression of growth on all latent embeddings. The estimated coefficient on this latent factor is small in magnitude, but statistically significant. The overall model fit, as measured by the BIC has improved and the magnitude of the coefficient on lagged growth has changed quite a bit. While this is still a very incomplete toy model of economic growth, it appears that the compact latent representation we recovered can be used in order to mitigate confounding bias.
-
-\begin{table}
-\caption{Regression output for various models.}\label{tab-reg}%
-\input{results/regression.tex}
-\end{table}
-
 \subsection{LLMs for Economic Sentiment Prediction}
 
 \subsubsection{Linear Probes}
