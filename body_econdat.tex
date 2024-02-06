@@ -71,7 +71,7 @@ Again, it should not be surprising that these latent embeddings are meaningful: 
 
 \subsection{Autoencoders as Economic Growth Predictors}\label{example-deep-learning}
 
-Our goal in this section is to not only predict economic growth from the yield curve but also extract meaningful features for downstream inference tasks. In particular, we will now use a neural network architecture.
+So far, we considered simple linear data transformations. One might argue that this does not really involve latent embeddings in the way they are typically thought of in the context of deep learning. Our goal in this section is to not only predict economic growth from the yield curve but also extract meaningful features for downstream inference tasks. In particular, we will now use a neural network architecture.
 
 \subsubsection{Data}\label{data}
 
@@ -124,7 +124,7 @@ Column (3) of Table \ref{tab-reg} shows the effect of instead including one of t
 
 \subsection{LLMs for Economic Sentiment Prediction}\label{ex-llm}
 
-So far, we considered simple linear data transformations. One might argue that this does not really involve latent embeddings in the way they are typically thought of in the context of deep learning. In Appendix~\ref{appendix:autoencoder}, we present an additional experiment in which we more explicitly seek neural network-based representations that will be useful for downstream tasks. Here, we continue with an example in which LLMs may be used for Economic Sentiment Prediction.
+Next, we continue with an example in which LLMs may be used for Economic Sentiment Prediction.
 
 Closely following the approach in \citet{gurnee2023languagev2}, we apply it to the novel \emph{Trillion Dollar Words}~\citep{shah2023trillion} financial dataset, containing a curated selection of sentences formulated by central bankers of the US Federal Reserve, and communicated to the public in speeches, meeting minutes and press conferences. ~\citep{shah2023trillion} use this dataset to train a set of LLMs and rule-based models to classify sentences as either `dovish', `hawkish' or `neutral'. In the context of central banking, `hawkishness' is typically associated with tight monetary policy: in other words, a `hawkish' stance on policy favors high interest rates to limit the supply of money and thereby control inflation. The authors first manually annotate a sub-sample of the available data and then fine-tune various models for the classification task. Their model of choice, \emph{FOMC-RoBERTa} (a fine-tuned version of RoBERTa \citep{liu2019roberta}), achieves an \(F_1\) score of around \(>0.7\) on the test data. To illustrate the potential usefulness of the learned classifier, they use predicted labels for the entire dataset to compute an ad-hoc, count-based measure of `hawkishness'. This measure is shown to correlate with key economic indicators in the expected direction: when inflationary pressures rise, the measured level of `hawkishness' increases, as central bankers react by raising interest rates to bring inflation back to target.
 
