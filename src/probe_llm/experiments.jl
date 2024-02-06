@@ -64,8 +64,8 @@ if PLOT_PROBES
     for g in gdf
         g = DataFrame(g)
         i = g.indicator[1]
-        m = g.maturity[1] |> x -> ismissing(x) ? "" : "_($x)"
-        n_pc = g.n_pc[1] |> x -> ismissing(x) ? "" : "_(n_pc=$x)"
+        m = g.maturity[1] |> x -> ismissing(x) ? "" : "_$x"
+        n_pc = g.n_pc[1] |> x -> ismissing(x) ? "" : "_n_pc=$x"
         title = "$i$m$n_pc"
         title = replace(title, " " => "")
         plt = plot_measures_for_ind(g, axis=axis)
