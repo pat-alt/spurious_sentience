@@ -1,4 +1,4 @@
-# Spurious Sentience
+# Spurious Sparks
 
 ## Code
 
