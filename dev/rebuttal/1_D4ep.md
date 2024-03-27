@@ -1,10 +1,10 @@
 # Reviewer (D4ep, rating: 7 `accept')
 
-We thank the reviewer very much for their thoughtful review. 
+We thank the reviewer for the detailed and thoughtful review. 
 
 ## Lack of distinct prescription
 
-The main weakness pointed out by the reviewer is that the paper '[...] lacks a distinct prescription beyond a call for AI researchers to be more cautious [...]'. We fall short of doing so in the paper mostly for scope reasons. Where possible we will add a paragraph either in the body or the appendix. In the meantime, we try to answer your specific questions below:
+The main weakness pointed out by the reviewer is that the paper '[...] lacks a distinct prescription beyond a call for AI researchers to be more cautious [...]'. We fall short of doing so in the paper mostly for reasons of scope and scale. Where possible we will add a paragraph either in the body, which is limited by the page limit, or the appendix. In the meantime, we try to answer your specific questions below:
 
 > " [...] if we assume that tearing down the whole publishing incentive structure is beyond the pale, what distinct steps can researchers actually take when experimenting, writing, reviewing and publishing?"
 
