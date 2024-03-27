@@ -10,8 +10,6 @@ The reviewer pointed out that the abstract was not optimally aligned with the pa
 
 ## Cognitive Biases
 
-For point 2, re 366-371: he’s probably right, and we can delete them. But I have a response to the ‘poorly argued’ bits:
-
 While we appreciate the feedback, we would like some clarity on what precisely this reviewer means by ‘a bit poorly argued’? We do indeed see that 366-371 can be cut. We may have included details that summarize more of the material than is essential to the discussion, and perhaps trimming would make our arguments more clear. Nevertheless, we feel the included text summarizes work that has shown antecedents to two forms of cognitive bias. These sections aim to show how the presence of the antecedents makes the current situation with ‘AI’ tools in general and with LLMs in specific, a perfect storm for misinterpretation. We would happily take on any suggestions as to how this can be clearer and better argued. 
 
 ## Figure 3
