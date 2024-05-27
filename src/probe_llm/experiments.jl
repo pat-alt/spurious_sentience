@@ -55,6 +55,7 @@ if PLOT_PROBES
                 split=_split,
                 variable=_var
             )
+            display(plt)
             save(joinpath(save_dir, "figures", "$(_var)_pca_$(n_pc).png"), plt, px_per_unit=3)
         end
     end
