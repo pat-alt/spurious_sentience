@@ -108,7 +108,7 @@ function plot_measures(
             :value => "Value",
             col=:indicator,
         )
-        layer = smooth() + visual(Scatter)
+        layer = visual(Scatter)
     end
     plt = draw(
         layer * plt,
