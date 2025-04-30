@@ -1,8 +1,16 @@
 # Spurious Sparks
 
+This repo contains all code used for our ICML 2024 paper: [Position: Stop Making Unscientific AGI Performance Claims](https://proceedings.mlr.press/v235/altmeyer24a.html) 
+
+[![DOI](https://zenodo.org/badge/744927925.svg)](https://doi.org/10.5281/zenodo.15309219)
+
 ## Code
 
 All code used for our experiments is contained in the [src](src) folder. Dependencies are defined in TOML files. 
+
+### Dependencies
+
+We created the [TrillionDollarWords.jl](https://github.com/pat-alt/TrillionDollarWords.jl) package as a reusable research software package used for the some of the experiments in this repo.
 
 ### Simple Examples
 
